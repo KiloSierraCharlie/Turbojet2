@@ -1,0 +1,9 @@
+vendor/
+settings.php
+prod_to_local.sh
+*.DS_Store
+*.log
+*.swp
+.idea
+.tags*
+npm-debug.log

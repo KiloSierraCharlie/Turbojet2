@@ -1,0 +1,59 @@
+﻿@import '~normalize.css/normalize.css';
+@import 'variables';
+@import 'fonts';
+// @import '~vue-material/dist/vue-material.css';
+@import '~vuetify/dist/vuetify.css';
+
+
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    // height: 100%;
+    // margin: 0;
+    // padding: 0;
+}
+
+body {
+    // color: $color-body;
+    // font-family: Roboto, Helvetica, Arial, sans-serif;
+    // font-size: 13px;
+}
+//
+// button {
+//     text-transform: capitalize;
+// }
+//
+// .txt-center {
+//     text-align: center;
+// }
+//
+// .txt-left {
+//     text-align: left;
+// }
+//
+// .txt-right {
+//     text-align: right;
+// }
+//
+// // .float-left {
+// //   float: left;
+// // }
+// //
+// // .float-right {
+// //   float: right;
+// // }
+//
+// .clearfix::before, .clearfix::after {
+//     content: "";
+//     display: table;
+// }
+//
+// .clearfix::after {
+//     clear: both;
+// }
+//
+// .clearfix {
+//     zoom: 1; /* For IE 6/7 (trigger hasLayout) */
+// }
