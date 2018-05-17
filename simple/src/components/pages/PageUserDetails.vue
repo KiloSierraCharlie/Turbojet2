@@ -49,7 +49,7 @@ export default {
                 callsign: '',
                 phone: '',
                 title: ''
-            }
+            },
             edit: {
                 email: false,
                 room_number: false,

@@ -24,7 +24,9 @@ class UserController {
         $includeGraduated = (boolean)$queryParams->get('includeGraduated');
         $groupId = $queryParams->get('groupId');
 
-        $users = $this->userModel->getUsers($groupId, $includeGraduated);
+        if(($users = $this->userModel->getUsers($groupId, $includeGraduated)) === false) {
+            return $this->app->json(['message' => 'An error has occured during the users data retrieval'], 500);
+        }
 
         return $this->app->json($users, 200);
     }

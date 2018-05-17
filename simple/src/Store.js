@@ -141,6 +141,10 @@ const actions = {
             .catch(function (error) {
                 throw error
             })
+    },
+
+    fetchNewsData({ commit }) {
+
     }
 }
 

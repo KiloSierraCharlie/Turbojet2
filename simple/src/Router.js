@@ -6,10 +6,9 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import PageListUsers from 'components/pages/PageListUsers.vue'
-import PageListGroups from 'components/pages/PageListGroups.vue'
+import PageNews from 'components/pages/PageNews.vue'
 import PageUserDetails from 'components/pages/PageUserDetails.vue'
 import PageLogin from 'components/pages/PageLogin.vue'
-// import PageLogout from 'components/pages/PageLogout.vue'
 import Store from './Store.js'
 
 Vue.use(VueRouter)
@@ -17,21 +16,21 @@ Vue.use(VueRouter)
 const router = new VueRouter({
     mode: 'hash',
     routes: [
-        // {
-        //     path: '/',
-        //     component: PageListUsers,
-        //     name: 'page-list-users'
-        // },
         {
             path: '/',
-            component: PageListGroups,
-            name: 'page-list-groups'
+            component: PageNews,
+            name: 'page-news',
+            meta: {
+                title: 'News'
+            }
         },
         {
-            path: '/group/:groupId',
+            path: '/users',
             component: PageListUsers,
-            name: 'page-group-details',
-            props: true
+            name: 'page-list-users',
+            meta: {
+                title: 'Person Finder'
+            }
         },
         {
             path: '/user/:userId',
@@ -44,11 +43,16 @@ const router = new VueRouter({
             component: PageLogin,
             name: 'login'
         },
-        // {
-        //     path: '/logout',
-        //     component: PageLogout,
-        //     name: 'logout'
-        // },
+        {
+            path: '/profile',
+            component: PageListUsers,
+            name: 'profile'
+        },
+        {
+            path: '/settings',
+            component: PageListUsers,
+            name: 'settings'
+        },
         // Fallback if no route matches, we redirect to the homepage
         {
             path: '*',
