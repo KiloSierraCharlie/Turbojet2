@@ -8,6 +8,7 @@ import Vue from 'vue'
 import VueI18n from 'vue-i18n'
 import Axios from 'axios'
 import _ from 'lodash' // https://lodash.com/docs/
+import moment from 'moment'
 import App from './App.vue'
 // import AppDark from './AppDark.vue'
 import Store from 'src/Store.js'

@@ -27,17 +27,7 @@
                 </v-toolbar>
                 <v-list dense>
                     <template v-for="item in drawerItems">
-                        <v-layout row v-if="item.heading" align-center :key="item.heading">
-                            <v-flex xs6>
-                                <v-subheader v-if="item.heading">
-                                    {{ item.heading }}
-                                </v-subheader>
-                            </v-flex>
-                            <v-flex xs6 class="text-xs-center">
-                                <a href="#!" class="body-2 black--text">EDIT</a>
-                            </v-flex>
-                        </v-layout>
-                        <v-list-group v-else-if="item.children" v-model="item.model" :key="item.text" :prepend-icon="item.icon">
+                        <v-list-group v-if="item.children" v-model="item.model" :key="item.text" :prepend-icon="item.icon">
                             <v-list-tile slot="activator">
                                 <v-list-tile-content>
                                     <v-list-tile-title>
@@ -70,11 +60,7 @@
                 </v-list>
             </v-navigation-drawer>
             <v-toolbar v-if="$route.name !== 'login'" fixed app color="indigo" dark>
-                <img src="/public/turbojet.svg" />
-                <!-- <object data="/public/turbojet.svg" type="image/svg+xml"></object> -->
-                <v-spacer></v-spacer>
-                <!-- <v-toolbar-title v-text="$t('pagesTitle.page-list-users')"></v-toolbar-title> -->
-                <v-spacer></v-spacer>
+                <img class="ml-3" src="/public/turbojet.svg" />
             </v-toolbar>
             <v-content>
                 <v-container fluid v-if="$route.name !== 'login'">
@@ -130,6 +116,8 @@
                     text: 'Flight Training',
                     children: [
                         { icon: 'mdi-cloud-download', text: 'Documents' },
+                        { icon: 'mdi-timetable', text: 'Zeus', link: 'http://www.jmaero.com/zeus/' },
+                        { icon: 'mdi-file-document', text: 'Allocation' },
                         { icon: 'mdi-desktop-classic', text: 'CBT', link: 'http://ftecbt.com/login.html' }
                     ]
                 },

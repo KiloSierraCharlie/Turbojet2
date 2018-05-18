@@ -12,9 +12,11 @@ use Symfony\Component\Security\Core\Exception\AuthenticationExpiredException;
 use JDesrosiers\Silex\Provider\CorsServiceProvider;
 use App\Controllers\AuthController;
 use App\Controllers\UserController;
+use App\Controllers\EditorialContentController;
 use App\Controllers\GroupController;
 use App\Controllers\TranslationController;
 use App\Models\UserModel;
+use App\Models\EditorialContentModel;
 use App\Models\GroupModel;
 use App\Providers\UserProvider;
 use App\Router;
@@ -72,8 +74,8 @@ $app['controller.user'] = function() use ($app) {
     return new UserController($app);
 };
 
-$app['controller.group'] = function() use ($app) {
-    return new GroupController($app);
+$app['controller.editorialContent'] = function() use ($app) {
+    return new EditorialContentController($app);
 };
 
 
@@ -84,8 +86,8 @@ $app['model.user'] = function() use ($app) {
     return new UserModel($app['db']);
 };
 
-$app['model.group'] = function() use ($app) {
-    return new GroupModel($app['db']);
+$app['model.editorialContent'] = function() use ($app) {
+    return new EditorialContentModel($app['db']);
 };
 
 /*

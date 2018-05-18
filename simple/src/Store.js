@@ -60,7 +60,7 @@ const actions = {
                 // Fetch user data
                 // dispatch('fetchUserData') // TODO
 
-                Router.push({ name: 'page-list-users' })
+                Router.push({ name: 'page-news' })
 
                 return response
             })

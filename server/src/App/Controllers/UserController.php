@@ -19,12 +19,11 @@ class UserController {
     *
     * @return JsonResponse A 200 HTTP response containing an array with all the customers
     */
-    public function getUsersFromGroup(Request $request) {
+    public function getUsers(Request $request) {
         $queryParams = $request->query;
         $includeGraduated = (boolean)$queryParams->get('includeGraduated');
-        $groupId = $queryParams->get('groupId');
 
-        if(($users = $this->userModel->getUsers($groupId, $includeGraduated)) === false) {
+        if(($users = $this->userModel->getUsers($includeGraduated)) === false) {
             return $this->app->json(['message' => 'An error has occured during the users data retrieval'], 500);
         }
 
@@ -74,5 +73,20 @@ class UserController {
         }
 
         return $this->app->json($user, 200);
+    }
+
+    public function getGroups(Request $request) {
+        $queryParams = $request->query;
+        $nonActive = (boolean)$queryParams->get('nonActive');
+
+        $groups = $this->groupModel->getGroups($nonActive);
+
+        return $this->app->json($groups, 200);
+    }
+
+    public function getPicklistGroups(Request $request) {
+        $groups = $this->groupModel->getGroupsKeyValue();
+
+        return $this->app->json($groups, 200);
     }
 }

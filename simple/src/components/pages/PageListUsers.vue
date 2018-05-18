@@ -22,13 +22,6 @@
                 </v-card>
             </v-flex xs12>
         </v-layout row>
-        <v-layout row class="mt-3">
-            <v-flex xs12>
-                <div class="text-xs-center">
-                    <v-pagination circle :length="totalPages" v-model="currentPage" :total-visible="7"></v-pagination>
-                </div>
-            </v-flex>
-        </v-layout>
         <v-layout row>
             <v-flex xs12>
                 <v-select
