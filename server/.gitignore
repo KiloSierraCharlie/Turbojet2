@@ -1,4 +1,5 @@
 vendor/
+www/media/
 settings.php
 prod_to_local.sh
 *.DS_Store

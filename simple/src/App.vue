@@ -85,29 +85,30 @@
         return {
             drawer: false,
             userMenuItems: [
-                { icon: 'mdi-account', text: 'Profile', link: 'profile' },
-                { icon: 'mdi-settings', text: 'Settings', link: 'settings'  },
+                { icon: 'mdi-account', text: 'Profile', link: '/profile' },
+                { icon: 'mdi-settings', text: 'Settings', link: '/settings'  },
                 { icon: 'mdi-logout-variant', text: 'Logout', action: this.logoutUser }
             ],
             drawerItems: [
-                { icon: 'mdi-message-alert', text: 'News', link: 'page-news' },
-                { icon: 'mdi-account-circle', text: 'Person Finder', link: 'page-list-users' },
-                { icon: 'mdi-calendar', text: 'My calendar' },
-                { icon: 'mdi-cart', text: 'FTEBay' },
+                { icon: 'mdi-message-alert', text: 'News', link: '/news' },
+                { icon: 'mdi-account-circle', text: 'Person Finder', link: '/users' },
+                { icon: 'mdi-calendar', text: 'My Calendar' },
+                { icon: 'mdi-cart', text: 'FTEBay', link: '/ftebay'  },
                 {
                     icon: 'mdi-domain',
-                    text: 'Facilities',
+                    text: 'Administration & Facilities',
                     children: [
-                        { icon: 'mdi-van-passenger', text: 'Minivan' },
-                        { icon: 'mdi-television-classic', text: 'TV Room' },
-                        { icon: 'mdi-wrench', text: 'IT / Maintenance request', link: 'http://intranet/request/' }
+                        { icon: 'mdi-cloud-download', text: 'Documents & Resources' },
+                        { icon: 'mdi-van-passenger', text: 'Minivan Booking' },
+                        { icon: 'mdi-television-classic', text: 'TV Room Booking' },
+                        { icon: 'mdi-wrench', text: 'IT / Maintenance Request', link: 'http://intranet/request/' }
                     ]
                 },
                 {
                     icon: 'mdi-projector-screen',
                     text: 'Groundschool',
                     children: [
-                        { icon: 'mdi-cloud-download', text: 'Documents' },
+                        { icon: 'mdi-cloud-download', text: 'Documents & Resources', link: 'documents/ground-school' },
                         { icon: 'mdi-desktop-classic', text: 'CBT', link: 'http://ftecbt.com/login.html' }
                     ]
                 },
@@ -115,9 +116,9 @@
                     icon: 'mdi-airplane',
                     text: 'Flight Training',
                     children: [
-                        { icon: 'mdi-cloud-download', text: 'Documents' },
+                        { icon: 'mdi-cloud-download', text: 'Documents & Resources', link: 'documents/flying' },
                         { icon: 'mdi-timetable', text: 'Zeus', link: 'http://www.jmaero.com/zeus/' },
-                        { icon: 'mdi-file-document', text: 'Allocation' },
+                        { icon: 'mdi-file-document', text: 'Allocation', link: 'documents/allocations' },
                         { icon: 'mdi-desktop-classic', text: 'CBT', link: 'http://ftecbt.com/login.html' }
                     ]
                 },
@@ -125,8 +126,8 @@
                     icon: 'mdi-account-multiple',
                     text: 'Multi Pilot Training',
                     children: [
-                        { icon: 'mdi-cloud-download', text: 'Documents' },
-                        { icon: 'mdi-calendar', text: '737 Sim TimeTable' }
+                        { icon: 'mdi-cloud-download', text: 'Documents & Resources', link: 'documents/multi-pilot-training' },
+                        { icon: 'mdi-calendar', text: '737 Sim TimeTable', link: 'documents/737-sim-timetable' }
                     ]
                 },
                 {
@@ -134,8 +135,8 @@
                     'icon-alt': 'keyboard_arrow_down',
                     text: 'Career',
                     children: [
-                        { icon: 'mdi-message-alert', text: 'Note from the Career Rep' },
-                        { icon: 'mdi-cloud-download', text: 'Documents & Resources' },
+                        { icon: 'mdi-cloud-download', text: 'Documents & Resources', link: 'documents/career-resources' },
+                        { icon: 'mdi-message-alert', text: 'Note from the Career Rep' }
                     ]
                 },
                 {
@@ -159,7 +160,7 @@
                     window.open(item.link)
                 }
                 else {
-                    this.$router.push({ name: item.link })
+                    this.$router.push({ path: item.link })
                 }
             }
             else if (_.has(item, 'action')) {

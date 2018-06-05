@@ -1,0 +1,97 @@
+<?php
+
+namespace App\Models;
+
+use Doctrine\DBAL\Connection;
+// use Doctrine\DBAL\ParameterType;
+// use Doctrine\DBAL\Types;
+
+class DocumentModel extends AbstractModel {
+
+    /**
+    * TODO
+    *
+    */
+    public function getDocumentsFromCollection($collectionSlug) {
+
+        try {
+            $queryBuilder = $this->conn->createQueryBuilder();
+
+            $queryBuilder
+                ->select('d.id', 'd.date_created', 'd.date_modified', 'd.name', 'd.type', 'd.path', 'dc.name as collection' )
+                ->from('documents', 'd')
+                ->innerJoin('d', 'document_collections', 'dc', 'dc.id = d.id_document_collection')
+                ->where('d.active = 1')
+                ->andWhere('dc.slug = :slug')
+                ->setParameter('slug', $collectionSlug)
+            ;
+
+            $stmt = $queryBuilder->execute();
+            $documents = $stmt->fetchAll();
+
+            // Format groups in name/type key/value array
+            // foreach ($users as &$user) {
+            //     $tempGroups = $user['groups'] = explode(',', $user['groups']);
+            //     $user['groups'] = array();
+            //
+            //     foreach ($tempGroups as &$group) {
+            //         $user['groups'][] = array('name' => explode('::', $group)[0], 'type' => explode('::', $group)[1]);
+            //     }
+            // }
+            return $documents;
+        }
+        catch(\Exception $e) {
+            return false;
+        }
+    }
+
+    public function getCollectionIdFromSlug($collectionSlug) {
+        try {
+            $queryBuilder = $this->conn->createQueryBuilder();
+
+            $queryBuilder
+                ->select('id')
+                ->from('document_collections')
+                ->where('slug = ?')
+                ->setParameter(0, $collectionSlug)
+            ;
+
+            $stmt = $queryBuilder->execute();
+            $collectionId = $stmt->fetchColumn();
+
+            return $collectionId[0];
+        }
+        catch(\Exception $e) {
+            return false;
+        }
+    }
+
+    public function add($name, $collectionId, $fileName, $link) {
+        try {
+            $queryBuilder = $this->conn->createQueryBuilder();
+
+            $queryBuilder->insert('documents');
+            $queryBuilder->setValue('name', ':name')->setParameter(':name', $name);
+            $queryBuilder->setValue('id_document_collection', ':collection')->setParameter(':collection', $collectionId);
+
+            if($fileName && !$link) {
+                $queryBuilder->setValue('path', ':path')->setParameter(':path', $fileName);
+                $queryBuilder->setValue('type', '"document"');
+            }
+            else if(!$fileName && $link) {
+                $queryBuilder->setValue('path', ':path')->setParameter(':path', $link);
+                $queryBuilder->setValue('type', '"link"');
+            }
+
+            $queryBuilder->setValue('active', '1');
+            $queryBuilder->setValue('date_created', 'NOW()');
+            $queryBuilder->setValue('date_modified', 'NOW()');
+
+            $queryBuilder->execute();
+            return true;
+        }
+        catch(\Exception $e) {
+            return false;
+        }
+    }
+}

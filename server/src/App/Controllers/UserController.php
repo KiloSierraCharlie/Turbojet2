@@ -79,13 +79,13 @@ class UserController {
         $queryParams = $request->query;
         $nonActive = (boolean)$queryParams->get('nonActive');
 
-        $groups = $this->groupModel->getGroups($nonActive);
+        $groups = $this->userModel->getGroups($nonActive);
 
         return $this->app->json($groups, 200);
     }
 
     public function getPicklistGroups(Request $request) {
-        $groups = $this->groupModel->getGroupsKeyValue();
+        $groups = $this->userModel->getGroupsKeyValue();
 
         return $this->app->json($groups, 200);
     }

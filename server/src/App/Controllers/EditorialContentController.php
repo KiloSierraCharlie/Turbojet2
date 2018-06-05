@@ -30,4 +30,12 @@ class EditorialContentController {
 
         return $this->app->json($news, 200);
     }
+
+    public function getFTEbayOffers() {
+        if(($posts = $this->editorialContentModel->getFTEbayOffers()) === false) {
+            return $this->app->json(['message' => 'An error has occured during the ftebay data retrieval'], 500);
+        }
+
+        return $this->app->json($posts, 200);
+    }
 }

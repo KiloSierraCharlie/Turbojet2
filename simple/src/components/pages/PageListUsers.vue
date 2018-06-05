@@ -40,7 +40,7 @@
                         <template v-for="(user, index) in userSelection">
                             <v-list-tile avatar :key="'user-'+user.id" @click="navigateUserDetails(user.id)">
                                 <v-list-tile-avatar size="80">
-                                    <img :src="user.picture ? 'http://api.turbojet.local/student_photos/'+user.picture : 'http://api.turbojet.local/student_photos/cygnet.jpg'">
+                                    <img :src="Config.endpoint+'media/student_photos/'+(user.picture ? user.picture : 'cygnet.jpg')">
                                 </v-list-tile-avatar>
                                 <v-list-tile-content>
                                     <v-list-tile-title>{{user.first_name}} {{user.last_name}}</v-list-tile-title>

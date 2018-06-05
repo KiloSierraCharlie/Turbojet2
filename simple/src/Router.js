@@ -6,7 +6,9 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import PageListUsers from 'components/pages/PageListUsers.vue'
+import PageListDocuments from 'components/pages/PageListDocuments.vue'
 import PageNews from 'components/pages/PageNews.vue'
+import PageFTEbay from 'components/pages/PageFTEbay.vue'
 import PageUserDetails from 'components/pages/PageUserDetails.vue'
 import PageLogin from 'components/pages/PageLogin.vue'
 import Store from './Store.js'
@@ -22,6 +24,14 @@ const router = new VueRouter({
             name: 'page-news',
             meta: {
                 title: 'News'
+            }
+        },
+        {
+            path: '/ftebay',
+            component: PageFTEbay,
+            name: 'page-ftebay',
+            meta: {
+                title: 'FTEbay'
             }
         },
         {
@@ -52,6 +62,15 @@ const router = new VueRouter({
             path: '/settings',
             component: PageListUsers,
             name: 'settings'
+        },
+        {
+            path: '/documents/:collectionSlug',
+            component: PageListDocuments,
+            name: 'list-documents',
+            props: true,
+            meta: {
+                title: 'Documents'
+            }
         },
         // Fallback if no route matches, we redirect to the homepage
         {

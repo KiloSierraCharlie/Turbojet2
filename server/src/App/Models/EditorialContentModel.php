@@ -49,4 +49,30 @@ class EditorialContentModel extends AbstractModel {
             return false;
         }
     }
+
+    public function getFTEbayOffers() {
+        try {
+            $queryBuilder = $this->conn->createQueryBuilder();
+
+            // TODO "is more than ?"
+            // TODO expiry date bof, je prererai un calcul dynamique basé sur la date actuelle
+
+            $queryBuilder
+                ->select('f.id', 'f.title', 'f.content', 'f.id_user', 'CONCAT(u.first_name, " ",u.last_name) as name', 'f.date')
+                ->from('ftebay', 'f')
+                ->innerJoin('f', 'users', 'u', 'u.id = f.id_user')
+                ->where('f.deleted = 0')
+                ->andWhere('f.expiry_date > NOW()')
+                ->orderBy('f.date', 'desc')
+            ;
+
+            $stmt = $queryBuilder->execute();
+            $posts = $stmt->fetchAll();
+
+            return $posts;
+        }
+        catch(\Exception $e) {
+            return false;
+        }
+    }
 }
