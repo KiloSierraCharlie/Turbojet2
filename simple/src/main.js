@@ -68,9 +68,9 @@ Axios.interceptors.response.use(
         return response;
     },
     function (error) {
-        console.log('axios.interceptors error', error.response)
+        console.log('axios.interceptors error', error)
         // If any web service returns a 401, we logout the user and redirect him to the login page
-        if (error.response.status === 401 && Router.currentRoute.name !== 'login') {
+        if (_.has(error, 'response.status') && error.response.status === 401 && Router.currentRoute.name !== 'login') {
             console.log('Interceptor: 401 not authorized')
             Store.commit('resetAuthData')
             Router.push({ name: 'login' })

@@ -94,4 +94,72 @@ class DocumentModel extends AbstractModel {
             return false;
         }
     }
+
+    public function edit($id, $name, $fileName, $link) {
+        try {
+            // Get type and filename for later deletion
+            $queryBuilder = $this->conn->createQueryBuilder();
+            $queryBuilder
+                ->select('type', 'path' )
+                ->from('documents')
+                ->where('id = :id')->setParameter(':id', $id)
+            ;
+
+            $stmt = $queryBuilder->execute();
+            $result = $stmt->fetch();
+            $oldFileName = $result['path'];
+            $type = $result['type'];
+
+            // Edit the document
+            $queryBuilder = $this->conn->createQueryBuilder();
+
+            $queryBuilder->update('documents');
+            $queryBuilder->set('name', ':name')->setParameter(':name', $name);
+            // $queryBuilder->set('id_document_collection', ':collection')->setParameter(':collection', $collectionId);
+
+            if($fileName && !$link) {
+                $queryBuilder->set('path', ':path')->setParameter(':path', $fileName);
+            }
+            else if(!$fileName && $link) {
+                $queryBuilder->set('path', ':path')->setParameter(':path', $link);
+            }
+
+            $queryBuilder->set('date_modified', 'NOW()');
+            $queryBuilder->where('id = :id')->setParameter(':id', $id);
+
+            $queryBuilder->execute();
+            return $type === 'document' ? $oldFileName : NULL;
+        }
+        catch(\Exception $e) {
+            return false;
+        }
+    }
+
+    public function delete($id) {
+        try {
+            // Get type and filename for later deletion
+            $queryBuilder = $this->conn->createQueryBuilder();
+            $queryBuilder
+                ->select('type', 'path' )
+                ->from('documents')
+                ->where('id = :id')->setParameter(':id', $id)
+            ;
+
+            $stmt = $queryBuilder->execute();
+            $result = $stmt->fetch();
+            $fileName = $result['path'];
+            $type = $result['type'];
+
+            // Delete item from database
+            $queryBuilder = $this->conn->createQueryBuilder();
+
+            $queryBuilder->delete('documents');
+            $queryBuilder->where('id = :id')->setParameter(':id', $id);
+            $queryBuilder->execute();
+            return $type === 'document' ? $fileName : NULL;
+        }
+        catch(\Exception $e) {
+            return false;
+        }
+    }
 }

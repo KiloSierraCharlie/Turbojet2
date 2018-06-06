@@ -39,7 +39,7 @@ $app->before(function(Request $request) {
 // Registering the CORS Provider for preflights requests (OPTIONS)
 // https://github.com/jdesrosiers/silex-cors-provider
 $app->register(new CorsServiceProvider(), $app['settings']['CORS'][$app['settings']['ENV']]);
-$app->after($app["cors"]);
+$app['cors-enabled']($app);
 
 // Registering the ServiceController Provider
 $app->register(new ServiceControllerServiceProvider());

@@ -2,7 +2,7 @@
     <v-container fluid class="page-list-documents">
         <v-layout row>
             <v-flex xs12>
-                <v-dialog v-model="dialog" max-width="500px">
+                <v-dialog v-model="dialogEdit" max-width="500px" persistent>
                     <v-btn slot="activator" color="primary" dark class="mb-2">New Document</v-btn>
                     <v-card>
                         <v-form enctype="multipart/form-data" ref="form" v-model="formIsValid">
@@ -11,11 +11,11 @@
                             </v-card-title>
                             <v-card-text>
                                 <!-- <v-switch label="Use a link" v-model="linkType" /> -->
-                                <v-radio-group v-model="docType">
-                                    <v-radio label="Document" value="doc"></v-radio>
+                                <v-radio-group v-if="editedIndex === -1" v-model="docType">
+                                    <v-radio label="Document" value="document"></v-radio>
                                     <v-radio label="Link" value="link"></v-radio>
                                 </v-radio-group>
-                                <div v-if="docType === 'doc'">
+                                <div v-if="docType === 'document'">
                                     <v-text-field
                                         v-model="editedDocument.name"
                                         label="Document name"
@@ -48,10 +48,21 @@
                             </v-card-text>
                             <v-card-actions>
                                 <v-spacer></v-spacer>
-                                <v-btn :disabled="isLoading" color="blue darken-1" flat @click="close">Cancel</v-btn>
-                                <v-btn :loading="isLoading" color="blue darken-1" flat @click="save">Save</v-btn>
+                                <v-btn :disabled="isLoading" outline color="primary" @click="closeDialogEdit">Cancel</v-btn>
+                                <v-btn :loading="isLoading" color="primary" @click="save">Save</v-btn>
                             </v-card-actions>
                         </v-form>
+                    </v-card>
+                </v-dialog>
+                <v-dialog v-model="dialogDelete" max-width="500px" persistent>
+                    <v-card>
+                        <v-card-title class="headline">Confirm deletion ?</v-card-title>
+                        <v-card-text>Are you sure you want to delete this item? This action can not be undone</v-card-text>
+                        <v-card-actions>
+                            <v-spacer></v-spacer>
+                            <v-btn :disabled="isLoading" outline color="primary" @click="closeDialogDelete">Cancel</v-btn>
+                            <v-btn :loading="isLoading" color="primary" @click="deleteItem">Confirm</v-btn>
+                        </v-card-actions>
                     </v-card>
                 </v-dialog>
                 <v-data-table
@@ -60,22 +71,22 @@
                     hide-actions
                     class="elevation-1"
                 >
-                    <template slot="items" slot-scope="data" @click="">
+                    <template slot="items" slot-scope="data">
                         <td>
                             <v-tooltip right>
-                                <v-icon slot="activator" :color="getType(data.item.path).color">{{getType(data.item.path).icon}}</v-icon>
-                                <span>{{getType(data.item.path).type}}</span>
+                                <v-icon slot="activator" :color="getType(data.item).color">{{getType(data.item).icon}}</v-icon>
+                                <span>{{getType(data.item).type}}</span>
                             </v-tooltip>
 
                         </td>
-                        <td><a href="#" @click="openDocument(data.item.path)">{{ data.item.name }}</a><v-icon class="ml-1" color="indigo" v-if="isNew(data.item.date_modified)">mdi-new-box</v-icon></td>
+                        <td><a :href="getDocumentLink(data.item)" target="_blank">{{ data.item.name }}</a><v-icon class="ml-1" color="indigo" v-if="isNew(data.item.date_modified)">mdi-new-box</v-icon></td>
                         <!-- <td>{{ data.item.size }}</td> -->
                         <td>{{ formatDate(data.item.date_modified) }}</td>
                         <td class="justify-center layout px-0">
                             <v-btn icon class="mx-0" @click="editItem(data.item)">
                                 <v-icon color="teal">edit</v-icon>
                             </v-btn>
-                            <v-btn icon class="mx-0" @click="deleteItem(data.item)">
+                            <v-btn icon class="mx-0" @click="dialogDelete = true; documentToDelete = data.item.id ">
                                 <v-icon color="pink">delete</v-icon>
                             </v-btn>
                         </td>
@@ -83,6 +94,10 @@
                   </v-data-table>
             </v-flex xs12>
         </v-layout row>
+        <v-snackbar :timeout="0" color="red accent-2" v-model="snackbar">
+          {{ errorMessage }}
+          <v-btn dark flat @click.native="snackbar = false">Close</v-btn>
+        </v-snackbar>
     </v-container>
 </template>
 
@@ -97,18 +112,17 @@ export default {
     name: 'page-list-documents',
     data() {
         return {
-            dialog: false,
+            dialogEdit: false,
+            dialogDelete: false,
             isLoading: false,
-            docType: 'doc', // doc or link
+            docType: 'document', // document or link
             editedIndex: -1,
             formIsValid: false,
+            documentToDelete: '',
             editedDocument: {
+                id: '',
                 name: '',
-                linkAddress: ''
-            },
-            defaultDocument: {
-                name: '',
-                linkAddress: ''
+                path: ''
             },
             rules: {
                 required(value) {
@@ -118,23 +132,31 @@ export default {
             documents: [],
             headers: [
                 { text: 'Type', value: 'type', sortable: false },
-                { text: 'Name', value: 'names' },
+                { text: 'Name', value: 'names' }, // TODO nug on sort
                 // { text: 'Type', value: 'type' },
                 // { text: 'Size', value: 'size' },
                 { text: 'Last Updated', value: 'modifiedAt' },
                 { text: 'Actions', value: 'name', sortable: false }
-            ]
+            ],
+            snackbar: false,
+            errorMessage: ''
         }
     },
     props: ['collectionSlug'],
     computed: {
         formTitle () {
-            return this.editedIndex === -1 ? 'New Document' : 'Edit Document'
+            var title = this.editedIndex === -1 ? 'New' : 'Edit'
+            title += this.docType === 'document' ? ' Document' : ' Link'
+
+            return title
         }
     },
     watch: {
-        dialog (val) {
-            val || this.close()
+        dialogEdit (val) {
+            val || this.closeDialogEdit()
+        },
+        dialogDelete (val) {
+            val || this.closeDialogDelete()
         }
     },
     created() {
@@ -161,23 +183,66 @@ export default {
             return moment(date).format("MMMM Do YYYY, h:mm a")
         },
 
+        getDocumentLink(documentItem) {
+            if(documentItem.type === 'document') {
+                return 'http://api.turbojet.local/media/documents/'+documentItem.path
+            }
+            else if(documentItem.type === 'link') {
+                return documentItem.path
+            }
+        },
+
         editItem (item) {
+            this.docType = item.type
             this.editedIndex = this.documents.indexOf(item)
-            this.editedItem = Object.assign({}, item)
-            this.dialog = true
+            this.editedDocument.name = item.name
+            this.editedDocument.path = item.path || ''
+            this.editedDocument.id = item.id
+            this.dialogEdit = true
         },
 
-        deleteItem (item) {
-            // const index = this.documents.indexOf(item)
-            // confirm('Are you sure you want to delete this document ?') && this.desserts.splice(index, 1)
+        deleteItem () {
+            var self = this
+
+            Axios.delete(Config.endpoint + 'documents/'+this.documentToDelete)
+                .then(function(response) {
+                    self.isLoading = false
+                    self.documentToDelete = ''
+                    self.dialogDelete = false
+                    self.snackbar = false
+                    self.fetchDocumentsData()
+                })
+                .catch(function(error) {
+                    self.isLoading = false
+
+                    console.log('error', error)
+
+                    if(_.has(error, 'message')) {
+                        self.errorMessage = error.message
+                        self.snackbar = true
+                    }
+                    else {
+                        self.errorMessage = 'An error occured, please try again'
+                        self.snackbar = true
+                    }
+                })
         },
 
-        close () {
-            this.dialog = false
+        closeDialogEdit () {
+            var self = this
+
+            this.dialogEdit = false
+            this.snackbar = false
             setTimeout(() => {
-                this.editedItem = Object.assign({}, this.defaultItem)
-                this.editedIndex = -1
+                self.resetForm()
             }, 300)
+        },
+
+        closeDialogDelete () {
+            var self = this
+
+            this.dialogDelete = false
+            this.snackbar = false
         },
 
         save () {
@@ -187,83 +252,126 @@ export default {
                 // console.log('this.$refs.fileDrop.file', this.$refs.fileDrop.file)
 
                 var payload = new FormData();
-                payload.append('name', this.editedDocument.name);
+                payload.append('name', this.editedDocument.name)
 
                 // TODO doc error red field if empty
-                console.log('this.$refs.fileDrop.file', this.$refs.fileDrop.file)
-                if(this.docType === 'doc' && this.$refs.fileDrop.file) {
+                // console.log('this.$refs.fileDrop.file', _.has(this, '$refs.fileDrop.file'))
+                if(this.docType === 'document' && _.has(this, '$refs.fileDrop.file')) {
                     // payload.file = this.$refs.fileDrop.file
                     payload.append('file', this.$refs.fileDrop.file)
                 }
-                else {
+                else if(this.docType === 'link') {
+                    payload.append('link', this.editedDocument.path)
+                } else {
                     return
-                }
-
-                if(this.docType === 'link') {
-                    payload.append('link', this.editedDocument.linkAddress)
                 }
 
                 this.isLoading = true
 
-                Axios.post(Config.endpoint + 'media/documents/'+this.collectionSlug, payload)
-                    .then(function (response) {
-                        self.dialog = false
-                        self.isLoading = false
-                        self.fetchDocumentsData()
-                    })
-                    .catch(function (error) {
-                        // TODO error management
-                        self.isLoading = false
-                    })
+                var success = function(response) {
+                    self.isLoading = false
+
+                    self.dialogEdit = false
+                    self.snackbar = false
+                    self.fetchDocumentsData()
+
+                    setTimeout(() => {
+                        self.resetForm()
+                    }, 300)
+                }
+
+                var error = function(error) {
+                    self.isLoading = false
+
+                    console.log('error', error)
+
+                    if(_.has(error, 'message')) {
+                        self.errorMessage = error.message
+                        self.snackbar = true
+                    }
+                    else {
+                        self.errorMessage = 'An error occured, please try again'
+                        self.snackbar = true
+                    }
+                }
+
+                // New document / link => POST request
+                if(this.editedIndex === -1) {
+                    Axios.post(Config.endpoint + 'documents/'+this.collectionSlug, payload)
+                        .then(success)
+                        .catch(error)
+                }
+
+                // Edit existing document / link => PUT request
+                else {
+                    Axios.post(Config.endpoint + 'documents/'+this.editedDocument.id+'/edit', payload)
+                        .then(success)
+                        .catch(error)
+                }
+
             }
         },
 
-        openDocument(path) {
-            window.open('http://api.turbojet.local/documents/'+path)
-        },
+        getType(documentItem) {
 
-        getType(path) {
-            var arr = path.toLowerCase().split('.')
+            if(documentItem.type === 'link') {
+                return {type: 'External link', icon: 'mdi-link-variant', color: 'black'}
+            }
+            else if(documentItem.type === 'document') {
 
-            switch(arr[arr.length-1]) {
-                case 'jpg':
-                case 'jpeg':
-                case 'gif':
-                case 'png':
-                    return {type: 'Image', icon: 'mdi-file-image', color: 'green lighten-1'}
-                    break
+                var arr = documentItem.path.toLowerCase().split('.')
 
-                case 'pdf':
-                    return {type: 'Pdf', icon: 'mdi-file-pdf', color: 'red darken-3'}
-                    break
+                switch(arr[arr.length-1]) {
+                    case 'jpg':
+                    case 'jpeg':
+                    case 'gif':
+                    case 'png':
+                        return {type: 'Image', icon: 'mdi-file-image', color: 'green lighten-1'}
+                        break
 
-                case 'zip':
-                    return {type: 'Archive', icon: 'mdi-zip-box', color: 'blue-grey'}
-                    break
+                    case 'pdf':
+                        return {type: 'Pdf', icon: 'mdi-file-pdf', color: 'red darken-3'}
+                        break
 
-                case 'xls':
-                case 'xlsx':
-                    return {type: 'Excel', icon: 'mdi-file-excel', color: 'bgreen darken-3'}
-                    break
+                    case 'zip':
+                        return {type: 'Archive', icon: 'mdi-zip-box', color: 'blue-grey'}
+                        break
 
-                case 'doc':
-                case 'docx':
-                    return {type: 'Word', icon: 'mdi-file-word', color: 'blue darken-3'}
-                    break
+                    case 'xls':
+                    case 'xlsx':
+                        return {type: 'Excel', icon: 'mdi-file-excel', color: 'bgreen darken-3'}
+                        break
 
-                case 'ppt':
-                case 'pptx':
-                case 'ppsx':
-                    return {type: 'Powerpoint', icon: 'mdi-file-powerpoint', color: 'deep-orange darken-1'}
-                    break
+                    case 'doc':
+                    case 'docx':
+                        return {type: 'Word', icon: 'mdi-file-word', color: 'blue darken-3'}
+                        break
 
-                default:
-                    return {type: 'not recognized', icon: 'mdi-file-question', color: 'black'}
+                    case 'ppt':
+                    case 'pptx':
+                    case 'ppsx':
+                        return {type: 'Powerpoint', icon: 'mdi-file-powerpoint', color: 'deep-orange darken-1'}
+                        break
+
+                    default:
+                        return {type: 'not recognized', icon: 'mdi-file-question', color: 'black'}
+                }
             }
         },
 
         isNew(date) {
             return moment().diff(moment(date), 'days') <= 7
+        },
+
+        resetForm() {
+            // TODO beeing able to efit the collection
+            this.$refs.form.reset()
+            this.docType = 'document'
+            this.editedIndex = -1
+            this.editedDocument.id = ''
+            this.editedDocument.name = ''
+            this.editedDocument.path = ''
+
         }
     },
     components: {'file-drop': FileDrop}
