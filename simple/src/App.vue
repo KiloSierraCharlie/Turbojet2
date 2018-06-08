@@ -98,7 +98,7 @@
                     icon: 'mdi-domain',
                     text: 'Administration & Facilities',
                     children: [
-                        { icon: 'mdi-cloud-download', text: 'Documents & Resources' },
+                        { icon: 'mdi-cloud-download', text: 'Documents & Resources', link: '/documents/administration'},
                         { icon: 'mdi-van-passenger', text: 'Minivan Booking' },
                         { icon: 'mdi-television-classic', text: 'TV Room Booking' },
                         { icon: 'mdi-wrench', text: 'IT / Maintenance Request', link: 'http://intranet/request/' }
@@ -108,7 +108,7 @@
                     icon: 'mdi-projector-screen',
                     text: 'Groundschool',
                     children: [
-                        { icon: 'mdi-cloud-download', text: 'Documents & Resources', link: 'documents/ground-school' },
+                        { icon: 'mdi-cloud-download', text: 'Documents & Resources', link: '/documents/ground-school' },
                         { icon: 'mdi-desktop-classic', text: 'CBT', link: 'http://ftecbt.com/login.html' }
                     ]
                 },
@@ -116,9 +116,9 @@
                     icon: 'mdi-airplane',
                     text: 'Flight Training',
                     children: [
-                        { icon: 'mdi-cloud-download', text: 'Documents & Resources', link: 'documents/flying' },
+                        { icon: 'mdi-cloud-download', text: 'Documents & Resources', link: '/documents/flying' },
                         { icon: 'mdi-timetable', text: 'Zeus', link: 'http://www.jmaero.com/zeus/' },
-                        { icon: 'mdi-file-document', text: 'Allocation', link: 'documents/allocations' },
+                        { icon: 'mdi-file-document', text: 'Allocation', link: '/documents/allocations' },
                         { icon: 'mdi-desktop-classic', text: 'CBT', link: 'http://ftecbt.com/login.html' }
                     ]
                 },
@@ -126,8 +126,17 @@
                     icon: 'mdi-account-multiple',
                     text: 'Multi Pilot Training',
                     children: [
-                        { icon: 'mdi-cloud-download', text: 'Documents & Resources', link: 'documents/multi-pilot-training' },
-                        { icon: 'mdi-calendar', text: '737 Sim TimeTable', link: 'documents/737-sim-timetable' }
+                        { icon: 'mdi-cloud-download', text: 'Documents & Resources', link: '/documents/multi-pilot-resources' },
+                        { icon: 'mdi-calendar', text: '737 Sim TimeTable', link: '/documents/737-sim-timetable' }
+                    ]
+                },
+                {
+                    icon: 'mdi-star-circle',
+                    text: 'Student Committee',
+                    children: [
+                        { icon: 'mdi-account-group', text: 'The Student Committee' },
+                        { icon: 'mdi-email', text: 'Contact'},
+                        { icon: 'mdi-cloud-download', text: 'Documents & Resources', link: '/documents/student-resources' }
                     ]
                 },
                 {
@@ -135,7 +144,7 @@
                     'icon-alt': 'keyboard_arrow_down',
                     text: 'Career',
                     children: [
-                        { icon: 'mdi-cloud-download', text: 'Documents & Resources', link: 'documents/career-resources' },
+                        { icon: 'mdi-cloud-download', text: 'Documents & Resources', link: '/documents/career-resources' },
                         { icon: 'mdi-message-alert', text: 'Note from the Career Rep' }
                     ]
                 },

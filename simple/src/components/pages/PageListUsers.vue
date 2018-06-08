@@ -4,7 +4,6 @@
             <v-flex xs12>
                 <v-card class="pa-3">
                     Search
-
                     <v-text-field
                         v-model="filterName"
                         label="Filter by name"
@@ -40,7 +39,7 @@
                         <template v-for="(user, index) in userSelection">
                             <v-list-tile avatar :key="'user-'+user.id" @click="navigateUserDetails(user.id)">
                                 <v-list-tile-avatar size="80">
-                                    <img :src="Config.endpoint+'media/student_photos/'+(user.picture ? user.picture : 'cygnet.jpg')">
+                                    <img :src="endpoint+'media/student_photos/'+(user.picture ? user.picture : 'cygnet.jpg')">
                                 </v-list-tile-avatar>
                                 <v-list-tile-content>
                                     <v-list-tile-title>{{user.first_name}} {{user.last_name}}</v-list-tile-title>
@@ -69,6 +68,7 @@
 <script>
 import moment from 'moment'
 import _ from 'lodash'
+import Config from 'src/Config.__ENV__.js'
 import GroupChip from 'components/GroupChip.vue'
 
 export default {
@@ -82,6 +82,9 @@ export default {
         }
     },
     computed: {
+        endpoint() {
+            return Config.endpoint
+        },
         totalPages() {
             return _.ceil(this.users.length / this.totalToDisplay)
         },
