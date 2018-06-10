@@ -15,7 +15,7 @@ class Router {
         $this->app->post('/encoder', 'controller.auth:encode')->bind('encoder');
         $this->app->post('/login', 'controller.auth:login')->bind('login');
         $this->app->get('/news', 'controller.editorialContent:getNews');
-        $this->app->get('/ftebay-posts', 'controller.editorialContent:getFTEPosts');
+        $this->app->get('/ftebay-posts', 'controller.editorialContent:getFTEbayOffers');
         $this->app->get('/documents/{collectionSlug}', 'controller.document:getDocuments');
         $this->app->post('/documents/{collectionSlug}', 'controller.document:addDocument');
         $this->app->post('/documents/{documentId}/edit', 'controller.document:editDocument'); // TODO use put

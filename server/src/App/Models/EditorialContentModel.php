@@ -51,7 +51,7 @@ class EditorialContentModel extends AbstractModel {
     }
 
     public function getFTEbayOffers() {
-        try {
+        // try {
             $queryBuilder = $this->conn->createQueryBuilder();
 
             // TODO "is more than ?"
@@ -59,9 +59,10 @@ class EditorialContentModel extends AbstractModel {
 
             $queryBuilder
                 ->select('f.id', 'f.title', 'f.content', 'f.id_user', 'CONCAT(u.first_name, " ",u.last_name) as name', 'f.date')
-                ->from('ftebay', 'f')
+                ->from('editorial_contents', 'f')
                 ->innerJoin('f', 'users', 'u', 'u.id = f.id_user')
-                ->where('f.deleted = 0')
+                ->where('f.active = 1')
+                ->andWhere('f.type = "ftebay"')
                 ->andWhere('f.expiry_date > NOW()')
                 ->orderBy('f.date', 'desc')
             ;
@@ -70,9 +71,9 @@ class EditorialContentModel extends AbstractModel {
             $posts = $stmt->fetchAll();
 
             return $posts;
-        }
-        catch(\Exception $e) {
-            return false;
-        }
+        // }
+        // catch(\Exception $e) {
+        //     return false;
+        // }
     }
 }
