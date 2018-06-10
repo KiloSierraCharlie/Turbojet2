@@ -10,7 +10,6 @@ import Axios from 'axios'
 import _ from 'lodash' // https://lodash.com/docs/
 import moment from 'moment'
 import App from './App.vue'
-// import AppDark from './AppDark.vue'
 import Store from 'src/Store.js'
 import Router from 'src/Router.js'
 import Config from 'src/Config.__ENV__.js'
@@ -120,9 +119,10 @@ var initializeVue = function (i18n) {
     new Vue({
         el: '#app',
         i18n,
-        router: Router,
         store: Store,
-        render: h => h(App),
+        components: { App },
+        router: Router,
+        template: "<App/>",
         created() {
             // Initializing the menu from the config file
             // this.$store.commit('setMenuConfig', _.cloneDeep(Config.navigation))

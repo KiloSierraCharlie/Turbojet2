@@ -5,7 +5,7 @@
   "author": "kevin bouhadana <kevin.bouhadana@gmail.com>",
   "private": true,
   "scripts": {
-    "dev": "cross-env NODE_ENV=development webpack-dev-server --open --inline --hot",
+    "dev": "cross-env NODE_ENV=development webpack-dev-server --history-api-fallback --open --inline --hot",
     "build": "cross-env NODE_ENV=production webpack --progress --hide-modules"
   },
   "dependencies": {
@@ -15,7 +15,7 @@
     "mdi": "^2.2.43",
     "moment": "~2.22.1",
     "normalize.css": "~6.0.0",
-    "vue": "~2.5.3",
+    "vue": "~2.5.16",
     "vue-i18n": "~7.6.0",
     "vue-recaptcha": "~1.1.0",
     "vue-router": "~3.0.1",

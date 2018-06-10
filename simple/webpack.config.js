@@ -9,7 +9,7 @@ module.exports = {
         filename: 'build.js'
     },
     resolve: {
-        extensions: ['.js', '.vue'],
+        extensions: ['*', '.js', '.vue', '.json'],
         alias: {
             'vue$': 'vue/dist/vue.esm.js',
             'public': path.resolve(__dirname, './public'),
@@ -59,7 +59,8 @@ module.exports = {
     },
     devServer: {
         historyApiFallback: true,
-        noInfo: true
+        noInfo: true,
+        overlay: true
     },
     performance: {
         hints: false

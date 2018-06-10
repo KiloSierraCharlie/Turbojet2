@@ -70,6 +70,16 @@
                         </v-flex>
                     </v-layout>
                 </v-container>
+                <router-link to="/documents/groundschool">
+                  Ground School
+                </router-link>
+                <br>
+                <router-link to="/documents/administration">
+                  Administration
+                </router-link>
+                <br />
+                test
+
                 <router-view></router-view>
             </v-content>
             <v-footer color="indigo" class="pa-3 white--text" app>

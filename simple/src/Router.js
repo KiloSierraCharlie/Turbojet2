@@ -27,6 +27,15 @@ const router = new VueRouter({
             }
         },
         {
+            path: '/documents/:collectionSlug',
+            component: PageListDocuments,
+            name: 'list-documents',
+            props: true,
+            meta: {
+                title: 'Documents'
+            }
+        },
+        {
             path: '/ftebay',
             component: PageFTEbay,
             name: 'page-ftebay',
@@ -63,15 +72,6 @@ const router = new VueRouter({
             component: PageListUsers,
             name: 'settings'
         },
-        {
-            path: '/documents/:collectionSlug',
-            component: PageListDocuments,
-            name: 'list-documents',
-            props: true,
-            meta: {
-                title: 'Documents'
-            }
-        },
         // Fallback if no route matches, we redirect to the homepage
         {
             path: '*',
@@ -92,26 +92,26 @@ const router = new VueRouter({
 /*
 * Before each route change this function is triggered so we can apply some custom behavior
 */
-router.beforeEach(function (to, from, next) {
-    // Add route class to the body
-    document.body.className = to.name
-
-    /*
-        Navigation guard:
-        1) Redirects the user to the login page if not logged-in
-        2) Redirects the user to the quizz page if a Quizz is in progress (Store.state.forceQuizzDisplay !== null)
-    */
-    console.log('change route to', to)
-    console.log('change route from', from)
-    console.log('Store.state.authToken', Store.state.authToken)
-
-    if (to.name !== 'login' && (!Store.state.authToken || Store.state.authToken === 'null')) {
-        next({ name: 'login' })
-    }
-    else {
-        next()
-    }
-})
+// router.beforeEach(function (to, from, next) {
+//     // Add route class to the body
+//     document.body.className = to.name
+//
+//     /*
+//         Navigation guard:
+//         1) Redirects the user to the login page if not logged-in
+//         2) Redirects the user to the quizz page if a Quizz is in progress (Store.state.forceQuizzDisplay !== null)
+//     */
+//     console.log('change route to', to)
+//     console.log('change route from', from)
+//     console.log('Store.state.authToken', Store.state.authToken)
+//
+//     if (to.name !== 'login' && (!Store.state.authToken || Store.state.authToken === 'null')) {
+//         next({ name: 'login' })
+//     }
+//     else {
+//         next()
+//     }
+// })
 
 /*
 * After each route change this function is triggered so we can apply some custom behavior

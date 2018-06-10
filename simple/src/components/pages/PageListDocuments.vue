@@ -10,7 +10,6 @@
                                 <span class="headline">{{ formTitle }}</span>
                             </v-card-title>
                             <v-card-text>
-                                <!-- <v-switch label="Use a link" v-model="linkType" /> -->
                                 <v-radio-group v-if="editedIndex === -1" v-model="docType">
                                     <v-radio label="Document" value="document"></v-radio>
                                     <v-radio label="Link" value="link"></v-radio>
@@ -80,7 +79,6 @@
 
                         </td>
                         <td><a :href="getDocumentLink(data.item)" target="_blank">{{ data.item.name }}</a><v-icon class="ml-1" color="indigo" v-if="isNew(data.item.date_modified)">mdi-new-box</v-icon></td>
-                        <!-- <td>{{ data.item.size }}</td> -->
                         <td>{{ formatDate(data.item.date_modified) }}</td>
                         <td class="justify-center layout px-0">
                             <v-btn icon class="mx-0" @click="editItem(data.item)">
@@ -110,6 +108,7 @@ import FileDrop from 'components/FileDrop.vue'
 
 export default {
     name: 'page-list-documents',
+    props: ['collectionSlug'],
     data() {
         return {
             dialogEdit: false,
@@ -142,7 +141,6 @@ export default {
             errorMessage: ''
         }
     },
-    props: ['collectionSlug'],
     computed: {
         formTitle () {
             var title = this.editedIndex === -1 ? 'New' : 'Edit'
@@ -152,15 +150,13 @@ export default {
         }
     },
     watch: {
+        '$route': 'fetchDocumentsData',
         dialogEdit (val) {
             val || this.closeDialogEdit()
         },
         dialogDelete (val) {
             val || this.closeDialogDelete()
         }
-    },
-    created() {
-        this.fetchDocumentsData()
     },
     methods: {
         fetchDocumentsData() {
@@ -373,6 +369,9 @@ export default {
             this.editedDocument.path = ''
 
         }
+    },
+    created() {
+        this.fetchDocumentsData()
     },
     components: {'file-drop': FileDrop}
 }
