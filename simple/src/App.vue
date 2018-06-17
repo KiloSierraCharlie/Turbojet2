@@ -73,7 +73,7 @@
                 <router-view></router-view>
             </v-content>
             <v-footer color="indigo" class="pa-3 white--text" app>
-                <span v-html="$t('footer.copyright')"/>
+                Made with love by&nbsp;<a target="_blank" href="https://www.linkedin.com/in/kevinbouhadana">Kevin Bouhadana (172)</a>
             </v-footer>
         </v-app>
     </div>

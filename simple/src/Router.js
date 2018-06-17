@@ -55,7 +55,10 @@ const router = new VueRouter({
             path: '/user/:userId',
             component: PageUserDetails,
             name: 'page-user-details',
-            props: true
+            props: true,
+            meta: {
+                title: 'User details'
+            }
         },
         {
             path: '/login',
@@ -65,12 +68,18 @@ const router = new VueRouter({
         {
             path: '/profile',
             component: PageListUsers,
-            name: 'profile'
+            name: 'profile',
+            meta: {
+                title: 'My Profile'
+            }
         },
         {
             path: '/settings',
             component: PageListUsers,
-            name: 'settings'
+            name: 'settings',
+            meta: {
+                title: 'Settings'
+            }
         },
         // Fallback if no route matches, we redirect to the homepage
         {

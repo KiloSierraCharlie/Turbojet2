@@ -15,7 +15,6 @@ use App\Controllers\UserController;
 use App\Controllers\DocumentController;
 use App\Controllers\EditorialContentController;
 use App\Controllers\GroupController;
-use App\Controllers\TranslationController;
 use App\Models\UserModel;
 use App\Models\DocumentModel;
 use App\Models\EditorialContentModel;
@@ -68,10 +67,6 @@ $app['controller.auth'] = function() use ($app) {
     return new AuthController($app);
 };
 
-$app['controller.translation'] = function() use ($app) {
-    return new TranslationController($app);
-};
-
 $app['controller.user'] = function() use ($app) {
     return new UserController($app);
 };
@@ -113,7 +108,7 @@ $app['router']->initRoutes();
 * Before function to protect the application by token authentification
 */
 $app->before(function(Request $request) use ($app) {
-    $whitelist = ['login', 'encoder', 'translation', 'picklist-groups'];
+    $whitelist = ['login', 'encoder', 'picklist-groups'];
     $method = $request->getMethod();
     $routeName = $request->get('_route');
 

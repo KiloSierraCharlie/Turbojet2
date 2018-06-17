@@ -76,4 +76,84 @@ class EditorialContentModel extends AbstractModel {
         //     return false;
         // }
     }
+
+    public function addFTEbayOffer($userId, $content, $title) {
+        try {
+            $queryBuilder = $this->conn->createQueryBuilder();
+
+
+            $queryBuilder->insert('editorial_contents');
+            $queryBuilder->setValue('content', ':content')->setParameter(':content', $content);
+            $queryBuilder->setValue('title', ':title')->setParameter(':title', $title);
+            $queryBuilder->setValue('id_user', ':idUser')->setParameter(':idUser', $userId);
+            $queryBuilder->setValue('active', '1');
+            $queryBuilder->setValue('type', '"ftebay"');
+            $queryBuilder->setValue('date', 'NOW()');
+            $queryBuilder->setValue('expiry_date', 'NOW() + INTERVAL 14 DAY');
+
+            $queryBuilder->execute();
+            return true;
+        }
+        catch(\Exception $e) {
+            return false;
+        }
+    }
+
+    public function editFTEbayOffer($offerId, $content, $title) {
+        try {
+            $queryBuilder = $this->conn->createQueryBuilder();
+
+            $queryBuilder
+                ->update('editorial_contents')
+                ->set('title', ':title')->setParameter(':title', $title)
+                ->set('content', ':content')->setParameter(':content', $content)
+                ->where('id = :id')->setParameter(':id', $offerId)
+                ->execute()
+            ;
+
+            return true;
+        }
+        catch(\Exception $e) {
+            return false;
+        }
+    }
+
+    public function deleteFTEbayOffer($offerId) {
+        try {
+            // Delete item from database
+            $queryBuilder = $this->conn->createQueryBuilder();
+
+            $queryBuilder
+                ->delete('editorial_contents')
+                ->where('id = :id')->setParameter(':id', $offerId)
+                ->execute()
+            ;
+
+            return true;
+        }
+        catch(\Exception $e) {
+            return false;
+        }
+    }
+
+    public function getFTEbayOfferAuthorId($offerId) {
+        try {
+            // Delete item from database
+            $queryBuilder = $this->conn->createQueryBuilder();
+
+            $queryBuilder
+                ->select('id_user')
+                ->from('editorial_contents')
+                ->where('id = :id')->setParameter(':id', $offerId);
+            ;
+
+            $stmt = $queryBuilder->execute();
+            $result = $stmt->fetch();
+            $authorId = $result['id_user'];
+            return $authorId;
+        }
+        catch(\Exception $e) {
+            return false;
+        }
+    }
 }

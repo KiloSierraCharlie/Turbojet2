@@ -32,14 +32,16 @@
 import _ from 'lodash'
 
 export default {
-    props: ['label'],
+    props: ['label', 'allowed-types'],
     name: 'file-drop',
     data () {
         return {
-            allowedTypes: [
-                'application/pdf',
+            allowedTypesImages: [
                 'image/jpeg',
-                'image/png',
+                'image/png'
+            ],
+            allowedTypesOthers: [
+                'application/pdf',
                 'multipart/x-zip',
                 'application/zip',
                 'application/x-zip-compressed',
@@ -67,12 +69,13 @@ export default {
             console.log('onFilesDropped', e)
             this.isDragOver = false
             this.errorMessage = ''
+
             if(e.dataTransfer.files.length > 1) {
                 this.errorMessage = '<strong>Error:</strong>You can only upload one file at a time. <strong>Try again!</strong>'
                 return
             }
 
-            if(_.indexOf(this.allowedTypes, e.dataTransfer.files[0].type) === -1) {
+            if(!this.isValidType(e.dataTransfer.files[0])) {
                 this.errorMessage = '<strong>Error:</strong>This format is not allowed. Please use one of the following: JPEG, JPG, PNG, PDF, ZIP, WORD, XLS, PPT'
                 return
             }
@@ -80,6 +83,17 @@ export default {
                 this.droppedFiles = e.dataTransfer.files
                 this.file = e.dataTransfer.files[0]
             }
+        },
+
+        isValid() {
+            return this.droppedFiles.length === 1 && this.file && this.isValidType(this.file)
+        },
+
+        isValidType(file) {
+            // Retrain types to imaes only or all depending on the allowed-type parameter
+            var mergedAllowedTypes = this.allowedTypes === 'images' ? this.allowedTypesImages : _.concat(this.allowedTypesImages, this.allowedTypesOthers)
+            console.log('mergedAllowedTypes', this.allowedTypes, mergedAllowedTypes)
+            return _.indexOf(mergedAllowedTypes, file.type) !== -1
         }
     }
 }

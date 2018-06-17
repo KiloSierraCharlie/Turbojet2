@@ -6,12 +6,12 @@
                     <div class="logo">
                         <img src="/public/logo.png" alt="turbojet logo"/>
                     </div>
-                    <h1 class="headline">{{$t('pagesTitle.page-login')}}</h1>
-                    <p class="">{{$t('login.welcome')}}</p>
-                    <p class="error-msg red--text" v-if="errorMsg">{{$t('generic.error') + ':&nbsp;' + errorMsg}}</p>
+                    <h1 class="headline">Login</h1>
+                    <p class="">Welcome on FTE Turbojet, please signin in order to continue</p>
+                    <p class="error-msg red--text" v-if="errorMsg">Error {{errorMsg}}</p>
                     <v-form>
-                        <v-text-field v-model="email" prepend-icon="person" :label="$t('login.email')" type="email" required></v-text-field>
-                        <v-text-field v-model="password" prepend-icon="lock" :label="$t('login.password')" type="password" required></v-text-field>
+                        <v-text-field v-model="email" prepend-icon="person" label="Email" type="email" required></v-text-field>
+                        <v-text-field v-model="password" prepend-icon="lock" label="Password" type="password" required></v-text-field>
                         <div class="text-xs-center">
                             <v-btn outline color="primary" @click="goRegister">Register</v-btn>
                             <v-btn color="primary" @click="onLogin">Login</v-btn>
@@ -24,10 +24,13 @@
         <v-dialog v-model="register" fullscreen hide-overlay transition="dialog-bottom-transition" scrollable>
             <v-card tile>
                 <v-toolbar card dark color="primary">
+                    <v-spacer></v-spacer>
+                    <v-toolbar-title>Register</v-toolbar-title>
+                    <v-spacer></v-spacer>
                     <v-btn icon @click.native="register = false" dark>
                         <v-icon>close</v-icon>
                     </v-btn>
-                    <v-toolbar-title>{{$t('pagesTitle.page-register')}}</v-toolbar-title>
+
                 </v-toolbar>
                 <v-card-text>
                     <v-container fluid class="pa-0">
@@ -36,38 +39,38 @@
                                 <v-container fluid grid-list-xl class="pa-0">
                                     <v-layout row wrap>
                                         <v-flex xs12 sm6>
-                                            <v-text-field v-model="firstname" prepend-icon="person" :label="$t('login.firstname')" type="text" required></v-text-field>
+                                            <v-text-field v-model="firstname" prepend-icon="person" label="Firstname" type="text" required></v-text-field>
                                         </v-flex>
                                         <v-flex xs12 sm6>
-                                            <v-text-field v-model="lastname" prepend-icon="person" :label="$t('login.lastname')" type="text" required></v-text-field>
+                                            <v-text-field v-model="lastname" prepend-icon="person" label="Lastname" type="text" required></v-text-field>
                                         </v-flex>
                                         <v-flex xs12 sm6>
-                                            <v-text-field v-model="email" prepend-icon="person" :label="$t('login.email')" type="email" required></v-text-field>
+                                            <v-text-field v-model="email" prepend-icon="person" label="Email" type="email" required></v-text-field>
                                         </v-flex>
                                         <v-flex xs12 sm6>
-                                            <v-text-field v-model="phone" prepend-icon="person" :label="$t('login.phone')" type="email" required></v-text-field>
+                                            <v-text-field v-model="phone" prepend-icon="person" label="Phone" type="email" required></v-text-field>
                                         </v-flex>
                                         <v-flex xs12 sm6>
-                                            <v-text-field v-model="room" prepend-icon="person" :label="$t('login.room')" type="text" required></v-text-field>
+                                            <v-text-field v-model="room" prepend-icon="person" label="Room" type="text" required></v-text-field>
                                         </v-flex>
                                         <v-flex xs12 sm6>
-                                            <v-select :items="groups" v-model="group" prepend-icon="person" :label="$t('login.course')" single-line required></v-select>
+                                            <v-select :items="groups" v-model="group" prepend-icon="person" label="Course" single-line required></v-select>
                                         </v-flex>
                                         <v-flex xs12 sm6>
-                                            <v-text-field v-model="password" prepend-icon="lock" :label="$t('login.password')" type="password" required></v-text-field>
+                                            <v-text-field v-model="password" prepend-icon="lock" label="Password" type="password" required></v-text-field>
                                         </v-flex>
                                         <v-flex xs12 sm6>
-                                            <v-text-field v-model="confirmPassword" prepend-icon="lock" :label="$t('login.confirm-password')" type="password" required></v-text-field>
+                                            <v-text-field v-model="confirmPassword" prepend-icon="lock" label="Confirm password" type="password" required></v-text-field>
                                         </v-flex>
                                         <v-flex xs12>
-                                            TODO picture
+                                            <file-drop ref="fileDrop" label="Your picture (we must be able to see your face): *" allowed-types="images" />
                                         </v-flex>
                                         <v-flex xs12>
                                             <vue-recaptcha :sitekey="recaptchaKey"></vue-recaptcha>
                                         </v-flex>
                                         <v-flex xs12>
-                                            <v-btn outline @click="register = false">{{$t('generic.back')}}</v-btn>
-                                            <v-btn color="primary" @click="onRegister">{{$t('login.register')}}</v-btn>
+                                            <v-btn color="primary" outline @click="register = false">Back</v-btn>
+                                            <v-btn color="primary" @click="onRegister">Register</v-btn>
                                         </v-flex>
                                     </v-layout>
                                 </v-container>
@@ -85,6 +88,7 @@ import _ from 'lodash'
 import Axios from 'axios'
 import Config from 'src/Config.__ENV__.js'
 import VueRecaptcha from 'vue-recaptcha'
+import FileDrop from 'components/FileDrop.vue'
 
 export default {
     data() {
@@ -125,7 +129,7 @@ export default {
         },
 
         onRegister(e) {
-
+            // TODO
         },
 
         /**
@@ -161,7 +165,7 @@ export default {
                     }
                     // no answer from the server, or no error message in the body
                     else {
-                        self.errorMsg = self.$t('login.errors.unknownError')
+                        self.errorMsg = 'An error has occurred, please try again. If the problem persists please contact the student committee'
                     }
                 })
         },
@@ -188,7 +192,8 @@ export default {
         this.initCaptcha()
     },
     components: {
-        VueRecaptcha
+        VueRecaptcha,
+        'file-drop': FileDrop
     }
 }
 </script>

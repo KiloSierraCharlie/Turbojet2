@@ -229,14 +229,14 @@ export default {
 
             this.dialogEdit = false
             this.snackbar = false
+            this.editedIndex = -1
+
             setTimeout(() => {
                 self.resetForm()
             }, 300)
         },
 
         closeDialogDelete () {
-            var self = this
-
             this.dialogDelete = false
             this.snackbar = false
         },
@@ -245,15 +245,13 @@ export default {
             var self = this
 
             if (this.$refs.form.validate()) {
-                // console.log('this.$refs.fileDrop.file', this.$refs.fileDrop.file)
-
                 var payload = new FormData();
                 payload.append('name', this.editedDocument.name)
 
+                // console.log('this.$refs.fileDrop.isValid()', this.$refs.fileDrop.isValid())
+
                 // TODO doc error red field if empty
-                // console.log('this.$refs.fileDrop.file', _.has(this, '$refs.fileDrop.file'))
-                if(this.docType === 'document' && _.has(this, '$refs.fileDrop.file')) {
-                    // payload.file = this.$refs.fileDrop.file
+                if(this.docType === 'document' && this.$refs.fileDrop.isValid()) {
                     payload.append('file', this.$refs.fileDrop.file)
                 }
                 else if(this.docType === 'link') {
@@ -267,13 +265,8 @@ export default {
                 var success = function(response) {
                     self.isLoading = false
 
-                    self.dialogEdit = false
-                    self.snackbar = false
+                    self.closeDialogEdit()
                     self.fetchDocumentsData()
-
-                    setTimeout(() => {
-                        self.resetForm()
-                    }, 300)
                 }
 
                 var error = function(error) {
@@ -304,7 +297,6 @@ export default {
                         .then(success)
                         .catch(error)
                 }
-
             }
         },
 
@@ -363,7 +355,6 @@ export default {
             // TODO beeing able to efit the collection
             this.$refs.form.reset()
             this.docType = 'document'
-            this.editedIndex = -1
             this.editedDocument.id = ''
             this.editedDocument.name = ''
             this.editedDocument.path = ''

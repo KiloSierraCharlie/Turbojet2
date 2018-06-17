@@ -5,7 +5,6 @@
 */
 
 import Vue from 'vue'
-import VueI18n from 'vue-i18n'
 import Axios from 'axios'
 import _ from 'lodash' // https://lodash.com/docs/
 import moment from 'moment'
@@ -46,19 +45,8 @@ if (Store.state.authToken) {
 }
 
 Axios.defaults.headers.post['Content-Type'] = 'application/json'
+Axios.defaults.headers.common['Accept-Language'] = Config.lang
 
-// Add a request interceptor
-// Axios.interceptors.request.use(
-//     function (config) {
-//         // Do something before request is sent
-//         return config;
-//     },
-//     function (error) {
-//         // Do something with request error
-//         return Promise.reject(error);
-//     }
-// );
-//
 // Add a response interceptor
 Axios.interceptors.response.use(
     function (response) {
@@ -81,53 +69,18 @@ Axios.interceptors.response.use(
 console.info('Axios --- initialized')
 
 /*
-    Initialize i18n (assync)
-    Documentation https://kazupon.github.io/vue-i18n/old/
-*/
-console.info('Vue i18n --- initializing')
+    Initializing Vue itself
+    https://github.com/axios/axios
+ */
+console.info('Vue --- initializing')
 
-// Make a request for a user with a given ID
-Axios.get(Config.endpoint + 'translations/'+Config.lang)
-    .then(function (response) {
-        console.log('Get translations: ', response.data);
-
-        Vue.use(VueI18n)
-
-        const i18n = new VueI18n({
-            locale: Config.lang,
-            fallbackLocale: Config.lang,
-            messages: response.data
-        })
-
-        // i18n.locale = Config.lang
-        Axios.defaults.headers.common['Accept-Language'] = Config.lang
-        document.querySelector('html').setAttribute('lang', Config.lang)
-        // i18n.setLocaleMessage(Config.lang, response.data[Config.lang])
-
-        console.info('Vue i18n --- initialized')
-        initializeVue(i18n)
-    })
-    .catch(function (error) {
-        // TODO manage error
-        console.log(error);
-    });
-
-/*
-    Method that will be called when all assync dependencies will be ready
-*/
-var initializeVue = function (i18n) {
-    new Vue({
-        el: '#app',
-        i18n,
-        store: Store,
-        components: { App },
-        router: Router,
-        template: "<App/>",
-        created() {
-            // Initializing the menu from the config file
-            // this.$store.commit('setMenuConfig', _.cloneDeep(Config.navigation))
-        }
-    })
-}
-
-// initializeVue()
+new Vue({
+    el: '#app',
+    store: Store,
+    components: { App },
+    router: Router,
+    template: "<App/>",
+    created() {
+        console.info('Vue --- initialized')
+    }
+})

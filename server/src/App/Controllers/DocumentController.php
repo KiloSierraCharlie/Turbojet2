@@ -107,7 +107,7 @@ class DocumentController {
 
             try {
                 $path = '../www/media/documents/';
-                $file->move($path, $file->getClientOriginalName());
+                $file->move($path, $fileName);
             }
             catch(\Exception $e) {
                 return $this->app->json(['message' => 'Error during the transfer of the file, please try again. If the problem persist please contact the IT Rep'], 403);
