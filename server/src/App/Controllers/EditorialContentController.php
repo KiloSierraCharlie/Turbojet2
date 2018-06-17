@@ -19,77 +19,98 @@ class EditorialContentController {
     *
     * @return JsonResponse A 200 HTTP response containing an array with all the news
     */
-    public function getNews(Request $request) {
-        $queryParams = $request->query;
-        $from = (int)$queryParams->get('from');
-        $length = (int)$queryParams->get('length');
+    public function getPosts(Request $request) {
+        if($request->get('_route') === 'getNews') {
+            $queryParams = $request->query;
+            $from = (int)$queryParams->get('from');
+            $length = (int)$queryParams->get('length');
 
-        if(($news = $this->editorialContentModel->getnews($from, $length)) === false) {
-            return $this->app->json(['message' => 'An error has occured during the news data retrieval'], 500);
+            $posts = $this->editorialContentModel->getPosts('news', $from, $length);
+        }
+        else {
+            $posts = $this->editorialContentModel->getPosts('ftebay');
         }
 
-
-        return $this->app->json($news, 200);
-    }
-
-    public function getFTEbayOffers() {
-        if(($posts = $this->editorialContentModel->getFTEbayOffers()) === false) {
-            return $this->app->json(['message' => 'An error has occured during the ftebay data retrieval'], 500);
+        if($posts === false) {
+            return $this->app->json(['message' => 'An error has occured during the news data retrieval'], 500);
         }
 
         return $this->app->json($posts, 200);
     }
 
-    public function createFTEbayOffer(Request $request) {
+
+    public function createPost(Request $request) {
         $content = $request->request->get('content');
         $title = $request->request->get('title');
+        $type = $request->get('_route') === 'createNews' ? 'news' : 'ftebay';
 
         // Check for correctly filled fields
         if(!$content || !$title) {
             return $this->app->json(['message' => 'Please fill all fields correcly'], 400);
         }
 
-        // Add the offer in base
-        if($this->editorialContentModel->addFTEbayOffer($this->app['user']->getId(), $content, $title) === false) {
+        // Add the post in base
+        if($this->editorialContentModel->addPost($type, $this->app['user']->getId(), $content, $title) === false) {
             return $this->app->json(['message' => 'Error during the storage in base of the document data'], 500);
         }
 
         return $this->app->json(null, 200);
     }
 
-    public function editFTEbayOffer(Request $request, $offerId) {
+    public function editPost(Request $request, $postId) {
         $content = $request->request->get('content');
         $title = $request->request->get('title');
-
-        $authorId = $this->editorialContentModel->getFTEbayOfferAuthorId($offerId);
-
-        // Check the user has the permission to edit offers or is the author
-        if(!$this->app['user']->hasPermission('permission_edit_ftebay_listing') && $this->app['user']->getId() !== $authorId) {
-            return $this->app->json(['message' => 'You don\'t have the permission to edit this user'], 403);
-        }
+        $type = $request->get('_route') === 'editNews' ? 'news' : 'ftebay';
 
         // Check for correctly filled fields
         if(!$content || !$title) {
             return $this->app->json(['message' => 'Please fill all fields correcly'], 400);
         }
 
-        // Add the offer in base
-        if($this->editorialContentModel->editFTEbayOffer($offerId, $content, $title) === false) {
-            return $this->app->json(['message' => 'Error during the storage in base of the document data'], 500);
+        if($type === 'news') {
+            // Check the user has the permission to edit announcements
+            if(!$this->app['user']->hasPermission('permission_edit_announcement')) {
+                return $this->app->json(['message' => 'You don\'t have the permission to edit announcements'], 403);
+            }
+        }
+        else {
+            $authorId = $this->editorialContentModel->getFTEbayOfferAuthorId($offerId);
+
+            // Check the user has the permission to edit offers or is the author
+            if(!$this->app['user']->hasPermission('permission_edit_ftebay_listing') && $this->app['user']->getId() !== $authorId) {
+                return $this->app->json(['message' => 'You don\'t have the permission to edit this offer'], 403);
+            }
+        }
+
+        // Edit the post in base
+        if($this->editorialContentModel->editPost($postId, $content, $title) === false) {
+            return $this->app->json(['message' => 'Error during the storage in base of the post data'], 500);
         }
 
         return $this->app->json(null, 200);
     }
 
-    public function deleteFTEbayOffer(Request $request, $offerId) {
-        // Check the user has the permission to edit offers
-        if(!$this->app['user']->hasPermission('permission_edit_ftebay_listing')) {
-            return $this->app->json(['message' => 'You don\'t have the permission to edit FTEbay offers'], 400);
+    public function deletePost(Request $request, $postId) {
+        $type = $request->get('_route') === 'deleteNews' ? 'news' : 'ftebay';
+
+        if($type === 'news') {
+            // Check the user has the permission to edit announcements
+            if(!$this->app['user']->hasPermission('permission_edit_announcement')) {
+                return $this->app->json(['message' => 'You don\'t have the permission to delete announcements'], 403);
+            }
+        }
+        else {
+            $authorId = $this->editorialContentModel->getFTEbayOfferAuthorId($offerId);
+
+            // Check the user has the permission to edit offers or is the author
+            if(!$this->app['user']->hasPermission('permission_edit_ftebay_listing') && $this->app['user']->getId() !== $authorId) {
+                return $this->app->json(['message' => 'You don\'t have the permission to delete this offer'], 403);
+            }
         }
 
-        // Add the document in base
-        if(($this->editorialContentModel->deleteFTEbayOffer($offerId)) === false) {
-            return $this->app->json(['message' => 'Error during the FTEbay offer deletion from database'], 500);
+        // Add the post in base
+        if(($this->editorialContentModel->deletePost($postId)) === false) {
+            return $this->app->json(['message' => 'Error during the post deletion from database'], 500);
         }
 
         return $this->app->json(null, 200);

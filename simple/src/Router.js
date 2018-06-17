@@ -7,8 +7,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import PageListUsers from 'components/pages/PageListUsers.vue'
 import PageListDocuments from 'components/pages/PageListDocuments.vue'
-import PageNews from 'components/pages/PageNews.vue'
-import PageFTEbay from 'components/pages/PageFTEbay.vue'
+import PageListEditorial from 'components/pages/PageListEditorial.vue'
 import PageUserDetails from 'components/pages/PageUserDetails.vue'
 import PageLogin from 'components/pages/PageLogin.vue'
 import Store from './Store.js'
@@ -20,10 +19,24 @@ const router = new VueRouter({
     routes: [
         {
             path: '/',
-            component: PageNews,
+            component: PageListEditorial,
             name: 'page-news',
             meta: {
-                title: 'News'
+                labels: {
+                    title: 'News',
+                    formTitleNew: 'New Announcement',
+                    formTitleEdit: 'Edit an Announcement'
+                },
+                api: {
+                    getAll: 'news',
+                    post: 'news',
+                    edit: 'news/{id}/edit',
+                    delete: 'news/{id}',
+                    imageUpload: 'editorial-image-upload'
+                },
+                settings: {
+                    totalToDisplay: 10
+                }
             }
         },
         {
@@ -37,10 +50,24 @@ const router = new VueRouter({
         },
         {
             path: '/ftebay',
-            component: PageFTEbay,
+            component: PageListEditorial,
             name: 'page-ftebay',
             meta: {
-                title: 'FTEbay'
+                labels: {
+                    title: 'FTEbay',
+                    formTitleNew: 'New FTEbay Offer',
+                    formTitleEdit: 'Edit an FTEbay Offer'
+                },
+                api: {
+                    getAll: 'ftebay-posts',
+                    post: 'ftebay-posts',
+                    edit: 'ftebay-posts/{id}/edit',
+                    delete: 'ftebay-posts/{id}',
+                    imageUpload: 'editorial-image-upload'
+                },
+                settings: {
+                    totalToDisplay: 100
+                }
             }
         },
         {

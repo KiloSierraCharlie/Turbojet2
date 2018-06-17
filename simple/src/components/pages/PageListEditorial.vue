@@ -1,9 +1,9 @@
 <template>
-    <v-container fluid class="page-ftebay">
+    <v-container fluid class="page-list-editorial">
         <v-layout row>
             <v-flex xs12>
                 <v-dialog v-model="dialogEdit" max-width="500px" fullscreen transition="dialog-bottom-transition" scrollable>
-                    <v-btn slot="activator" color="primary" dark class="mb-2">New FTEbay offer</v-btn>
+                    <v-btn slot="activator" color="primary" dark class="mb-2">{{ buttonLabel }}</v-btn>
                     <v-card tile>
                         <v-form enctype="multipart/form-data" ref="form" v-model="formIsValid">
                             <v-toolbar card dark color="primary">
@@ -16,14 +16,14 @@
                             </v-toolbar>
                             <v-card-text class="dialog-content">
                                 <v-text-field
-                                    v-model="editedOffer.title"
+                                    v-model="editedPost.title"
                                     label="Title"
                                     persistent-hint
                                     required
                                     :rules="[rules.required]"
                                     class="mb-1"
                                 />
-                                <vue-editor v-model="editedOffer.content"
+                                <vue-editor v-model="editedPost.content"
                                     useCustomImageHandler
                                     @imageAdded="handleImageAdded"
                                 >
@@ -32,7 +32,7 @@
                             <v-card-actions>
                                 <v-spacer></v-spacer>
                                 <v-btn :disabled="isLoading" outline color="primary" @click="closeDialogEdit">Cancel</v-btn>
-                                <v-btn :loading="isLoading" color="primary" @click="saveOffer">Save</v-btn>
+                                <v-btn :loading="isLoading" color="primary" @click="savePost">Save</v-btn>
                             </v-card-actions>
                         </v-form>
                     </v-card>
@@ -40,11 +40,11 @@
                 <v-dialog v-model="dialogDelete" max-width="500px" persistent>
                     <v-card>
                         <v-card-title class="headline">Confirm deletion ?</v-card-title>
-                        <v-card-text>Are you sure you want to delete this offer? This action can not be undone</v-card-text>
+                        <v-card-text>Are you sure you want to delete this post? This action can not be undone</v-card-text>
                         <v-card-actions>
                             <v-spacer></v-spacer>
                             <v-btn :disabled="isLoading" outline color="primary" @click="closeDialogDelete">Cancel</v-btn>
-                            <v-btn :loading="isLoading" color="primary" @click="deleteOffer">Confirm</v-btn>
+                            <v-btn :loading="isLoading" color="primary" @click="deletePost">Confirm</v-btn>
                         </v-card-actions>
                     </v-card>
                 </v-dialog>
@@ -60,11 +60,11 @@
                                 <v-icon>mdi-settings</v-icon>
                             </v-btn>
                             <v-list>
-                                <v-list-tile @click="editOffer(post)">
+                                <v-list-tile @click="editPost(post)">
                                     <v-list-tile-action><v-icon>mdi-pencil</v-icon></v-list-tile-action>
                                     <v-list-tile-title>Edit</v-list-tile-title>
                                 </v-list-tile>
-                                <v-list-tile @click="dialogDelete = true; offerToDelete = post.id ">
+                                <v-list-tile @click="dialogDelete = true; postToDelete = post.id ">
                                     <v-list-tile-action><v-icon>mdi-delete</v-icon></v-list-tile-action>
                                     <v-list-tile-title>Delete</v-list-tile-title>
                                 </v-list-tile>
@@ -87,6 +87,15 @@
 
             </v-flex xs12>
         </v-layout row>
+        <v-layout row class="mt-3" v-if="totalPages > 1">
+            <v-flex xs12>
+                <div class="text-xs-center">
+                    <v-pagination
+                        circle :length="totalPages" v-model="currentPage"
+                        total-visible="7" @input="onPageChange" />
+                </div>
+            </v-flex>
+        </v-layout>
         <v-snackbar :timeout="0" color="red accent-2" v-model="snackbar">
           {{ errorMessage }}
           <v-btn dark flat @click.native="snackbar = false">Close</v-btn>
@@ -106,10 +115,12 @@ import Config from 'src/Config.__ENV__.js'
 // Quill.register('modules/imageResize', ImageResize)
 
 export default {
-    name: 'page-ftebay',
+    name: 'page-list-editorial',
     data() {
         return {
             posts: [],
+            currentPage: 1,
+            totalPages: 0,
             colors: [
                 'pink',
                 'indigo',
@@ -128,12 +139,12 @@ export default {
             snackbar: false,
             isLoading: false,
             errorMessage: '',
-            editedOffer: {
+            editedPost: {
                 id: '',
                 title: '',
                 content: ''
             },
-            offerToDelete: '',
+            postToDelete: '',
             dialogDelete: false,
             editedIndex: -1,
             rules: {
@@ -154,14 +165,24 @@ export default {
         }
     },
     computed: {
+        isEdit() {
+            return this.editedIndex !== -1
+        },
         formTitle () {
-            return this.editedIndex === -1 ? 'New FTEbay offer' : 'Edit FTEbay offer'
+            return this.isEdit ? this.$route.meta.labels.formTitleEdit : this.$route.meta.labels.formTitleNew
+        },
+        buttonLabel () {
+            return this.$route.meta.labels.formTitleNew
+        },
+        totalToDisplay() {
+            return this.$route.meta.settings.totalToDisplay
         }
     },
     created() {
         this.fetchPostsData()
     },
     watch: {
+        '$route': 'fetchPostsData',
         dialogEdit (val) {
             val || this.closeDialogEdit()
         },
@@ -173,11 +194,10 @@ export default {
         fetchPostsData() {
             var that = this
 
-            Axios.get(Config.endpoint + 'ftebay-posts')
+            Axios.get(Config.endpoint + this.$route.meta.api.getAll + '?from='+((this.currentPage-1)*this.totalToDisplay)+'&length='+this.totalToDisplay)
                 .then(function (response) {
-                    that.posts = response.data
-                    // that.totalPages = _.toInteger(response.data.totalPages)
-                    console.log('fetch news data success', response.data)
+                    that.posts = response.data.posts
+                    that.totalPages = _.toInteger(response.data.totalPages)
                 })
                 .catch(function (error) {
                     if(_.has(error, 'message')) {
@@ -190,13 +210,17 @@ export default {
                     }
                 });
         },
+        onPageChange() {
+            this.fetchPostsData()
+            window.scrollTo(0, 0)
+        },
         randomColor() {
             return _.sample(this.colors)
         },
         formatDate(date) {
             return moment(date).format("dddd, MMMM Do YYYY, h:mm a")
         },
-        saveOffer() {
+        savePost() {
             var self = this
 
             if (this.$refs.form.validate()) {
@@ -223,16 +247,16 @@ export default {
                     }
                 }
 
-                // New offer / link => POST request
+                // New post / link => POST request
                 if(this.editedIndex === -1) {
-                    Axios.post(Config.endpoint + 'ftebay-posts', this.editedOffer)
+                    Axios.post(Config.endpoint + this.$route.meta.api.post, this.editedPost)
                         .then(success)
                         .catch(error)
                 }
 
-                // Edit existing offer / link => PUT request
+                // Edit existing post / link => PUT request
                 else {
-                    Axios.post(Config.endpoint + 'ftebay-posts/'+this.editedOffer.id+'/edit', this.editedOffer)
+                    Axios.post(Config.endpoint + this.$route.meta.api.edit.replace('{id}', this.editedPost.id), this.editedPost)
                         .then(success)
                         .catch(error)
                 }
@@ -257,9 +281,9 @@ export default {
         },
         resetForm() {
             this.$refs.form.reset()
-            this.editedOffer.id = ''
-            this.editedOffer.title = ''
-            this.editedOffer.content = ''
+            this.editedPost.id = ''
+            this.editedPost.title = ''
+            this.editedPost.content = ''
         },
         handleImageAdded: function(file, Editor, cursorLocation, resetUploader) {
             console.log('handleImageAdded', file);
@@ -267,7 +291,7 @@ export default {
             var formData = new FormData();
             formData.append('file', file)
 
-            Axios.post(Config.endpoint + 'ftebay-posts/image', formData)
+            Axios.post(Config.endpoint + this.$route.meta.api.imageUpload, formData)
             .then((result) => {
                 Editor.insertEmbed(cursorLocation, 'image', result.data.file.path);
                 resetUploader();
@@ -276,20 +300,20 @@ export default {
               console.log(err);
             })
         },
-        editOffer(post) {
+        editPost(post) {
             this.editedIndex = this.posts.indexOf(post)
-            this.editedOffer.title = post.title
-            this.editedOffer.content = post.content
-            this.editedOffer.id = post.id
+            this.editedPost.title = post.title
+            this.editedPost.content = post.content
+            this.editedPost.id = post.id
             this.dialogEdit = true
         },
-        deleteOffer() {
+        deletePost() {
             var self = this
 
-            Axios.delete(Config.endpoint + 'ftebay-posts/'+this.offerToDelete)
+            Axios.delete(Config.endpoint + this.$route.meta.api.delete.replace('{id}', this.postToDelete))
                 .then(function(response) {
                     self.isLoading = false
-                    self.offerToDelete = ''
+                    self.postToDelete = ''
                     self.dialogDelete = false
                     self.snackbar = false
                     self.fetchPostsData()
@@ -317,8 +341,4 @@ export default {
 </script>
 
 <style scoped lang="scss">
-    .page-ftebay {
-    }
-
-
 </style>

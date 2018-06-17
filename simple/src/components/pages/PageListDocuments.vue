@@ -352,7 +352,7 @@ export default {
         },
 
         resetForm() {
-            // TODO beeing able to efit the collection
+            // TODO beeing able to edit the collection
             this.$refs.form.reset()
             this.docType = 'document'
             this.editedDocument.id = ''
