@@ -9,7 +9,11 @@ import PageListUsers from 'components/pages/PageListUsers.vue'
 import PageListDocuments from 'components/pages/PageListDocuments.vue'
 import PageListEditorial from 'components/pages/PageListEditorial.vue'
 import PageUserDetails from 'components/pages/PageUserDetails.vue'
+import PageBooking from 'components/pages/PageBooking.vue'
+import BookingEvent from 'components/BookingEvent.vue'
 import PageLogin from 'components/pages/PageLogin.vue'
+import PageManager from 'components/pages/PageManager.vue'
+import PageCustom from 'components/pages/PageCustom.vue'
 import Store from './Store.js'
 
 Vue.use(VueRouter)
@@ -28,10 +32,10 @@ const router = new VueRouter({
                     formTitleEdit: 'Edit an Announcement'
                 },
                 api: {
-                    getAll: 'news',
-                    post: 'news',
-                    edit: 'news/{id}/edit',
-                    delete: 'news/{id}',
+                    getAll: 'editorial/news',
+                    post: 'editorial/news',
+                    edit: 'editorial/news/{id}/edit',
+                    delete: 'editorial/news/{id}',
                     imageUpload: 'editorial-image-upload'
                 },
                 settings: {
@@ -45,8 +49,91 @@ const router = new VueRouter({
             name: 'list-documents',
             props: true,
             meta: {
-                title: 'Documents'
+                labels: {
+                    title: 'Documents'
+                }
             }
+        },
+        {
+            path: '/pages/:section/:id',
+            component: PageCustom,
+            name: 'custom-pages',
+            props: true,
+            // meta: {
+            //     labels: {
+            //         title: '{section} Pages'
+            //     }
+            // }
+        },
+
+        {
+            path: '/page-manager',
+            component: PageManager,
+            children: [
+                {
+                    name: 'page-sport',
+                    path: 'page-sport',
+                    meta: {
+                        labels: {
+                            title: 'Sport Page Manager',
+                            formTitleNew: 'New Page',
+                            formTitleEdit: 'Edit Page'
+                        },
+                        api: {
+                            getAll: 'editorial/page-sport',
+                            post: 'editorial/page-sport',
+                            edit: 'editorial/page-sport/{id}/edit',
+                            delete: 'editorial/page-sport/{id}',
+                            imageUpload: 'editorial-image-upload'
+                        },
+                        settings: {
+
+                        }
+                    }
+                },
+                {
+                    name: 'page-career',
+                    path: 'page-career',
+                    meta: {
+                        labels: {
+                            title: 'Career Page Manager',
+                            formTitleNew: 'New Page',
+                            formTitleEdit: 'Edit Page'
+                        },
+                        api: {
+                            getAll: 'editorial/page-career',
+                            post: 'editorial/page-career',
+                            edit: 'editorial/page-career/{id}/edit',
+                            delete: 'editorial/page-career/{id}',
+                            imageUpload: 'editorial-image-upload'
+                        },
+                        settings: {
+
+                        }
+                    }
+                },
+                {
+                    name: 'page-entertainment',
+                    path: 'page-entertainment',
+                    meta: {
+                        labels: {
+                            title: 'Entertainment Page Manager',
+                            formTitleNew: 'New Page',
+                            formTitleEdit: 'Edit Page'
+                        },
+                        api: {
+                            getAll: 'editorial/page-entertainment',
+                            post: 'editorial/page-entertainment',
+                            edit: 'editorial/page-entertainment/{id}/edit',
+                            delete: 'editorial/page-entertainment/{id}',
+                            imageUpload: 'editorial-image-upload'
+                        },
+                        settings: {
+
+                        }
+                    }
+                }
+            ]
         },
         {
             path: '/ftebay',
@@ -59,10 +146,10 @@ const router = new VueRouter({
                     formTitleEdit: 'Edit an FTEbay Offer'
                 },
                 api: {
-                    getAll: 'ftebay-posts',
-                    post: 'ftebay-posts',
-                    edit: 'ftebay-posts/{id}/edit',
-                    delete: 'ftebay-posts/{id}',
+                    getAll: 'editorial/ftebay',
+                    post: 'editorial/ftebay',
+                    edit: 'editorial/ftebay/{id}/edit',
+                    delete: 'editorial/ftebay/{id}',
                     imageUpload: 'editorial-image-upload'
                 },
                 settings: {
@@ -75,7 +162,9 @@ const router = new VueRouter({
             component: PageListUsers,
             name: 'page-list-users',
             meta: {
-                title: 'Person Finder'
+                labels: {
+                    title: 'Person Finder'
+                }
             }
         },
         {
@@ -84,8 +173,85 @@ const router = new VueRouter({
             name: 'page-user-details',
             props: true,
             meta: {
-                title: 'User details'
+                labels: {
+                    title: 'User details'
+                }
             }
+        },
+        {
+            path: '/bookings',
+            component: PageBooking,
+            children: [
+                {
+                    name: 'minivan-booking',
+                    path: 'minivan',
+                    component: BookingEvent,
+                    meta: {
+                        labels: {
+                            title: 'Minivan Booking',
+                        },
+                        api: {
+                            getAll: 'bookings/minivan',
+                            post: 'bookings/minivan',
+                            edit: 'bookings/minivan/{id}/edit',
+                            changeState: 'bookings/minivan/{id}/changeState',
+                            markAsPaid: 'bookings/minivan/{id}/markAsPaid',
+                            getPriceApi: 'bookings/minivan/calculatePrice',
+                            getResources: 'bookings/minivan/resources'
+                        },
+                        settings: {
+                            minimumHours: 1,
+                            maximumHours: 8,
+                            multiResources: false
+                        }
+                    }
+                },
+                {
+                    name: 'tv-booking',
+                    path: 'tv',
+                    component: BookingEvent,
+                    meta: {
+                        labels: {
+                            title: 'TV Booking',
+                        },
+                        api: {
+                            getAll: 'bookings/tv',
+                            post: 'bookings/tv',
+                            edit: 'bookings/tv/{id}/edit',
+                            changeState: 'bookings/tv/{id}/changeState',
+                            getResources: 'bookings/tv/resources'
+                        },
+                        settings: {
+                            minimumHours: 0.5,
+                            maximumHours: 4,
+                            multiResources: false
+                        }
+                    }
+                },
+                {
+                    name: 'barbecue-booking',
+                    path: 'barbecue',
+                    component: BookingEvent,
+                    meta: {
+                        labels: {
+                            title: 'Barbecue Booking',
+                        },
+                        api: {
+                            getAll: 'bookings/barbecue',
+                            post: 'bookings/barbecue',
+                            edit: 'bookings/barbecue/{id}/edit',
+                            changeState: 'bookings/barbecue/{id}/changeState',
+                            getResources: 'bookings/barbecue/resources'
+                        },
+                        settings: {
+                            minimumHours: 0.5,
+                            maximumHours: 4,
+                            multiResources: true
+                        }
+                    }
+                }
+            ],
+            props: true
         },
         {
             path: '/login',
@@ -97,7 +263,9 @@ const router = new VueRouter({
             component: PageListUsers,
             name: 'profile',
             meta: {
-                title: 'My Profile'
+                labels: {
+                    title: 'My Profile'
+                }
             }
         },
         {
@@ -105,7 +273,9 @@ const router = new VueRouter({
             component: PageListUsers,
             name: 'settings',
             meta: {
-                title: 'Settings'
+                labels: {
+                    title: 'Settings'
+                }
             }
         },
         // Fallback if no route matches, we redirect to the homepage
@@ -115,39 +285,6 @@ const router = new VueRouter({
         }
     ]
 })
-
-/**
-* Custom method added to the vue-router instance for handling navigation for :
-* 1) Link to be opened in a Webview (iframe)
-* 2) Link to be opened in the device browser (outside of the app)
-* 3) Standard vue-router routes
-*
-* @param link Object {url: vueRouterPath|hyperlink, webview: true|false}
-*/
-
-/*
-* Before each route change this function is triggered so we can apply some custom behavior
-*/
-// router.beforeEach(function (to, from, next) {
-//     // Add route class to the body
-//     document.body.className = to.name
-//
-//     /*
-//         Navigation guard:
-//         1) Redirects the user to the login page if not logged-in
-//         2) Redirects the user to the quizz page if a Quizz is in progress (Store.state.forceQuizzDisplay !== null)
-//     */
-//     console.log('change route to', to)
-//     console.log('change route from', from)
-//     console.log('Store.state.authToken', Store.state.authToken)
-//
-//     if (to.name !== 'login' && (!Store.state.authToken || Store.state.authToken === 'null')) {
-//         next({ name: 'login' })
-//     }
-//     else {
-//         next()
-//     }
-// })
 
 /*
 * After each route change this function is triggered so we can apply some custom behavior

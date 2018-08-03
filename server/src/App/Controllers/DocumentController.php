@@ -87,7 +87,7 @@ class DocumentController {
             return $this->app->json(['message' => 'Please fill all fields correcly'], 400);
         }
 
-        // Add the document in base
+        // Edit the document in base
         if(($oldFileName = $this->documentModel->edit($documentId, $name, $fileName, $link)) === false) {
             return $this->app->json(['message' => 'Error during the storage in base of the document data'], 500);
         }

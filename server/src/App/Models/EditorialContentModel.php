@@ -20,20 +20,15 @@ class EditorialContentModel extends AbstractModel {
             }
 
             $queryBuilder
-                ->select('e.id', 'e.title', 'e.content', 'e.id_user', 'CONCAT(u.first_name, " ",u.last_name) as name', 'e.date')
+                ->select('e.id', 'e.title', 'e.content', 'e.id_user', 'CONCAT(u.first_name, " ",u.last_name) as name', 'e.date', 'e.type', 'e.menu_icon')
                 ->from('editorial_contents', 'e')
                 ->innerJoin('e', 'users', 'u', 'u.id = e.id_user')
                 ->where('e.active = 1')
+                ->where('e.type = :type')->setParameter(':type', $type)
             ;
 
             if($type === 'ftebay') {
-                $queryBuilder
-                    ->andWhere('e.expiry_date > NOW()')
-                    ->andWhere('e.type = "ftebay"')
-                ;
-            }
-            else if($type === 'news') {
-                $queryBuilder->andWhere('e.type = "news"');
+                $queryBuilder->andWhere('e.expiry_date > NOW()');
             }
 
             $queryBuilder->orderBy('e.date', 'desc');
@@ -42,18 +37,45 @@ class EditorialContentModel extends AbstractModel {
             $stmt = $queryBuilder->execute();
             $posts = $stmt->fetchAll();
 
+            // Pagination management
+            if($from !== -1 && $length !== -1) {
+                $queryBuilder = $this->conn->createQueryBuilder();
+                $queryBuilder
+                    ->select('COUNT(*) as total')
+                    ->from('editorial_contents')
+                    ->where('active = 1')
+                    ->andWhere('type = :type')->setParameter(':type', $type);
+                ;
+
+                $stmt = $queryBuilder->execute();
+                $total = $stmt->fetchColumn(0);
+
+                return array('posts' => $posts, 'length' => ($length !== -1 ? $length : -1), 'currentPage' => ($from !== -1 ? $from : 0), 'totalPages' => ceil($total / $length));
+            }
+            else {
+                return array('posts' => $posts);
+            }
+        }
+        catch(\Exception $e) {
+            return false;
+        }
+    }
+
+    public function getPost($type, $postId) {
+        try {
             $queryBuilder = $this->conn->createQueryBuilder();
+
             $queryBuilder
-                ->select('COUNT(*) as total')
+                ->select('id', 'title', 'content', 'type')
                 ->from('editorial_contents')
                 ->where('active = 1')
-                ->andWhere('type = :type')->setParameter(':type', $type);
+                ->andWhere('id = :id')->setParameter(':id', $postId)
             ;
 
             $stmt = $queryBuilder->execute();
-            $total = $stmt->fetchColumn(0);
+            $page = $stmt->fetch();
 
-            return array('posts' => $posts, 'length' => ($length !== -1 ? $length : -1), 'currentPage' => ($from !== -1 ? $from : 0), 'totalPages' => ceil($total / $length));
+            return $page;
         }
         catch(\Exception $e) {
             return false;
@@ -124,14 +146,14 @@ class EditorialContentModel extends AbstractModel {
         }
     }
 
-    public function getFTEbayOfferAuthorId($offerId) {
+    public function getFTEbayPostAuthorId($postId) {
         try {
             $queryBuilder = $this->conn->createQueryBuilder();
 
             $queryBuilder
                 ->select('id_user')
                 ->from('editorial_contents')
-                ->where('id = :id')->setParameter(':id', $offerId);
+                ->where('id = :id')->setParameter(':id', $postId);
             ;
 
             $stmt = $queryBuilder->execute();

@@ -52,14 +52,13 @@ class DocumentModel extends AbstractModel {
             $queryBuilder
                 ->select('id')
                 ->from('document_collections')
-                ->where('slug = ?')
-                ->setParameter(0, $collectionSlug)
+                ->where('slug = :slug')->setParameter('slug', $collectionSlug)
             ;
 
             $stmt = $queryBuilder->execute();
             $collectionId = $stmt->fetchColumn();
 
-            return $collectionId[0];
+            return $collectionId;
         }
         catch(\Exception $e) {
             return false;

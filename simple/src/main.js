@@ -13,8 +13,11 @@ import Store from 'src/Store.js'
 import Router from 'src/Router.js'
 import Config from 'src/Config.__ENV__.js'
 import Vuetify from 'vuetify'
-
 Vue.use(Vuetify)
+window.jQuery = window.$ = require('jquery')
+import FullCalendar from 'vue-full-calendar'
+import "fullcalendar-scheduler";
+Vue.use(FullCalendar)
 
 /*
     Initialize the persistent data (token and preferred conference) from localstorage and pass it to the store

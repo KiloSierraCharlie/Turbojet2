@@ -1,5 +1,5 @@
 <template>
-    <v-chip class="group-chip" :color="color" text-color="white" small>
+    <v-chip class="group-chip" :color="color" text-color="white" small label :close="close" @input="onClose">
         <v-avatar>
             <v-icon small>{{icon}}</v-icon>
         </v-avatar>
@@ -10,7 +10,7 @@
 <script>
 
 export default {
-    props: ['group-name', 'group-type'],
+    props: ['group-name', 'group-type', 'close'],
     name: 'group-chip',
     computed: {
         color() {
@@ -111,6 +111,11 @@ export default {
 
             }
         }
+    },
+    methods: {
+        onClose() {
+            this.$emit('remove')
+        }
     }
 }
 </script>
@@ -119,6 +124,14 @@ export default {
 @import '~scss/variables';
 
 .group-chip {
+    // &.chip {
+    //     margin: 0;
+    // }
+
+    &.v-chip .v-avatar {
+        margin-left: -15px;
+        margin-right: 0px;
+    }
 
 }
 </style>

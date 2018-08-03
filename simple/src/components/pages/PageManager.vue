@@ -1,9 +1,9 @@
 <template>
-    <v-container fluid class="page-list-editorial">
+    <v-container fluid class="page-manager">
         <v-layout row>
             <v-flex xs12>
                 <v-dialog v-model="dialogEdit" max-width="500px" fullscreen transition="dialog-bottom-transition" scrollable>
-                    <v-btn slot="activator" color="primary" dark class="mb-2">{{ buttonLabel }}</v-btn>
+                    <v-btn slot="activator" color="primary" dark class="mb-2">New Page</v-btn>
                     <v-card tile>
                         <v-form enctype="multipart/form-data" ref="form" v-model="formIsValid">
                             <v-toolbar card dark color="primary">
@@ -15,15 +15,23 @@
                                 </v-btn>
                             </v-toolbar>
                             <v-card-text class="dialog-content">
+                                <!-- <v-text-field
+                                    v-model="editedPage.menu_icon"
+                                    label="Icon"
+                                    persistent-hint
+                                    required
+                                    :rules="[rules.required]"
+                                    class="mb-1"
+                                /> -->
                                 <v-text-field
-                                    v-model="editedPost.title"
+                                    v-model="editedPage.title"
                                     label="Title"
                                     persistent-hint
                                     required
                                     :rules="[rules.required]"
                                     class="mb-1"
                                 />
-                                <vue-editor v-model="editedPost.content"
+                                <vue-editor v-model="editedPage.content"
                                     useCustomImageHandler
                                     @imageAdded="handleImageAdded"
                                 >
@@ -32,7 +40,7 @@
                             <v-card-actions>
                                 <v-spacer></v-spacer>
                                 <v-btn :disabled="isLoading" outline color="primary" @click="closeDialogEdit">Cancel</v-btn>
-                                <v-btn :loading="isLoading" color="primary" @click="savePost">Save</v-btn>
+                                <v-btn :loading="isLoading" color="primary" @click="savePage">Save</v-btn>
                             </v-card-actions>
                         </v-form>
                     </v-card>
@@ -40,62 +48,36 @@
                 <v-dialog v-model="dialogDelete" max-width="500px" persistent>
                     <v-card>
                         <v-card-title class="headline">Confirm deletion ?</v-card-title>
-                        <v-card-text>Are you sure you want to delete this post? This action can not be undone</v-card-text>
+                        <v-card-text>Are you sure you want to delete this page? This action can not be undone</v-card-text>
                         <v-card-actions>
                             <v-spacer></v-spacer>
                             <v-btn :disabled="isLoading" outline color="primary" @click="closeDialogDelete">Cancel</v-btn>
-                            <v-btn :loading="isLoading" color="primary" @click="deletePost">Confirm</v-btn>
+                            <v-btn :loading="isLoading" color="primary" @click="deletePage">Confirm</v-btn>
                         </v-card-actions>
                     </v-card>
                 </v-dialog>
-                <v-card v-for="(post, index) in posts" :key="post.id" :class="{'mt-4': index !== 0}">
-                    <v-card-title
-                        :class="'white--text ' + randomColor()"
-                        src="/static/doc-images/cards/docks.jpg"
-                    >
-                        <span class="headline">{{post.title}}</span>
-                        <v-spacer></v-spacer>
-                        <v-menu left>
-                            <v-btn slot="activator" icon dark>
-                                <v-icon>mdi-settings</v-icon>
+
+                <v-data-table
+                    :headers="headers"
+                    :items="pages"
+                    hide-actions
+                    class="elevation-1"
+                >
+                    <template slot="items" slot-scope="data">
+                        <td><v-icon>mdi-file-document-box</v-icon></td>
+                        <td><router-link :to="'/pages/'+data.item.type+'/'+data.item.id">{{ data.item.title }}</router-link></td>
+                        <td class="justify-center layout px-0">
+                            <v-btn icon class="mx-0" @click="editPage(data.item)">
+                                <v-icon color="teal">mdi-pencil</v-icon>
                             </v-btn>
-                            <v-list>
-                                <v-list-tile @click="editPost(post)">
-                                    <v-list-tile-action><v-icon>mdi-pencil</v-icon></v-list-tile-action>
-                                    <v-list-tile-title>Edit</v-list-tile-title>
-                                </v-list-tile>
-                                <v-list-tile @click="dialogDelete = true; postToDelete = post.id ">
-                                    <v-list-tile-action><v-icon>mdi-delete-forever</v-icon></v-list-tile-action>
-                                    <v-list-tile-title>Delete</v-list-tile-title>
-                                </v-list-tile>
-                            </v-list>
-                        </v-menu>
-                    </v-card-title>
-                    <v-card-text>
-                        <div>
-                            <div class="mb-2 grey--text text--darken-2">
-                                <span><v-icon small class="mr-1">mdi-calendar-text</v-icon>{{formatDate(post.date)}}</span>
-                                <span class="ml-2"><router-link :to="'user/'+post.id_user"><v-icon small class="mr-1">mdi-account</v-icon>{{post.name}}</router-link></span>
-                            </div>
-                            <div v-html="post.content"></div>
-                        </div>
-                    </v-card-text>
-                    <!-- <v-card-actions>
-
-                    </v-card-actions> -->
-                </v-card>
-
+                            <v-btn icon class="mx-0" @click="dialogDelete = true; pageToDelete = data.item.id ">
+                                <v-icon color="pink">mdi-delete-forever</v-icon>
+                            </v-btn>
+                        </td>
+                    </template>
+                  </v-data-table>
             </v-flex xs12>
         </v-layout row>
-        <v-layout row class="mt-3" v-if="totalPages > 1">
-            <v-flex xs12>
-                <div class="text-xs-center">
-                    <v-pagination
-                        circle :length="totalPages" v-model="currentPage"
-                        total-visible="7" @input="onPageChange" />
-                </div>
-            </v-flex>
-        </v-layout>
         <v-snackbar :timeout="0" color="red accent-2" v-model="snackbar">
           {{ errorMessage }}
           <v-btn dark flat @click.native="snackbar = false">Close</v-btn>
@@ -107,44 +89,27 @@
 import Axios from 'axios'
 import moment from 'moment'
 import _ from 'lodash'
-// import { VueEditor } from 'vue2-editor'
-import { VueEditor, Quill } from 'vue2-editor'
-// import ImageResize from 'quill-image-resize-module'
 import Config from 'src/Config.__ENV__.js'
-
-// Quill.register('modules/imageResize', ImageResize)
+import FileDrop from 'components/FileDrop.vue'
+import { VueEditor, Quill } from 'vue2-editor'
 
 export default {
-    name: 'page-list-editorial',
+    name: 'page-manager',
+    props: ['section'],
     data() {
         return {
-            posts: [],
-            currentPage: 1,
-            totalPages: 0,
-            colors: [
-                'pink',
-                'indigo',
-                'red',
-                'purple',
-                'blue',
-                'deep-purple ',
-                'light-blue ',
-                'teal',
-                'green',
-                'amber',
-                'blue-grey'
-            ],
             dialogEdit: false,
             formIsValid: false,
             snackbar: false,
             isLoading: false,
             errorMessage: '',
-            editedPost: {
+            editedPage: {
                 id: '',
+                // icon: '',
                 title: '',
                 content: ''
             },
-            postToDelete: '',
+            pageToDelete: '',
             dialogDelete: false,
             editedIndex: -1,
             rules: {
@@ -154,50 +119,31 @@ export default {
             },
             files: [],
             showSettings: false,
-            // editorModules: [
-            //     { alias: 'imageResize', module: ImageResize }
-            // ],
-            // editorOptions: {
-            //     modules: {
-            //         imageResize: {}
-            //     }
-            // }
+            pages: [],
+            headers: [
+                { text: 'Icon', value: 'icon' },
+                { text: 'Name', value: 'names' }, // TODO nug on sort
+                { text: 'Actions', value: 'name', sortable: false }
+            ],
+            snackbar: false,
+            errorMessage: ''
         }
     },
     computed: {
-        isEdit() {
-            return this.editedIndex !== -1
-        },
         formTitle () {
-            return this.isEdit ? this.$route.meta.labels.formTitleEdit : this.$route.meta.labels.formTitleNew
-        },
-        buttonLabel () {
-            return this.$route.meta.labels.formTitleNew
-        },
-        totalToDisplay() {
-            return this.$route.meta.settings.totalToDisplay
+            return this.editedIndex === -1 ? 'New Page' : 'Edit Page'
         }
-    },
-    created() {
-        this.fetchPostsData()
     },
     watch: {
-        '$route': 'fetchPostsData',
-        dialogEdit (val) {
-            val || this.closeDialogEdit()
-        },
-        dialogDelete (val) {
-            val || this.closeDialogDelete()
-        }
+        '$route': 'fetchPagesData'
     },
     methods: {
-        fetchPostsData() {
-            var that = this
+        fetchPagesData() {
+            const $this = this
 
-            Axios.get(Config.endpoint + this.$route.meta.api.getAll + '?from='+((this.currentPage-1)*this.totalToDisplay)+'&length='+this.totalToDisplay)
+            Axios.get(Config.endpoint + this.$route.meta.api.getAll)
                 .then(function (response) {
-                    that.posts = response.data.posts
-                    that.totalPages = _.toInteger(response.data.totalPages)
+                    $this.pages = response.data.posts
                 })
                 .catch(function (error) {
                     if(_.has(error, 'message')) {
@@ -211,7 +157,7 @@ export default {
                 });
         },
         onPageChange() {
-            this.fetchPostsData()
+            this.fetchPagesData()
             window.scrollTo(0, 0)
         },
         randomColor() {
@@ -220,8 +166,8 @@ export default {
         formatDate(date) {
             return moment(date).format("dddd, MMMM Do YYYY, h:mm a")
         },
-        savePost() {
-            const $this = this
+        savePage() {
+            var $this = this
 
             if (this.$refs.form.validate()) {
 
@@ -229,7 +175,7 @@ export default {
                     $this.isLoading = false
 
                     $this.closeDialogEdit()
-                    $this.fetchPostsData()
+                    $this.fetchPagesData()
                 }
 
                 var error = function(error) {
@@ -247,16 +193,16 @@ export default {
                     }
                 }
 
-                // New post / link => POST request
+                // New pages / link => POST request
                 if(this.editedIndex === -1) {
-                    Axios.post(Config.endpoint + this.$route.meta.api.post, this.editedPost)
+                    Axios.post(Config.endpoint + this.$route.meta.api.post, this.editedPage)
                         .then(success)
                         .catch(error)
                 }
 
-                // Edit existing post / link => PUT request
+                // Edit existing page / link => PUT request
                 else {
-                    Axios.post(Config.endpoint + this.$route.meta.api.edit.replace('{id}', this.editedPost.id), this.editedPost)
+                    Axios.post(Config.endpoint + this.$route.meta.api.edit.replace('{id}', this.editedPage.id), this.editedPage)
                         .then(success)
                         .catch(error)
                 }
@@ -265,7 +211,7 @@ export default {
             }
         },
         closeDialogEdit() {
-            const $this = this
+            var $this = this
 
             this.dialogEdit = false
             this.snackbar = false
@@ -281,9 +227,10 @@ export default {
         },
         resetForm() {
             this.$refs.form.reset()
-            this.editedPost.id = ''
-            this.editedPost.title = ''
-            this.editedPost.content = ''
+            this.editedPage.id = ''
+            // this.editedPage.menu_icon = ''
+            this.editedPage.title = ''
+            this.editedPage.content = ''
         },
         handleImageAdded: function(file, Editor, cursorLocation, resetUploader) {
             console.log('handleImageAdded', file);
@@ -300,23 +247,24 @@ export default {
               console.log(err);
             })
         },
-        editPost(post) {
-            this.editedIndex = this.posts.indexOf(post)
-            this.editedPost.title = post.title
-            this.editedPost.content = post.content
-            this.editedPost.id = post.id
+        editPage(page) {
+            this.editedIndex = this.pages.indexOf(page)
+            // this.editedPage.menu_icon = page.menu_icon
+            this.editedPage.title = page.title
+            this.editedPage.content = page.content
+            this.editedPage.id = page.id
             this.dialogEdit = true
         },
-        deletePost() {
-            const $this = this
+        deletePage() {
+            var $this = this
 
-            Axios.delete(Config.endpoint + this.$route.meta.api.delete.replace('{id}', this.postToDelete))
+            Axios.delete(Config.endpoint + this.$route.meta.api.delete.replace('{id}', this.pageToDelete))
                 .then(function(response) {
                     $this.isLoading = false
-                    $this.postToDelete = ''
+                    $this.pageToDelete = ''
                     $this.dialogDelete = false
                     $this.snackbar = false
-                    $this.fetchPostsData()
+                    $this.fetchPagesData()
                 })
                 .catch(function(error) {
                     $this.isLoading = false
@@ -334,11 +282,18 @@ export default {
                 })
         }
     },
+    created() {
+        this.fetchPagesData()
+    },
     components: {
+        'file-drop': FileDrop,
         'vue-editor': VueEditor
     }
 }
 </script>
 
 <style scoped lang="scss">
+    .page-manager {
+
+    }
 </style>

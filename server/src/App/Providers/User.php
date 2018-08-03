@@ -22,7 +22,7 @@ class User implements UserInterface, EquatableInterface {
         $this->id = $user['id'];
         $this->firstName = $user['first_name'];
         $this->lastName = $user['last_name'];
-        $this->roomNumber = $user['room_number'];
+        $this->room = $user['room'];
         $this->banned = (int) $user['banned'];
         $this->verified = (int) $user['verified'];
         $this->superAdmin = (int) $user['super_admin'];
@@ -74,8 +74,8 @@ class User implements UserInterface, EquatableInterface {
         return $this->lastName;
     }
 
-    public function getRoomNumber() {
-        return $this->roomNumber;
+    public function getRoom() {
+        return $this->room;
     }
 
     public function getBanned() {

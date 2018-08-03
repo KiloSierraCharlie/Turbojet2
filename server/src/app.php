@@ -13,10 +13,14 @@ use JDesrosiers\Silex\Provider\CorsServiceProvider;
 use App\Controllers\AuthController;
 use App\Controllers\UserController;
 use App\Controllers\DocumentController;
+use App\Controllers\BookingController;
+use App\Controllers\MenuController;
 use App\Controllers\EditorialContentController;
 use App\Controllers\GroupController;
 use App\Models\UserModel;
 use App\Models\DocumentModel;
+use App\Models\BookingModel;
+use App\Models\MenuModel;
 use App\Models\EditorialContentModel;
 use App\Models\GroupModel;
 use App\Providers\UserProvider;
@@ -75,6 +79,13 @@ $app['controller.document'] = function() use ($app) {
     return new DocumentController($app);
 };
 
+$app['controller.booking'] = function() use ($app) {
+    return new BookingController($app);
+};
+
+$app['controller.menu'] = function() use ($app) {
+    return new MenuController($app);
+};
 
 $app['controller.editorialContent'] = function() use ($app) {
     return new EditorialContentController($app);
@@ -90,6 +101,14 @@ $app['model.user'] = function() use ($app) {
 
 $app['model.document'] = function() use ($app) {
     return new DocumentModel($app['db']);
+};
+
+$app['model.booking'] = function() use ($app) {
+    return new BookingModel($app['db']);
+};
+
+$app['model.menu'] = function() use ($app) {
+    return new MenuModel($app['db']);
 };
 
 $app['model.editorialContent'] = function() use ($app) {
@@ -108,7 +127,7 @@ $app['router']->initRoutes();
 * Before function to protect the application by token authentification
 */
 $app->before(function(Request $request) use ($app) {
-    $whitelist = ['login', 'encoder', 'picklist-groups'];
+    $whitelist = ['login', 'encoder', 'register', 'picklist-groups'];
     $method = $request->getMethod();
     $routeName = $request->get('_route');
 

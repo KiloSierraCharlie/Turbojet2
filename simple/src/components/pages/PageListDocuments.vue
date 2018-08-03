@@ -82,10 +82,10 @@
                         <td>{{ formatDate(data.item.date_modified) }}</td>
                         <td class="justify-center layout px-0">
                             <v-btn icon class="mx-0" @click="editItem(data.item)">
-                                <v-icon color="teal">edit</v-icon>
+                                <v-icon color="teal">mdi-pencil</v-icon>
                             </v-btn>
                             <v-btn icon class="mx-0" @click="dialogDelete = true; documentToDelete = data.item.id ">
-                                <v-icon color="pink">delete</v-icon>
+                                <v-icon color="pink">mdi-delete-forever</v-icon>
                             </v-btn>
                         </td>
                     </template>

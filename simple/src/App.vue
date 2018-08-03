@@ -4,7 +4,7 @@
             <v-navigation-drawer
                 v-if="$route.name !== 'login'" v-model="drawer"
                 class="grey darken-4" dark
-                app permanent>
+                app fixed>
                 <v-toolbar flat class="elevation-1" color="transparent">
                     <v-menu offset-x>
                         <v-list slot="activator" class="pa-0">
@@ -26,24 +26,24 @@
                     </v-menu>
                 </v-toolbar>
                 <v-list dense>
-                    <template v-for="item in drawerItems">
+                    <template v-for="item in mergedDrawerItems">
                         <v-list-group v-if="item.children" v-model="item.model" :key="item.text" :prepend-icon="item.icon">
                             <v-list-tile slot="activator">
-                                <v-list-tile-content>
+                                <!-- <v-list-tile-content> -->
                                     <v-list-tile-title>
                                         {{ item.text }}
                                     </v-list-tile-title>
-                                </v-list-tile-content>
+                                <!-- </v-list-tile-content> -->
                             </v-list-tile>
                             <v-list-tile v-for="(child, i) in item.children" :key="i" @click="clickMenu(child)" >
                                 <v-list-tile-action v-if="child.icon">
                                     <v-icon>{{ child.icon }}</v-icon>
                                 </v-list-tile-action>
-                                <v-list-tile-content>
+                                <!-- <v-list-tile-content> -->
                                     <v-list-tile-title>
                                         {{ child.text }}
                                     </v-list-tile-title>
-                                </v-list-tile-content>
+                                <!-- </v-list-tile-content> -->
                             </v-list-tile>
                         </v-list-group>
                         <v-list-tile v-else :key="item.text" @click="clickMenu(item)">
@@ -60,48 +60,56 @@
                 </v-list>
             </v-navigation-drawer>
             <v-toolbar v-if="$route.name !== 'login'" fixed app color="indigo" dark>
-                <img class="ml-3" src="/public/turbojet.svg" />
+                <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
+                <img class="logo ml-3" src="/public/turbojet.svg" />
             </v-toolbar>
             <v-content>
-                <v-container fluid v-if="$route.name !== 'login'">
+                <v-container fluid v-if="$route.name !== 'login' && displayTitle">
                     <v-layout row>
                         <v-flex xs12>
-                            <v-card class="headline pa-3">{{$route.meta.title}}</v-card>
+                            <v-card class="headline pa-3">{{$route.meta.labels.title}}</v-card>
                         </v-flex>
                     </v-layout>
                 </v-container>
                 <router-view></router-view>
+                <!-- <router-view name="dialog"></router-view> -->
             </v-content>
             <v-footer color="indigo" class="pa-3 white--text" app>
-                Made with love by&nbsp;<a target="_blank" href="https://www.linkedin.com/in/kevinbouhadana">Kevin Bouhadana (172)</a>
+                <!-- Made with love by&nbsp;<a target="_blank" href="https://www.linkedin.com/in/kevinbouhadana">Kevin Bouhadana (172)</a> -->
+                ®2018
             </v-footer>
         </v-app>
     </div>
 </template>
 
 <script>
-  export default {
+import _ from 'lodash'
+import Axios from 'axios'
+import Config from 'src/Config.__ENV__.js'
+
+export default {
     data () {
         return {
-            drawer: false,
+            drawer: true,
             userMenuItems: [
-                { icon: 'mdi-account', text: 'Profile', link: '/profile' },
-                { icon: 'mdi-settings', text: 'Settings', link: '/settings'  },
+                { icon: 'mdi-account', text: '(TODO prio 1) Profile', link: '/profile' },
+                // { icon: 'mdi-settings', text: '(TODO prio 1) Settings', link: '/settings'  },
                 { icon: 'mdi-logout-variant', text: 'Logout', action: this.logoutUser }
             ],
             drawerItems: [
                 { icon: 'mdi-message-alert', text: 'News', link: '/news' },
                 { icon: 'mdi-account-circle', text: 'Person Finder', link: '/users' },
-                { icon: 'mdi-calendar', text: 'My Calendar' },
+                { icon: 'mdi-calendar', text: '(TODO prio 1) My Calendar' },
                 { icon: 'mdi-cart', text: 'FTEBay', link: '/ftebay'  },
                 {
                     icon: 'mdi-domain',
                     text: 'Administration & Facilities',
                     children: [
                         { icon: 'mdi-cloud-download', text: 'Documents & Resources', link: '/documents/administration'},
-                        { icon: 'mdi-van-passenger', text: 'Minivan Booking' },
-                        { icon: 'mdi-television-classic', text: 'TV Room Booking' },
-                        { icon: 'mdi-wrench', text: 'IT / Maintenance Request', link: 'http://intranet/request/' }
+                        { icon: 'mdi-van-passenger', text: 'Minivan Booking', link: '/bookings/minivan'},
+                        { icon: 'mdi-television-classic', text: 'TV Room Booking', link: '/bookings/tv'},
+                        { icon: 'mdi-fire', text: 'Barbecue Booking', link: '/bookings/barbecue'},
+                        { icon: 'mdi-wrench', text: 'IT / Maintenance Request', link: 'http://request.ftejerez.com' }
                     ]
                 },
                 {
@@ -132,10 +140,9 @@
                 },
                 {
                     icon: 'mdi-star-circle',
-                    text: 'Student Committee',
+                    text: '(TODO prio 2) Student Committee',
                     children: [
-                        { icon: 'mdi-account-group', text: 'The Student Committee' },
-                        { icon: 'mdi-email', text: 'Contact'},
+                        { icon: 'mdi-account-group', text: '(TODO) The Student Committee' },
                         { icon: 'mdi-cloud-download', text: 'Documents & Resources', link: '/documents/student-resources' }
                     ]
                 },
@@ -145,24 +152,88 @@
                     text: 'Career',
                     children: [
                         { icon: 'mdi-cloud-download', text: 'Documents & Resources', link: '/documents/career-resources' },
-                        { icon: 'mdi-message-alert', text: 'Note from the Career Rep' }
-                    ]
+                        { icon: 'mdi-settings', text: 'Page Manager', link: '/page-manager/page-career' }
+                    ],
+                    customPagesPlaceholder: 'page-career'
                 },
                 {
                     icon: 'mdi-basketball',
                     text: 'Sport',
                     children: [
-                        { icon: 'mdi-message-alert', text: 'Advice Section' },
-                        { icon: 'mdi-message-text', text: 'Groups' },
-                        { icon: 'mdi-calendar', text: 'Events' },
-                        { icon: 'mdi-lightbulb-on', text: 'Suggestions' },
-                    ]
+                        { icon: 'mdi-cloud-download', text: 'Documents & Resources', link: '/documents/sport-resources' },
+                        { icon: 'mdi-settings', text: 'Page Manager', link: '/page-manager/page-sport' }
+                    ],
+                    customPagesPlaceholder: 'page-sport'
                 },
-                { icon: 'mdi-silverware', text: 'FTE Discounts' },
-            ]
+                {
+                    icon: 'mdi-silverware',
+                    text: 'Entertainment',
+                    children: [
+                        { icon: 'mdi-cloud-download', text: 'Documents & Resources', link: '/documents/entertainment-resources' },
+                        { icon: 'mdi-settings', text: 'Page Manager', link: '/page-manager/page-entertainment' }
+                    ],
+                    customPagesPlaceholder: 'page-entertainment'
+                }
+            ],
+            dynamicPages: []
+        }
+    },
+    computed: {
+        // title() {
+        //     var regex = /{(.*?)}/
+        //     var tagValue = this.$route.meta.labels.title.match(regex)[1]
+        //
+        //     if(tagValue) {
+        //         return this.$route.meta.labels.title.replace(regex, this.$route.params[tagValue])
+        //     }
+        //     else {
+        //         return this.$route.meta.labels.title
+        //     }
+        // },
+        displayTitle() {
+            return _.has(this.$route, 'meta.labels.title')
+        },
+        mergedDrawerItems() {
+            var mergedDrawerItems = _.cloneDeep(this.drawerItems)
+            const $this = this
+
+            _.each(this.dynamicPages, function(page) {
+                var menuIndex = _.findIndex(mergedDrawerItems, { 'customPagesPlaceholder': page.type})
+
+                // Adding the page to the corresponding menu section (e.g.: page-sport)
+                if(menuIndex !== -1) {
+                    if(!_.has($this.drawerItems[menuIndex], 'children')) {
+                        $this.drawerItems[menuIndex].children = []
+                    }
+
+                    mergedDrawerItems[menuIndex].children.push({ icon: 'mdi-file-document-box', text: page.title, link: '/pages/'+page.type+'/'+page.id })
+                }
+            })
+
+            return mergedDrawerItems
         }
     },
     methods: {
+        fetchDynamicMenuSections() {
+            const $this = this
+
+            Axios.get(Config.endpoint + 'menu')
+                .then(function (response) {
+                    if(_.has(response.data, 'pages')) {
+                        $this.dynamicPages = response.data.pages
+                    }
+                })
+                .catch(function (error) {
+                    if(_.has(error, 'message')) {
+                        $this.errorMessage = error.message
+                        $this.snackbar = true
+                    }
+                    else {
+                        $this.errorMessage = 'An error occured, please try again'
+                        $this.snackbar = true
+                    }
+                });
+        },
         clickMenu(item) {
             if (_.has(item, 'link')) {
                 if(item.link.indexOf('http') == 0) {
@@ -179,6 +250,9 @@
         logoutUser() {
             this.$store.dispatch('logoutUser')
         }
+    },
+    created() {
+        this.fetchDynamicMenuSections()
     }
   }
 </script>
@@ -187,9 +261,15 @@
 
 <style lang="scss">
     #app {
-        .toolbar {
-            img {
+        .v-toolbar {
+            img.logo {
                 height: 30px;
+            }
+        }
+
+        .navigation-drawer {
+            .list__group__items {
+                background-color: #2d2d2d;
             }
         }
 

@@ -48,27 +48,27 @@ const actions = {
     * @return promise a promise object linked to the ajax call: Any component that dispatch
     * this action receive the promise object in response
     */
-    authUser({ dispatch, commit, state }, payload) {
-        console.log("authUser", payload.username)
-        console.log("authUser password", payload.password)
-
-        return Axios.post(Config.endpoint + 'login', payload)
-            .then(function (response) {
-                // Store the token
-                commit('userAuthSuccess', response.data.token)
-
-                // Fetch user data
-                // dispatch('fetchUserData') // TODO
-
-                Router.push({ name: 'page-news' })
-
-                return response
-            })
-            .catch(function (error) {
-                throw error
-            })
-
-    },
+    // authUser({ dispatch, commit, state }, payload) {
+    //     console.log("authUser", payload.username)
+    //     console.log("authUser password", payload.password)
+    //
+    //     return Axios.post(Config.endpoint + 'login', payload)
+    //         .then(function (response) {
+    //             // Store the token
+    //             commit('userAuthSuccess', response.data.token)
+    //
+    //             // Fetch user data
+    //             // dispatch('fetchUserData') // TODO
+    //
+    //             Router.push({ name: 'page-news' })
+    //
+    //             return response
+    //         })
+    //         .catch(function (error) {
+    //             throw error
+    //         })
+    //
+    // },
 
     /**
     * Logout the user : reset the user data and redirect him to the login page

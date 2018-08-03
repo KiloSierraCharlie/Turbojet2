@@ -19,30 +19,51 @@ class EditorialContentController {
     *
     * @return JsonResponse A 200 HTTP response containing an array with all the news
     */
-    public function getPosts(Request $request) {
-        if($request->get('_route') === 'getNews') {
-            $queryParams = $request->query;
+    public function getPosts(Request $request, $type) {
+        $queryParams = $request->query;
+
+        if(!$this->isAllowedType($type)) {
+            return $this->app->json(['message' => 'this type of content does not exist'], 400);
+        }
+
+        // Pagination params
+        if($queryParams->has('from') && $queryParams->has('length')) {
             $from = (int)$queryParams->get('from');
             $length = (int)$queryParams->get('length');
-
-            $posts = $this->editorialContentModel->getPosts('news', $from, $length);
         }
         else {
-            $posts = $this->editorialContentModel->getPosts('ftebay');
+            $from = -1;
+            $length = -1;
         }
 
-        if($posts === false) {
-            return $this->app->json(['message' => 'An error has occured during the news data retrieval'], 500);
+        if(($posts = $this->editorialContentModel->getPosts($type, $from, $length)) === false) {
+            return $this->app->json(['message' => 'An error has occured during the content data retrieval'], 500);
         }
 
         return $this->app->json($posts, 200);
     }
 
+    public function getPost(Request $request, $type, $postId) {
+        if(!$this->isAllowedType($type)) {
+            return $this->app->json(['message' => 'this type of content does not exist'], 400);
+        }
 
-    public function createPost(Request $request) {
+
+        if(($post = $this->editorialContentModel->getPost($type, $postId)) === false) {
+            return $this->app->json(['message' => 'An error has occured during the content data retrieval'], 500);
+        }
+
+        return $this->app->json($post, 200);
+    }
+
+
+    public function createPost(Request $request, $type) {
         $content = $request->request->get('content');
         $title = $request->request->get('title');
-        $type = $request->get('_route') === 'createNews' ? 'news' : 'ftebay';
+
+        if(!$this->isAllowedType($type)) {
+            return $this->app->json(['message' => 'this type of content does not exist'], 400);
+        }
 
         // Check for correctly filled fields
         if(!$content || !$title) {
@@ -57,10 +78,13 @@ class EditorialContentController {
         return $this->app->json(null, 200);
     }
 
-    public function editPost(Request $request, $postId) {
+    public function editPost(Request $request, $type, $postId) {
         $content = $request->request->get('content');
         $title = $request->request->get('title');
-        $type = $request->get('_route') === 'editNews' ? 'news' : 'ftebay';
+
+        if(!$this->isAllowedType($type)) {
+            return $this->app->json(['message' => 'this type of content does not exist'], 400);
+        }
 
         // Check for correctly filled fields
         if(!$content || !$title) {
@@ -74,11 +98,11 @@ class EditorialContentController {
             }
         }
         else {
-            $authorId = $this->editorialContentModel->getFTEbayOfferAuthorId($offerId);
+            $authorId = $this->editorialContentModel->getFTEbayPostAuthorId($postId);
 
-            // Check the user has the permission to edit offers or is the author
+            // Check the user has the permission to edit posts or is the author
             if(!$this->app['user']->hasPermission('permission_edit_ftebay_listing') && $this->app['user']->getId() !== $authorId) {
-                return $this->app->json(['message' => 'You don\'t have the permission to edit this offer'], 403);
+                return $this->app->json(['message' => 'You don\'t have the permission to edit this post'], 403);
             }
         }
 
@@ -90,8 +114,10 @@ class EditorialContentController {
         return $this->app->json(null, 200);
     }
 
-    public function deletePost(Request $request, $postId) {
-        $type = $request->get('_route') === 'deleteNews' ? 'news' : 'ftebay';
+    public function deletePost(Request $request, $type, $postId) {
+        if(!$this->isAllowedType($type)) {
+            return $this->app->json(['message' => 'this type of content does not exist'], 400);
+        }
 
         if($type === 'news') {
             // Check the user has the permission to edit announcements
@@ -100,11 +126,11 @@ class EditorialContentController {
             }
         }
         else {
-            $authorId = $this->editorialContentModel->getFTEbayOfferAuthorId($offerId);
+            $authorId = $this->editorialContentModel->getFTEbayPostAuthorId($postId);
 
-            // Check the user has the permission to edit offers or is the author
+            // Check the user has the permission to edit posts or is the author
             if(!$this->app['user']->hasPermission('permission_edit_ftebay_listing') && $this->app['user']->getId() !== $authorId) {
-                return $this->app->json(['message' => 'You don\'t have the permission to delete this offer'], 403);
+                return $this->app->json(['message' => 'You don\'t have the permission to delete this post'], 403);
             }
         }
 
@@ -146,5 +172,11 @@ class EditorialContentController {
 
         $domainName = $_SERVER['HTTP_HOST'];
         return $protocol.$domainName;
+    }
+
+    private function isAllowedType($type) {
+        $allowedTypes = ['news', 'ftebay', 'page-sport', 'page-career', 'page-entertainment'];
+
+        return in_array($type, $allowedTypes);
     }
 }

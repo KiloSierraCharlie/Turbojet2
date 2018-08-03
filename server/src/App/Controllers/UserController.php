@@ -41,6 +41,15 @@ class UserController {
         return $this->app->json($user, 200);
     }
 
+    public function createUser($username, $firstName, $lastname, $room, $group, $email, $phone) {
+
+        if(($user = $this->userModel->createUser($username, $firstName, $lastname, $room, $group, $email, $phone)) === false) {
+            return $this->app->json(['message' => 'An error has occured during the user creation'], 500);
+        }
+
+        return $this->app->json($user, 200);
+    }
+
     /**
     * Edit the user
     *

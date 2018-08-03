@@ -64,6 +64,42 @@ class UserModel extends AbstractModel {
         }
     }
 
+    public function createUser($username, $firstName, $lastName, $room, $group, $phone) {
+        try {
+            $queryBuilder = $this->conn->createQueryBuilder();
+
+            $queryBuilder->insert('users');
+            $queryBuilder->setValue('email', ':email')->setParameter(':email', $username);
+            $queryBuilder->setValue('first_name', ':firstName')->setParameter(':firstName', $firstName);
+            $queryBuilder->setValue('last_name', ':lastName')->setParameter(':lastName', $lastName);
+            $queryBuilder->setValue('room', ':room')->setParameter(':room', $room);
+            $queryBuilder->setValue('phone', ':phone')->setParameter(':phone', $phone);
+            $queryBuilder->execute();
+
+            return true;
+        }
+        catch(\Exception $e) {
+            return $e;
+        }
+    }
+
+    public function setUserPassword($id, $salt, $encodedPassword) {
+        try {
+            $queryBuilder = $this->conn->createQueryBuilder();
+
+            $queryBuilder->update('users');
+            $queryBuilder->set('salt', ":salt")->setParameter('salt', $salt);
+            $queryBuilder->set('password', ":password")->setParameter('password', $encodedPassword);
+            $queryBuilder->where('id = :id')->setParameter('id', $id);
+            $queryBuilder->execute();
+
+            return true;
+        }
+        catch(\Exception $e) {
+            return $e;
+        }
+    }
+
     /**
     * TODO
     *
@@ -76,7 +112,7 @@ class UserModel extends AbstractModel {
                 email,
                 first_name,
                 last_name,
-                room_number,
+                room,
                 callsign,
                 title,
                 phone,
