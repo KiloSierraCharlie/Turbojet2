@@ -67,13 +67,41 @@ class AuthController {
         $room = $request->request->get('room');
         $group = $request->request->get('group');
         $phone = $request->request->get('phone');
-        $recaptcha = $request->request->get('recaptcha');
+        $recaptcha = $request->request->get('captchaReponse');
+        $file = $request->files->get('file');
 
-        $userModel = $this->app['model.user'];
+        // Check for correctly filled fields
+        if(!$username || !$plainPassword || !$firstName || !$lastName || !$room ||
+           !$group || !$phone || !$recaptcha || !$file) {
+            return $this->app->json(['message' => 'Please fill all fields correcly'], 400);
+        }
 
-        $userProvider = new UserProvider($this->app['db']);
+        // check recaptcha
+        $url = 'https://www.google.com/recaptcha/api/siteverify';
+    	$data = array(
+    		'secret' => $this->app['settings']['RECAPTCHA_SECRET'],
+    		'response' => $recaptcha
+    	);
+    	$options = array(
+    		'http' => array (
+    			'method' => 'POST',
+    			'content' => http_build_query($data),
+                'header' => "Content-Type: application/x-www-form-urlencoded"
+
+    		)
+    	);
+    	$context  = stream_context_create($options);
+    	$verify = file_get_contents($url, false, $context);
+    	$captchaSuccess = json_decode($verify);
+
+        if ($captchaSuccess->success !== true) {
+    		return $this->app->json(['message' => 'Invalid captcha verification. Please try again'], 400);
+    	}
 
         // Create the user profile
+        $userModel = $this->app['model.user'];
+        $userProvider = new UserProvider($this->app['db']);
+
         if(($result = $userModel->createUser($username, $firstName, $lastName, $room, $group, $phone)) instanceof \Exception) {
             $response = ['message' => 'An error has occured during the user creation'];
 
@@ -82,6 +110,17 @@ class AuthController {
             }
 
             return $this->app->json($response, 500);
+        }
+
+        // Move the file in the correct path.e
+        if($file) {
+            try {
+                $path = '../www/media/student_photos/';
+                $file->move($path, $file->getClientOriginalName());
+            }
+            catch(\Exception $e) {
+                return $this->app->json(['message' => 'Error during the transfer of the file, please try again. If the problem persist please contact the IT Rep'], 403);
+            }
         }
 
         try {

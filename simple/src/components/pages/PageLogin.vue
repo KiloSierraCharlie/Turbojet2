@@ -8,7 +8,7 @@
                     </div>
                     <h1 class="headline">Login</h1>
                     <p class="">Welcome on FTE Turbojet, please signin in order to continue</p>
-                    <p class="error-msg red--text" v-if="errorMsg">Error {{errorMsg}}</p>
+                    <!-- <p class="error-msg red--text" v-if="errorMsg">Error {{errorMsg}}</p> -->
                     <v-form>
                         <v-text-field v-model="loginFormData.username" prepend-icon="person" label="Email" type="email" required></v-text-field>
                         <v-text-field v-model="loginFormData.password" prepend-icon="lock" label="Password" type="password" required></v-text-field>
@@ -23,120 +23,151 @@
         </v-layout>
         <v-dialog v-model="register" fullscreen hide-overlay transition="dialog-bottom-transition" scrollable>
             <v-card tile>
-                <v-toolbar card dark color="primary">
-                    <v-spacer></v-spacer>
-                    <v-toolbar-title>Register</v-toolbar-title>
-                    <v-spacer></v-spacer>
-                    <v-btn icon @click.native="register = false" dark>
-                        <v-icon>close</v-icon>
-                    </v-btn>
+                <v-form enctype="multipart/form-data" ref="form" v-model="formIsValid">
+                    <v-toolbar card dark color="primary">
+                        <v-spacer></v-spacer>
+                        <v-toolbar-title>Register</v-toolbar-title>
+                        <v-spacer></v-spacer>
+                        <v-btn icon @click.native="register = false" dark>
+                            <v-icon>close</v-icon>
+                        </v-btn>
 
-                </v-toolbar>
-                <v-card-text>
-                    <v-container fluid class="pa-0">
-                        <v-layout align-center justify-center>
-                            <v-flex xs12 sm10 md8 lg6>
-                                <v-container fluid grid-list-xl class="pa-0">
-                                    <v-layout row wrap>
-                                        <v-flex xs12 sm6>
-                                            <v-text-field
-                                                v-model="registerFormData.firstName"
-                                                prepend-icon="person"
-                                                label="Firstname"
-                                                type="text"
-                                                required
-                                                :rules="[rules.required]"
-                                            />
-                                        </v-flex>
-                                        <v-flex xs12 sm6>
-                                            <v-text-field
-                                                v-model="registerFormData.lastName"
-                                                prepend-icon="person"
-                                                label="Lastname"
-                                                type="text"
-                                                required
-                                                :rules="[rules.required]"
-                                            />
-                                        </v-flex>
-                                        <v-flex xs12 sm6>
-                                            <v-text-field
-                                                v-model="registerFormData.email"
-                                                prepend-icon="person"
-                                                label="Email"
-                                                type="email"
-                                                required
-                                                :rules="[rules.required]"
-                                            />
-                                        </v-flex>
-                                        <v-flex xs12 sm6>
-                                            <v-text-field
-                                                v-model="registerFormData.phone"
-                                                prepend-icon="person"
-                                                label="Phone"
-                                                type="email"
-                                                required
-                                                :rules="[rules.required]"
-                                            />
-                                        </v-flex>
-                                        <v-flex xs12 sm6>
-                                            <v-text-field
-                                                v-model="registerFormData.room"
-                                                prepend-icon="person"
-                                                label="Room"
-                                                type="text"
-                                                required
-                                                :rules="[rules.required]"
-                                            />
-                                        </v-flex>
-                                        <v-flex xs12 sm6>
-                                            <v-select
-                                                :items="groups"
-                                                v-model="registerFormData.group"
-                                                prepend-icon="person"
-                                                label="Course"
-                                                single-line
-                                                required
-                                                :rules="[rules.required]"
-                                            />
-                                        </v-flex>
-                                        <v-flex xs12 sm6>
-                                            <v-text-field
-                                                v-model="registerFormData.password"
-                                                prepend-icon="lock"
-                                                label="Password"
-                                                type="password"
-                                                required
-                                                :rules="[rules.required]"
-                                            />
-                                        </v-flex>
-                                        <v-flex xs12 sm6>
-                                            <v-text-field
-                                                v-model="registerFormData.confirmPassword"
-                                                prepend-icon="lock"
-                                                label="Confirm password"
-                                                type="password"
-                                                required
-                                                :rules="[rules.required]"
-                                            />
-                                        </v-flex>
-                                        <v-flex xs12>
-                                            <file-drop ref="fileDrop" label="Your picture (we must be able to see your face): *" allowed-types="images" />
-                                        </v-flex>
-                                        <v-flex xs12>
-                                            <vue-recaptcha :sitekey="recaptchaKey" @verify="onCaptchaVerify"></vue-recaptcha>
-                                        </v-flex>
-                                        <v-flex xs12>
-                                            <v-btn color="primary" outline @click="register = false">Back</v-btn>
-                                            <v-btn color="primary" @click="onRegister">Register</v-btn>
-                                        </v-flex>
-                                    </v-layout>
-                                </v-container>
-                            </v-flex>
-                        </v-layout>
-                    </v-container>
-                </v-card-text>
+                    </v-toolbar>
+                    <v-card-text>
+                        <v-container fluid class="pa-0">
+                            <v-layout align-center justify-center>
+                                <v-flex xs12 sm10 md8 lg6>
+                                    <v-container fluid grid-list-xl class="pa-0">
+                                        <v-layout row wrap>
+                                            <v-flex xs12 sm6>
+                                                <v-text-field
+                                                    v-model="registerFormData.firstName"
+                                                    prepend-icon="person"
+                                                    label="Firstname"
+                                                    name="firstName"
+                                                    type="text"
+                                                    required
+                                                    v-validate="{required: true}"
+                                                    :error="errors.has('firstName')"
+                                                    :error-messages="errors.collect('firstName')"
+                                                />
+                                            </v-flex>
+                                            <v-flex xs12 sm6>
+                                                <v-text-field
+                                                    v-model="registerFormData.lastName"
+                                                    prepend-icon="person"
+                                                    label="Lastname"
+                                                    name="lastName"
+                                                    type="text"
+                                                    required
+                                                    v-validate="{required: true}"
+                                                    :error="errors.has('lastName')"
+                                                    :error-messages="errors.collect('lastName')"
+                                                />
+                                            </v-flex>
+                                            <v-flex xs12 sm6>
+                                                <v-text-field
+                                                    v-model="registerFormData.email"
+                                                    prepend-icon="person"
+                                                    label="Email"
+                                                    name="email"
+                                                    type="email"
+                                                    required
+                                                    v-validate="{required: true, email:true}"
+                                                    :error="errors.has('email')"
+                                                    :error-messages="errors.collect('email')"
+                                                />
+                                            </v-flex>
+                                            <v-flex xs12 sm6>
+                                                <v-text-field
+                                                    v-model="registerFormData.phone"
+                                                    prepend-icon="person"
+                                                    label="Phone"
+                                                    name="phone"
+                                                    type="text"
+                                                    required
+                                                    v-validate="{required: true}"
+                                                    :error="errors.has('phone')"
+                                                    :error-messages="errors.collect('phone')"
+                                                />
+                                            </v-flex>
+                                            <v-flex xs12 sm6>
+                                                <v-text-field
+                                                    v-model="registerFormData.room"
+                                                    prepend-icon="person"
+                                                    label="Room"
+                                                    name="room"
+                                                    type="text"
+                                                    required
+                                                    v-validate="{required: true}"
+                                                    :error="errors.has('room')"
+                                                    :error-messages="errors.collect('room')"
+                                                />
+                                            </v-flex>
+                                            <v-flex xs12 sm6>
+                                                <v-select
+                                                    :items="groups"
+                                                    v-model="registerFormData.group"
+                                                    prepend-icon="person"
+                                                    label="Course"
+                                                    name="course"
+                                                    single-line
+                                                    required
+                                                    v-validate="{required: true}"
+                                                    :error="errors.has('course')"
+                                                    :error-messages="errors.collect('course')"
+                                                />
+                                            </v-flex>
+                                            <v-flex xs12 sm6>
+                                                <v-text-field
+                                                    v-model="registerFormData.password"
+                                                    prepend-icon="lock"
+                                                    label="Password"
+                                                    name="password"
+                                                    ref="password"
+                                                    type="password"
+                                                    required
+                                                    v-validate="{min:6, required: true}"
+                                                    :error="errors.has('password')"
+                                                    :error-messages="errors.collect('password')"
+                                                />
+                                            </v-flex>
+                                            <v-flex xs12 sm6>
+                                                <v-text-field
+                                                    v-model="registerFormData.confirmPassword"
+                                                    prepend-icon="lock"
+                                                    label="Confirm password"
+                                                    name="passwordConfirm"
+                                                    type="password"
+                                                    required
+                                                    v-validate="{min:6, required: true, confirmed: 'password'}"
+                                                    :error="errors.has('passwordConfirm')"
+                                                    :error-messages="errors.collect('passwordConfirm')"
+                                                />
+                                            </v-flex>
+                                            <v-flex xs12>
+                                                <file-drop ref="fileDrop" label="Your picture (we must be able to see your face): *" allowed-types="images" />
+                                            </v-flex>
+                                            <v-flex xs12>
+                                                <vue-recaptcha :sitekey="recaptchaKey" @verify="onCaptchaVerify"></vue-recaptcha>
+                                            </v-flex>
+                                            <v-flex xs12>
+                                                <v-btn color="primary" outline @click="closeRegister">Back</v-btn>
+                                                <v-btn color="primary" @click="onRegister">Register</v-btn>
+                                            </v-flex>
+                                        </v-layout>
+                                    </v-container>
+                                </v-flex>
+                            </v-layout>
+                        </v-container>
+                    </v-card-text>
+                </v-form>
             </v-card>
         </v-dialog>
+        <v-snackbar :timeout="0" color="red accent-2" v-model="snackbar">
+          {{ errorMessage }}
+          <v-btn dark flat @click.native="snackbar = false">Close</v-btn>
+        </v-snackbar>
     </v-container>
 </template>
 
@@ -146,11 +177,13 @@ import Axios from 'axios'
 import Config from 'src/Config.__ENV__.js'
 import VueRecaptcha from 'vue-recaptcha'
 import FileDrop from 'components/FileDrop.vue'
+import { required } from 'vuelidate/lib/validators'
 
 export default {
     data() {
         return {
             register: false,
+            formIsValid: false,
             loginFormData: {
                 username: '',
                 password: ''
@@ -168,7 +201,9 @@ export default {
             },
             groups: [],
             isLoading: false,
-            errorMsg: '',
+            snackbar: false,
+            errorMessage: '',
+            // errorMsg: '',
             rules: {
                 required(value) {
                     return !!value || 'Required.'
@@ -197,6 +232,30 @@ export default {
             this.register = true
         },
 
+        closeRegister() {
+            const $this = this
+
+            this.register = false
+            this.snackbar = false
+
+            setTimeout(() => {
+                $this.resetForm()
+            }, 300)
+        },
+
+        resetForm() {
+            this.$refs.form.reset()
+            this.firstName = ''
+            this.lastName = ''
+            this.room = ''
+            this.group = ''
+            this.email = ''
+            this.phone = ''
+            this.password = ''
+            this.confirmPassword = ''
+            this.captchaReponse = ''
+        },
+
         onRegister(e) {
             const $this = this
 
@@ -204,31 +263,38 @@ export default {
                 return
             }
 
-            this.isLoading = true
+            console.log('this.$validator.', this.$validator)
 
-            var payload = {
-                username: this.registerFormData.email,
-                firstName: this.registerFormData.firstName,
-                lastName: this.registerFormData.lastName,
-                room: this.registerFormData.room,
-                group: this.registerFormData.group,
-                phone: this.registerFormData.phone,
-                password: this.registerFormData.password,
-                captchaReponse: ''
-            }
+            this.$validator.validateAll()
+                .then(function(res) {
+                    if(res && $this.$refs.fileDrop.isValid() && $this.registerFormData.captchaReponse) {
+                        $this.isLoading = true
 
-            Axios.post(Config.endpoint + 'register', payload)
-                .then(function (response) {
-                    $this.$store.commit('userAuthSuccess', response.data.token)
+                        var payload = new FormData()
+                        payload.append('file', $this.$refs.fileDrop.file)
+                        payload.append('username', $this.registerFormData.email)
+                        payload.append('firstName', $this.registerFormData.firstName)
+                        payload.append('lastName', $this.registerFormData.lastName)
+                        payload.append('room', $this.registerFormData.room)
+                        payload.append('group', $this.registerFormData.group)
+                        payload.append('phone', $this.registerFormData.phone)
+                        payload.append('password', $this.registerFormData.password)
+                        payload.append('captchaReponse', $this.registerFormData.captchaReponse)
 
-                    $this.$router.push({ name: 'page-news' })
+                        Axios.post(Config.endpoint + 'register', payload)
+                            .then(function (response) {
+                                $this.$store.commit('userAuthSuccess', response.data.token)
 
-                    $this.isLoading = false
-                })
-                .catch(function (error) {
-                    console.log('register error', error)
+                                $this.$router.push({ name: 'page-news' })
 
-                    $this.isLoading = false
+                                $this.isLoading = false
+                            })
+                            .catch(function (error) {
+                                console.log('register error', error)
+
+                                $this.isLoading = false
+                            })
+                    }
                 })
         },
 
@@ -264,11 +330,15 @@ export default {
 
                     // error received from the server
                     if (error.response && _.has(error, 'response.data.message')) {
-                        $this.errorMsg = error.response.data.message
+                        $this.errorMessage = error.response.data.message
+                        $this.snackbar = true
+                        // $this.errorMsg = error.response.data.message
                     }
                     // no answer from the server, or no error message in the body
                     else {
-                        $this.errorMsg = 'An error has occurred, please try again. If the problem persists please contact the student committee'
+                        $this.errorMessage = 'An error has occurred, please try again. If the problem persists please contact the student committee'
+                        $this.snackbar = true
+                        // $this.errorMsg = 'An error has occurred, please try again. If the problem persists please contact the student committee'
                     }
                 })
         },
@@ -283,16 +353,10 @@ export default {
                     // TODO manage error
                     console.log(error);
                 });
-
-        },
-        initCaptcha() {
-            // console.log('this.$refs', this.$refs.grecaptcha)
-            // window.grecaptcha.render('g-recaptcha', {"sitekey": "6LeS8k8UAAAAAOZsYkWOV9dSei8RNa2sSDFNI6hB"})
         }
     },
     created() {
         this.getPicklistData()
-        // this.initCaptcha()
     },
     components: {
         VueRecaptcha,

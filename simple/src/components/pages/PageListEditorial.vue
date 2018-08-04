@@ -192,12 +192,12 @@ export default {
     },
     methods: {
         fetchPostsData() {
-            var that = this
+            const $this = this
 
             Axios.get(Config.endpoint + this.$route.meta.api.getAll + '?from='+((this.currentPage-1)*this.totalToDisplay)+'&length='+this.totalToDisplay)
                 .then(function (response) {
-                    that.posts = response.data.posts
-                    that.totalPages = _.toInteger(response.data.totalPages)
+                    $this.posts = response.data.posts
+                    $this.totalPages = _.toInteger(response.data.totalPages)
                 })
                 .catch(function (error) {
                     if(_.has(error, 'message')) {
