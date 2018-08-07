@@ -68,8 +68,8 @@ export default {
                     $this.page = response.data
                 })
                 .catch(function (error) {
-                    if(_.has(error, 'message')) {
-                        $this.errorMessage = error.message
+                    if(_.has(error, 'response.data.message')) {
+                        $this.errorMessage = error.response.data.message
                         $this.snackbar = true
                     }
                     else {

@@ -174,8 +174,7 @@ export default {
                     ],
                     customPagesPlaceholder: 'page-entertainment'
                 }
-            ],
-            dynamicPages: []
+            ]
         }
     },
     computed: {
@@ -197,7 +196,7 @@ export default {
             var mergedDrawerItems = _.cloneDeep(this.drawerItems)
             const $this = this
 
-            _.each(this.dynamicPages, function(page) {
+            _.each(this.$store.state.dynamicMenu, function(page) {
                 var menuIndex = _.findIndex(mergedDrawerItems, { 'customPagesPlaceholder': page.type})
 
                 // Adding the page to the corresponding menu section (e.g.: page-sport)
@@ -214,26 +213,7 @@ export default {
         }
     },
     methods: {
-        fetchDynamicMenuSections() {
-            const $this = this
 
-            Axios.get(Config.endpoint + 'menu')
-                .then(function (response) {
-                    if(_.has(response.data, 'pages')) {
-                        $this.dynamicPages = response.data.pages
-                    }
-                })
-                .catch(function (error) {
-                    if(_.has(error, 'message')) {
-                        $this.errorMessage = error.message
-                        $this.snackbar = true
-                    }
-                    else {
-                        $this.errorMessage = 'An error occured, please try again'
-                        $this.snackbar = true
-                    }
-                });
-        },
         clickMenu(item) {
             if (_.has(item, 'link')) {
                 if(item.link.indexOf('http') == 0) {
@@ -250,9 +230,6 @@ export default {
         logoutUser() {
             this.$store.dispatch('logoutUser')
         }
-    },
-    created() {
-        this.fetchDynamicMenuSections()
     }
   }
 </script>

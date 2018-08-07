@@ -24,6 +24,7 @@ Vue.use(Vuex)
 */
 const state = {
     users: [],
+    dynamicMenu: [],
     userDetails: {},
     groups: []
 }
@@ -69,6 +70,13 @@ const actions = {
     //         })
     //
     // },
+    //
+
+    userAuthSuccess({ dispatch, commit }, token) {
+        commit('setToken', token)
+
+        dispatch('fetchDynamicMenuSections')
+    },
 
     /**
     * Logout the user : reset the user data and redirect him to the login page
@@ -79,6 +87,25 @@ const actions = {
     logoutUser({ commit }) {
         commit('resetAuthData')
         Router.push({ name: 'login' })
+    },
+
+    fetchDynamicMenuSections({ commit }) {
+        Axios.get(Config.endpoint + 'menu')
+            .then(function (response) {
+                if(_.has(response.data, 'pages')) {
+                    commit('setDynamicMenu', response.data.pages)
+                }
+            })
+            .catch(function (error) {
+                // if(_.has(error, 'message')) {
+                //     $this.errorMessage = error.message
+                //     $this.snackbar = true
+                // }
+                // else {
+                //     $this.errorMessage = 'An error occured, please try again'
+                //     $this.snackbar = true
+                // }
+            });
     },
 
     /**
@@ -155,13 +182,17 @@ const actions = {
 * mutation to ask the store to modify the data.
 */
 const mutations = {
-    userAuthSuccess(state, token) {
+    setToken(state, token) {
         state.authToken = token
 
         // Store the token also in the local storage so it can be retreived later even if the app is
         // terminated
         window.localStorage.setItem('authToken', token)
         Axios.defaults.headers.common['AuthToken'] = token
+    },
+
+    setDynamicMenu(state, menu) {
+        state.dynamicMenu = menu
     },
 
     resetAuthData(state) {

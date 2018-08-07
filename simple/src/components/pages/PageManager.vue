@@ -26,9 +26,12 @@
                                 <v-text-field
                                     v-model="editedPage.title"
                                     label="Title"
+                                    name="title"
                                     persistent-hint
                                     required
-                                    :rules="[rules.required]"
+                                    v-validate="{required: true}"
+                                    :error="errors.has('title')"
+                                    :error-messages="errors.collect('title')"
                                     class="mb-1"
                                 />
                                 <vue-editor v-model="editedPage.content"
@@ -112,11 +115,6 @@ export default {
             pageToDelete: '',
             dialogDelete: false,
             editedIndex: -1,
-            rules: {
-                required(value) {
-                    return !!value || 'Required.'
-                }
-            },
             files: [],
             showSettings: false,
             pages: [],
@@ -146,8 +144,8 @@ export default {
                     $this.pages = response.data.posts
                 })
                 .catch(function (error) {
-                    if(_.has(error, 'message')) {
-                        $this.errorMessage = error.message
+                    if(_.has(error, 'response.data.message')) {
+                        $this.errorMessage = error.response.data.message
                         $this.snackbar = true
                     }
                     else {
@@ -169,46 +167,49 @@ export default {
         savePage() {
             var $this = this
 
-            if (this.$refs.form.validate()) {
+            this.$validator.validateAll()
+                .then(function(res) {
+                    if(res) {
+                        var success = function(response) {
+                            $this.isLoading = false
 
-                var success = function(response) {
-                    $this.isLoading = false
+                            $this.closeDialogEdit()
+                            $this.fetchPagesData()
+                            $this.$store.dispatch('fetchDynamicMenuSections')
+                        }
 
-                    $this.closeDialogEdit()
-                    $this.fetchPagesData()
-                }
+                        var error = function(error) {
+                            $this.isLoading = false
 
-                var error = function(error) {
-                    $this.isLoading = false
+                            console.log('error', error)
 
-                    console.log('error', error)
+                            if(_.has(error, 'response.data.message')) {
+                                $this.errorMessage = error.response.data.message
+                                $this.snackbar = true
+                            }
+                            else {
+                                $this.errorMessage = 'An error occured, please try again'
+                                $this.snackbar = true
+                            }
+                        }
 
-                    if(_.has(error, 'message')) {
-                        $this.errorMessage = error.message
-                        $this.snackbar = true
+                        // New pages / link => POST request
+                        if($this.editedIndex === -1) {
+                            Axios.post(Config.endpoint + $this.$route.meta.api.post, $this.editedPage)
+                                .then(success)
+                                .catch(error)
+                        }
+
+                        // Edit existing page / link => PUT request
+                        else {
+                            Axios.post(Config.endpoint + $this.$route.meta.api.edit.replace('{id}', $this.editedPage.id), $this.editedPage)
+                                .then(success)
+                                .catch(error)
+                        }
+
+                        $this.isLoading = true
                     }
-                    else {
-                        $this.errorMessage = 'An error occured, please try again'
-                        $this.snackbar = true
-                    }
-                }
-
-                // New pages / link => POST request
-                if(this.editedIndex === -1) {
-                    Axios.post(Config.endpoint + this.$route.meta.api.post, this.editedPage)
-                        .then(success)
-                        .catch(error)
-                }
-
-                // Edit existing page / link => PUT request
-                else {
-                    Axios.post(Config.endpoint + this.$route.meta.api.edit.replace('{id}', this.editedPage.id), this.editedPage)
-                        .then(success)
-                        .catch(error)
-                }
-
-                this.isLoading = true
-            }
+                })
         },
         closeDialogEdit() {
             var $this = this
@@ -227,6 +228,7 @@ export default {
         },
         resetForm() {
             this.$refs.form.reset()
+            this.$validator.reset()
             this.editedPage.id = ''
             // this.editedPage.menu_icon = ''
             this.editedPage.title = ''
@@ -265,14 +267,15 @@ export default {
                     $this.dialogDelete = false
                     $this.snackbar = false
                     $this.fetchPagesData()
+                    $this.$store.dispatch('fetchDynamicMenuSections')
                 })
                 .catch(function(error) {
                     $this.isLoading = false
 
                     console.log('error', error)
 
-                    if(_.has(error, 'message')) {
-                        $this.errorMessage = error.message
+                    if(_.has(error, 'response.data.message')) {
+                        $this.errorMessage = error.response.data.message
                         $this.snackbar = true
                     }
                     else {

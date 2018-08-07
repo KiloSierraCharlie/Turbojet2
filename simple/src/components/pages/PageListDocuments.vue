@@ -5,7 +5,6 @@
                 <v-dialog v-model="dialogEdit" max-width="500px" persistent>
                     <v-btn slot="activator" color="primary" dark class="mb-2">New Document</v-btn>
                     <v-card>
-                        <v-form enctype="multipart/form-data" ref="form" v-model="formIsValid">
                             <v-card-title>
                                 <span class="headline">{{ formTitle }}</span>
                             </v-card-title>
@@ -14,36 +13,42 @@
                                     <v-radio label="Document" value="document"></v-radio>
                                     <v-radio label="Link" value="link"></v-radio>
                                 </v-radio-group>
-                                <div v-if="docType === 'document'">
+                                <v-form v-show="docType === 'document'" enctype="multipart/form-data" ref="form" v-model="formIsValid" data-vv-scope="document-form">
                                     <v-text-field
                                         v-model="editedDocument.name"
                                         label="Document name"
                                         hint="The document will appear with that name"
                                         persistent-hint
-                                        required
-                                        :rules="[rules.required]"
+                                        name="documentName"
+                                        v-validate="{required: true}"
+                                        :error="errors.has('document-form.documentName')"
+                                        :error-messages="errors.collect('document-form.documentName')"
                                     />
 
                                     <file-drop ref="fileDrop" label="Document: *"/>
-                                </div>
-                                <div v-if="docType === 'link'">
+                                </v-form>
+                                <v-form v-show="docType === 'link'" enctype="multipart/form-data" ref="form" v-model="formIsValid" data-vv-scope="link-form">
                                     <v-text-field
                                         v-model="editedDocument.name"
                                         label="Link name"
                                         hint="The link will appear with that name"
                                         persistent-hint
-                                        required
-                                        :rules="[rules.required]"
+                                        name="linkName"
+                                        v-validate="{required: true}"
+                                        :error="errors.has('link-form.linkName')"
+                                        :error-messages="errors.collect('link-form.linkName')"
                                     />
                                     <v-text-field
                                         v-model="editedDocument.path"
                                         label="Link URL"
                                         hint="E.g.: http://www.google.com"
                                         persistent-hint
-                                        required
-                                        :rules="[rules.required]"
+                                        name="path"
+                                        v-validate="{required: true}"
+                                        :error="errors.has('link-form.path')"
+                                        :error-messages="errors.collect('link-form.path')"
                                     />
-                                </div>
+                                </v-form>
                             </v-card-text>
                             <v-card-actions>
                                 <v-spacer></v-spacer>
@@ -122,11 +127,6 @@ export default {
                 id: '',
                 name: '',
                 path: ''
-            },
-            rules: {
-                required(value) {
-                    return !!value || 'Required.'
-                }
             },
             documents: [],
             headers: [
@@ -213,8 +213,8 @@ export default {
 
                     console.log('error', error)
 
-                    if(_.has(error, 'message')) {
-                        self.errorMessage = error.message
+                    if(_.has(error, 'response.data.message')) {
+                        this.errorMessage = error.response.data.message
                         self.snackbar = true
                     }
                     else {
@@ -242,62 +242,66 @@ export default {
         },
 
         save () {
-            var self = this
+            const $this = this
 
-            if (this.$refs.form.validate()) {
-                var payload = new FormData();
-                payload.append('name', this.editedDocument.name)
+            this.$validator.validateAll(this.docType === 'document' ? 'document-form' : 'link-form')
+                .then(function(res) {
+                    if(res) {
+                        var payload = new FormData();
+                        payload.append('name', $this.editedDocument.name)
 
-                // console.log('this.$refs.fileDrop.isValid()', this.$refs.fileDrop.isValid())
+                        // console.log('this.$refs.fileDrop.isValid()', this.$refs.fileDrop.isValid())
 
-                // TODO doc error red field if empty
-                if(this.docType === 'document' && this.$refs.fileDrop.isValid()) {
-                    payload.append('file', this.$refs.fileDrop.file)
-                }
-                else if(this.docType === 'link') {
-                    payload.append('link', this.editedDocument.path)
-                } else {
-                    return
-                }
+                        // TODO doc error red field if empty
+                        if($this.docType === 'document' && $this.$refs.fileDrop.isValid()) {
+                            payload.append('file', $this.$refs.fileDrop.file)
+                        }
+                        else if($this.docType === 'link') {
+                            payload.append('link', $this.editedDocument.path)
+                        } else {
+                            return
+                        }
 
-                this.isLoading = true
+                        $this.isLoading = true
 
-                var success = function(response) {
-                    self.isLoading = false
+                        var success = function(response) {
+                            $this.isLoading = false
 
-                    self.closeDialogEdit()
-                    self.fetchDocumentsData()
-                }
+                            $this.closeDialogEdit()
+                            $this.fetchDocumentsData()
+                        }
 
-                var error = function(error) {
-                    self.isLoading = false
+                        var error = function(error) {
+                            $this.isLoading = false
 
-                    console.log('error', error)
+                            console.log('error', error)
 
-                    if(_.has(error, 'message')) {
-                        self.errorMessage = error.message
-                        self.snackbar = true
+                            if(_.has(error, 'response.data.message')) {
+                                $this.errorMessage = error.response.data.message
+                                $this.snackbar = true
+                            }
+                            else {
+                                $this.errorMessage = 'An error occured, please try again'
+                                $this.snackbar = true
+                            }
+                        }
+
+                        // New document / link => POST request
+                        if($this.editedIndex === -1) {
+                            Axios.post(Config.endpoint + 'documents/'+$this.collectionSlug, payload)
+                                .then(success)
+                                .catch(error)
+                        }
+
+                        // Edit existing document / link => PUT request
+                        else {
+                            Axios.post(Config.endpoint + 'documents/'+$this.editedDocument.id+'/edit', payload)
+                                .then(success)
+                                .catch(error)
+                        }
                     }
-                    else {
-                        self.errorMessage = 'An error occured, please try again'
-                        self.snackbar = true
-                    }
-                }
+                })
 
-                // New document / link => POST request
-                if(this.editedIndex === -1) {
-                    Axios.post(Config.endpoint + 'documents/'+this.collectionSlug, payload)
-                        .then(success)
-                        .catch(error)
-                }
-
-                // Edit existing document / link => PUT request
-                else {
-                    Axios.post(Config.endpoint + 'documents/'+this.editedDocument.id+'/edit', payload)
-                        .then(success)
-                        .catch(error)
-                }
-            }
         },
 
         getType(documentItem) {
@@ -354,6 +358,7 @@ export default {
         resetForm() {
             // TODO beeing able to edit the collection
             this.$refs.form.reset()
+            this.$validator.reset()
             this.docType = 'document'
             this.editedDocument.id = ''
             this.editedDocument.name = ''

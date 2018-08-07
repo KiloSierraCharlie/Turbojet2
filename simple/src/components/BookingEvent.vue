@@ -38,8 +38,10 @@
                     <v-text-field
                         v-model="eventData.data.booking_reason"
                         label="Trip location"
-                        required
-                        :rules="[rules.required]"
+                        name="booking_reason"
+                        v-validate="{required: true}"
+                        :error="errors.has('booking_reason')"
+                        :error-messages="errors.collect('booking_reason')"
                         :disabled="eventData.data.id && !editMode ? true : false"
                     />
                 </v-card-text>
@@ -79,11 +81,6 @@ export default {
             formIsValid: false,
             isLoading: false,
             isLoadingMessage: 'Calculating ...',
-            rules: {
-                required(value) {
-                    return !!value || 'Required.'
-                }
-            },
             editMode: false
         }
     },
@@ -103,25 +100,30 @@ export default {
     methods: {
         closeDialog() {
             this.editMode = false
-            this.$refs.form.reset()
+            // this.$refs.form.reset()
+            // this.$validator.reset()
             this.$emit('closeDialogEdit')
         },
         cancelDialog() {
-            if (this.$refs.form.validate()) {
-                this.$emit('cancelBooking')
-            }
+            this.$emit('cancelBooking')
         },
         paid() {
             this.$emit('bookingPaid')
         },
         save() {
-            if (this.$refs.form.validate()) {
-                this.editMode = false
-                this.$emit('saveBooking')
-            }
+            const $this = this
+
+            this.$validator.validateAll()
+                .then(function(res) {
+                    if(res) {
+                        $this.editMode = false
+                        $this.$emit('saveBooking')
+                    }
+                })
         },
         resetForm() {
             this.$refs.form.reset()
+            this.$validator.reset()
             this.downloadedPrice = -1
         }
     }

@@ -22,19 +22,6 @@ import VeeValidate from 'vee-validate'
 Vue.use(VeeValidate)
 
 /*
-    Initialize the persistent data (token and preferred conference) from localstorage and pass it to the store
-*/
-console.info('Local storage --- initializing')
-var token = window.localStorage.getItem('authToken')
-
-if (token) {
-    Store.commit('userAuthSuccess', token)
-}
-
-console.info('Local storage --- initialized')
-
-
-/*
     Initializing Axios for ajax calls
     https://github.com/axios/axios
  */
@@ -44,9 +31,6 @@ console.info('Axios --- initializing')
 // Axios.defaults.baseURL = 'https://api.example.com';
 if (Config.apikey) {
     Axios.defaults.headers.common['ApiKey'] = Config.apikey
-}
-if (Store.state.authToken) {
-    Axios.defaults.headers.common['AuthToken'] = Store.state.authToken
 }
 
 Axios.defaults.headers.post['Content-Type'] = 'application/json'
@@ -72,6 +56,21 @@ Axios.interceptors.response.use(
 );
 
 console.info('Axios --- initialized')
+
+/*
+    Initialize the persistent data (token and preferred conference) from localstorage and pass it to the store
+*/
+console.info('Local storage --- initializing')
+var token = window.localStorage.getItem('authToken')
+
+if (token) {
+    Store.commit('setToken', token)
+    Axios.defaults.headers.common['AuthToken'] = token
+    Store.dispatch('fetchDynamicMenuSections')
+}
+
+console.info('Local storage --- initialized')
+
 
 /*
     Initializing Vue itself

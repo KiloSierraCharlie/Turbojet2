@@ -8,10 +8,27 @@
                     </div>
                     <h1 class="headline">Login</h1>
                     <p class="">Welcome on FTE Turbojet, please signin in order to continue</p>
-                    <!-- <p class="error-msg red--text" v-if="errorMsg">Error {{errorMsg}}</p> -->
-                    <v-form>
-                        <v-text-field v-model="loginFormData.username" prepend-icon="person" label="Email" type="email" required></v-text-field>
-                        <v-text-field v-model="loginFormData.password" prepend-icon="lock" label="Password" type="password" required></v-text-field>
+                    <v-form data-vv-scope="login-form">
+                        <v-text-field
+                            v-model="loginFormData.username"
+                            prepend-icon="person"
+                            label="Email"
+                            type="email"
+                            name="loginEmail"
+                            v-validate="{required: true, email: true}"
+                            :error="errors.has('login-form.loginEmail')"
+                            :error-messages="errors.collect('login-form.loginEmail')"
+                        />
+                        <v-text-field
+                            v-model="loginFormData.password"
+                            prepend-icon="lock"
+                            label="Password"
+                            type="password"
+                            name="loginPassword"
+                            v-validate="{required: true}"
+                            :error="errors.has('login-form.loginPassword')"
+                            :error-messages="errors.collect('login-form.loginPassword')"
+                        />
                         <div class="text-xs-center">
                             <v-btn outline color="primary" @click="goRegister">Register</v-btn>
                             <v-btn color="primary" @click="onLogin">Login</v-btn>
@@ -23,7 +40,7 @@
         </v-layout>
         <v-dialog v-model="register" fullscreen hide-overlay transition="dialog-bottom-transition" scrollable>
             <v-card tile>
-                <v-form enctype="multipart/form-data" ref="form" v-model="formIsValid">
+                <v-form enctype="multipart/form-data" ref="form" v-model="formIsValid" data-vv-scope="register-form">
                     <v-toolbar card dark color="primary">
                         <v-spacer></v-spacer>
                         <v-toolbar-title>Register</v-toolbar-title>
@@ -46,10 +63,9 @@
                                                     label="Firstname"
                                                     name="firstName"
                                                     type="text"
-                                                    required
                                                     v-validate="{required: true}"
-                                                    :error="errors.has('firstName')"
-                                                    :error-messages="errors.collect('firstName')"
+                                                    :error="errors.has('register-form.firstName')"
+                                                    :error-messages="errors.collect('register-form.firstName')"
                                                 />
                                             </v-flex>
                                             <v-flex xs12 sm6>
@@ -61,8 +77,8 @@
                                                     type="text"
                                                     required
                                                     v-validate="{required: true}"
-                                                    :error="errors.has('lastName')"
-                                                    :error-messages="errors.collect('lastName')"
+                                                    :error="errors.has('register-form.lastName')"
+                                                    :error-messages="errors.collect('register-form.lastName')"
                                                 />
                                             </v-flex>
                                             <v-flex xs12 sm6>
@@ -72,10 +88,9 @@
                                                     label="Email"
                                                     name="email"
                                                     type="email"
-                                                    required
                                                     v-validate="{required: true, email:true}"
-                                                    :error="errors.has('email')"
-                                                    :error-messages="errors.collect('email')"
+                                                    :error="errors.has('register-form.email')"
+                                                    :error-messages="errors.collect('register-form.email')"
                                                 />
                                             </v-flex>
                                             <v-flex xs12 sm6>
@@ -85,10 +100,9 @@
                                                     label="Phone"
                                                     name="phone"
                                                     type="text"
-                                                    required
                                                     v-validate="{required: true}"
-                                                    :error="errors.has('phone')"
-                                                    :error-messages="errors.collect('phone')"
+                                                    :error="errors.has('register-form.phone')"
+                                                    :error-messages="errors.collect('register-form.phone')"
                                                 />
                                             </v-flex>
                                             <v-flex xs12 sm6>
@@ -98,10 +112,9 @@
                                                     label="Room"
                                                     name="room"
                                                     type="text"
-                                                    required
                                                     v-validate="{required: true}"
-                                                    :error="errors.has('room')"
-                                                    :error-messages="errors.collect('room')"
+                                                    :error="errors.has('register-form.room')"
+                                                    :error-messages="errors.collect('register-form.room')"
                                                 />
                                             </v-flex>
                                             <v-flex xs12 sm6>
@@ -112,10 +125,9 @@
                                                     label="Course"
                                                     name="course"
                                                     single-line
-                                                    required
                                                     v-validate="{required: true}"
-                                                    :error="errors.has('course')"
-                                                    :error-messages="errors.collect('course')"
+                                                    :error="errors.has('register-form.course')"
+                                                    :error-messages="errors.collect('register-form.course')"
                                                 />
                                             </v-flex>
                                             <v-flex xs12 sm6>
@@ -126,10 +138,9 @@
                                                     name="password"
                                                     ref="password"
                                                     type="password"
-                                                    required
                                                     v-validate="{min:6, required: true}"
-                                                    :error="errors.has('password')"
-                                                    :error-messages="errors.collect('password')"
+                                                    :error="errors.has('register-form.password')"
+                                                    :error-messages="errors.collect('register-form.password')"
                                                 />
                                             </v-flex>
                                             <v-flex xs12 sm6>
@@ -139,10 +150,9 @@
                                                     label="Confirm password"
                                                     name="passwordConfirm"
                                                     type="password"
-                                                    required
                                                     v-validate="{min:6, required: true, confirmed: 'password'}"
-                                                    :error="errors.has('passwordConfirm')"
-                                                    :error-messages="errors.collect('passwordConfirm')"
+                                                    :error="errors.has('register-form.passwordConfirm')"
+                                                    :error-messages="errors.collect('register-form.passwordConfirm')"
                                                 />
                                             </v-flex>
                                             <v-flex xs12>
@@ -202,13 +212,7 @@ export default {
             groups: [],
             isLoading: false,
             snackbar: false,
-            errorMessage: '',
-            // errorMsg: '',
-            rules: {
-                required(value) {
-                    return !!value || 'Required.'
-                }
-            },
+            errorMessage: ''
         }
     },
     computed: {
@@ -245,6 +249,7 @@ export default {
 
         resetForm() {
             this.$refs.form.reset()
+            this.$validator.reset()
             this.firstName = ''
             this.lastName = ''
             this.room = ''
@@ -265,7 +270,7 @@ export default {
 
             console.log('this.$validator.', this.$validator)
 
-            this.$validator.validateAll()
+            this.$validator.validateAll('register-form')
                 .then(function(res) {
                     if(res && $this.$refs.fileDrop.isValid() && $this.registerFormData.captchaReponse) {
                         $this.isLoading = true
@@ -283,7 +288,7 @@ export default {
 
                         Axios.post(Config.endpoint + 'register', payload)
                             .then(function (response) {
-                                $this.$store.commit('userAuthSuccess', response.data.token)
+                                $this.$store.dispatch('userAuthSuccess', response.data.token)
 
                                 $this.$router.push({ name: 'page-news' })
 
@@ -313,32 +318,38 @@ export default {
                 return
             }
 
-            this.isLoading = true
+            this.$validator.validateAll('login-form')
+                .then(function(res) {
+                    console.log('res', res)
+                    if(res) {
+                        $this.isLoading = true
 
-            Axios.post(Config.endpoint + 'login', this.loginFormData)
-                .then(function (response) {
-                    // Store the token
-                    $this.$store.commit('userAuthSuccess', response.data.token)
+                        Axios.post(Config.endpoint + 'login', $this.loginFormData)
+                            .then(function (response) {
+                                // Store the token
+                                $this.$store.dispatch('userAuthSuccess', response.data.token)
 
-                    $this.$router.push({ name: 'page-news' })
+                                $this.$router.push({ name: 'page-news' })
 
-                    $this.isLoading = false
-                })
-                .catch(function (error) {
-                    console.log('login error', error)
-                    $this.isLoading = false
+                                $this.isLoading = false
+                            })
+                            .catch(function (error) {
+                                console.log('login error', error)
+                                $this.isLoading = false
 
-                    // error received from the server
-                    if (error.response && _.has(error, 'response.data.message')) {
-                        $this.errorMessage = error.response.data.message
-                        $this.snackbar = true
-                        // $this.errorMsg = error.response.data.message
-                    }
-                    // no answer from the server, or no error message in the body
-                    else {
-                        $this.errorMessage = 'An error has occurred, please try again. If the problem persists please contact the student committee'
-                        $this.snackbar = true
-                        // $this.errorMsg = 'An error has occurred, please try again. If the problem persists please contact the student committee'
+                                // error received from the server
+                                if (error.response && _.has(error, 'response.data.message')) {
+                                    $this.errorMessage = error.response.data.message
+                                    $this.snackbar = true
+                                    // $this.errorMsg = error.response.data.message
+                                }
+                                // no answer from the server, or no error message in the body
+                                else {
+                                    $this.errorMessage = 'An error has occurred, please try again. If the problem persists please contact the student committee'
+                                    $this.snackbar = true
+                                    // $this.errorMsg = 'An error has occurred, please try again. If the problem persists please contact the student committee'
+                                }
+                            })
                     }
                 })
         },

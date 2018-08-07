@@ -19,8 +19,10 @@
                                     v-model="editedPost.title"
                                     label="Title"
                                     persistent-hint
-                                    required
-                                    :rules="[rules.required]"
+                                    name="title"
+                                    v-validate="{required: true}"
+                                    :error="errors.has('title')"
+                                    :error-messages="errors.collect('title')"
                                     class="mb-1"
                                 />
                                 <vue-editor v-model="editedPost.content"
@@ -147,11 +149,6 @@ export default {
             postToDelete: '',
             dialogDelete: false,
             editedIndex: -1,
-            rules: {
-                required(value) {
-                    return !!value || 'Required.'
-                }
-            },
             files: [],
             showSettings: false,
             // editorModules: [
@@ -200,8 +197,8 @@ export default {
                     $this.totalPages = _.toInteger(response.data.totalPages)
                 })
                 .catch(function (error) {
-                    if(_.has(error, 'message')) {
-                        $this.errorMessage = error.message
+                    if(_.has(error, 'response.data.message')) {
+                        this.errorMessage = error.response.data.message
                         $this.snackbar = true
                     }
                     else {
@@ -223,46 +220,48 @@ export default {
         savePost() {
             const $this = this
 
-            if (this.$refs.form.validate()) {
+            this.$validator.validateAll()
+                .then(function(res) {
+                    if(res) {
+                        var success = function(response) {
+                            $this.isLoading = false
 
-                var success = function(response) {
-                    $this.isLoading = false
+                            $this.closeDialogEdit()
+                            $this.fetchPostsData()
+                        }
 
-                    $this.closeDialogEdit()
-                    $this.fetchPostsData()
-                }
+                        var error = function(error) {
+                            $this.isLoading = false
 
-                var error = function(error) {
-                    $this.isLoading = false
+                            // console.log('error', error.response)
 
-                    console.log('error', error)
+                            if(_.has(error, 'response.data.message')) {
+                                $this.errorMessage = error.response.data.message
+                                $this.snackbar = true
+                            }
+                            else {
+                                $this.errorMessage = 'An error occured, please try again'
+                                $this.snackbar = true
+                            }
+                        }
 
-                    if(_.has(error, 'message')) {
-                        $this.errorMessage = error.message
-                        $this.snackbar = true
+                        // New post / link => POST request
+                        if($this.editedIndex === -1) {
+                            Axios.post(Config.endpoint + $this.$route.meta.api.post, $this.editedPost)
+                                .then(success)
+                                .catch(error)
+                        }
+
+                        // Edit existing post / link => PUT request
+                        else {
+                            Axios.post(Config.endpoint + $this.$route.meta.api.edit.replace('{id}', $this.editedPost.id), $this.editedPost)
+                                .then(success)
+                                .catch(error)
+                        }
+
+                        $this.isLoading = true
                     }
-                    else {
-                        $this.errorMessage = 'An error occured, please try again'
-                        $this.snackbar = true
-                    }
-                }
-
-                // New post / link => POST request
-                if(this.editedIndex === -1) {
-                    Axios.post(Config.endpoint + this.$route.meta.api.post, this.editedPost)
-                        .then(success)
-                        .catch(error)
-                }
-
-                // Edit existing post / link => PUT request
-                else {
-                    Axios.post(Config.endpoint + this.$route.meta.api.edit.replace('{id}', this.editedPost.id), this.editedPost)
-                        .then(success)
-                        .catch(error)
-                }
-
-                this.isLoading = true
-            }
+                })
         },
         closeDialogEdit() {
             const $this = this
@@ -323,8 +322,8 @@ export default {
 
                     console.log('error', error)
 
-                    if(_.has(error, 'message')) {
-                        $this.errorMessage = error.message
+                    if(_.has(error, 'response.data.message')) {
+                        this.errorMessage = error.response.data.message
                         $this.snackbar = true
                     }
                     else {
