@@ -115,7 +115,7 @@ export default {
             errorMessage: '',
             drawer: true,
             userMenuItems: [
-                { icon: 'mdi-account', text: '(TODO prio 1) Profile', link: '/profile' },
+                { icon: 'mdi-account', text: 'My Profile', action: this.openUserProfile },
                 // { icon: 'mdi-settings', text: '(TODO prio 1) Settings', link: '/settings'  },
                 { icon: 'mdi-logout-variant', text: 'Logout', action: this.logoutUser }
             ],
@@ -246,6 +246,9 @@ export default {
         },
         logoutUser() {
             this.$store.dispatch('logoutUser')
+        },
+        openUserProfile() {
+            this.$root.$emit('showUser', this.$store.state.connectedUser.id)
         },
         openUserDialog(userId) {
             console.log('openUserDialog', userId)
