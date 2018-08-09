@@ -120,7 +120,7 @@ export default {
             pages: [],
             headers: [
                 { text: 'Icon', value: 'icon' },
-                { text: 'Name', value: 'names' }, // TODO nug on sort
+                { text: 'Name', value: 'names' }, // TODO bug on sort
                 { text: 'Actions', value: 'name', sortable: false }
             ],
             snackbar: false,

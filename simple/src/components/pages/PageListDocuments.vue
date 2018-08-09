@@ -131,7 +131,7 @@ export default {
             documents: [],
             headers: [
                 { text: 'Type', value: 'type', sortable: false },
-                { text: 'Name', value: 'names' }, // TODO nug on sort
+                { text: 'Name', value: 'names' }, // TODO bug on sort
                 { text: 'Last Updated', value: 'modifiedAt' },
                 { text: 'Actions', value: 'name', sortable: false }
             ],
