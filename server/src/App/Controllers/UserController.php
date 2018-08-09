@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use Silex\Application;
+use App\Providers\UserProvider;
 use Symfony\Component\HttpFoundation\Request;
 
 class UserController {
@@ -13,6 +14,7 @@ class UserController {
         $this->app = $app;
         $this->userModel = $app['model.user'];
     }
+
 
     /**
     * Fetch all the users
@@ -39,6 +41,15 @@ class UserController {
         $user = $this->userModel->getUserDetails($id);
 
         return $this->app->json($user, 200);
+    }
+
+    /**
+    * Fetch all the users
+    *
+    * @return JsonResponse A 200 HTTP response containing the user details
+    */
+    public function getConnectedUser() {
+        return $this->app->json($this->app['user'], 200);
     }
 
     public function createUser($username, $firstName, $lastname, $room, $group, $email, $phone) {
@@ -77,18 +88,45 @@ class UserController {
             return $this->app->json(['message' => 'You don\'t have the permission to edit these fields'], 403);
         }
 
-        if(($user = $this->userModel->editUserDetails($id, $userData)) === false) {
-            return $this->app->json(['message' => 'An error has occured during the user modification'], 500);
+        if(isset($userData['groups']) && count($userData['groups']) === 0) {
+            return $this->app->json(['message' => 'A user can\'t be affected to no group'], 403);
+        }
+
+        if(isset($userData['password'])) {
+            $userProvider = new UserProvider($this->app['db']);
+
+            // Try finding the user through his username and get the proper encoder
+            $user = $userProvider->loadUserById($id);
+            $encoder = $this->app['security.encoder_factory']->getEncoder($user);
+
+            // Encode the password
+            $userData['salt'] = $user->generateSalt();
+            $userData['password'] = $encoder->encodePassword($userData['password'], $userData['salt']);
+        }
+
+        if(isset($userData['groups'])) {
+            if(($user = $this->userModel->setGroups($id, $userData['groups'])) === false) {
+                return $this->app->json(['message' => 'An error has occured during the user groups modification'], 500);
+            }
+            else {
+                unset($userData['groups']);
+            }
+        }
+
+        if(count($userData) > 0) {
+            if(($user = $this->userModel->editUserDetails($id, $userData)) === false) {
+                return $this->app->json(['message' => 'An error has occured during the user modification'], 500);
+            }
         }
 
         return $this->app->json($user, 200);
     }
 
-    public function getGroups(Request $request) {
+    public function getAllGroups(Request $request) {
         $queryParams = $request->query;
         $nonActive = (boolean)$queryParams->get('nonActive');
 
-        $groups = $this->userModel->getGroups($nonActive);
+        $groups = $this->userModel->getAllGroups($nonActive);
 
         return $this->app->json($groups, 200);
     }

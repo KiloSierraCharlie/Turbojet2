@@ -12,10 +12,6 @@
                     </v-card-title>
                     <v-card-text>
                         <div>
-                            <div class="mb-2 grey--text text--darken-2">
-                                <span><v-icon small class="mr-1">mdi-calendar-text</v-icon>{{formatDate(page.date)}}</span>
-                                <span class="ml-2"><router-link :to="'user/'+page.id_user"><v-icon small class="mr-1">mdi-account</v-icon>{{page.name}}</router-link></span>
-                            </div>
                             <div v-html="page.content"></div>
                         </div>
                     </v-card-text>
@@ -61,7 +57,7 @@ export default {
     },
     methods: {
         fetchPageData() {
-            var $this = this
+            const $this = this
 
             Axios.get(Config.endpoint + 'editorial/' + this.$props.section + '/' + this.$props.id)
                 .then(function (response) {

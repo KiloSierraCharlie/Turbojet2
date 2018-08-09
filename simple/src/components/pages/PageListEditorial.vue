@@ -77,7 +77,7 @@
                         <div>
                             <div class="mb-2 grey--text text--darken-2">
                                 <span><v-icon small class="mr-1">mdi-calendar-text</v-icon>{{formatDate(post.date)}}</span>
-                                <span class="ml-2"><router-link :to="'user/'+post.id_user"><v-icon small class="mr-1">mdi-account</v-icon>{{post.name}}</router-link></span>
+                                <a class="ml-2" @click="clickUser(post.id_user)"><v-icon small class="mr-1">mdi-account</v-icon>{{post.name}}</a>
                             </div>
                             <div v-html="post.content"></div>
                         </div>
@@ -198,7 +198,7 @@ export default {
                 })
                 .catch(function (error) {
                     if(_.has(error, 'response.data.message')) {
-                        this.errorMessage = error.response.data.message
+                        $this.errorMessage = error.response.data.message
                         $this.snackbar = true
                     }
                     else {
@@ -206,6 +206,9 @@ export default {
                         $this.snackbar = true
                     }
                 });
+        },
+        clickUser(id) {
+            this.$root.$emit('showUser', id)
         },
         onPageChange() {
             this.fetchPostsData()
@@ -323,7 +326,7 @@ export default {
                     console.log('error', error)
 
                     if(_.has(error, 'response.data.message')) {
-                        this.errorMessage = error.response.data.message
+                        $this.errorMessage = error.response.data.message
                         $this.snackbar = true
                     }
                     else {

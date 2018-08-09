@@ -8,12 +8,14 @@
                 <v-toolbar flat class="elevation-1" color="transparent">
                     <v-menu offset-x>
                         <v-list slot="activator" class="pa-0">
-                            <v-list-tile avatar>
+                            <v-list-tile avatar v-if="user">
                                 <v-list-tile-avatar>
-                                    <img src="https://randomuser.me/api/portraits/men/85.jpg" >
+                                    <div class="background" :style="'background-image: url(' + endpoint + 'media/student_photos/'+ (user.picture ? user.picture : 'cygnet.jpg') + ')'">
+
+                                    </div>
                                 </v-list-tile-avatar>
                                 <v-list-tile-content>
-                                    <v-list-tile-title>John Leider <v-icon small>mdi-menu-down</v-icon></v-list-tile-title>
+                                    <v-list-tile-title>{{user.firstName}} {{user.lastName}} <v-icon small>mdi-menu-down</v-icon></v-list-tile-title>
                                 </v-list-tile-content>
                             </v-list-tile>
                         </v-list>
@@ -71,14 +73,27 @@
                         </v-flex>
                     </v-layout>
                 </v-container>
-                <router-view></router-view>
+                <router-view ref="view"></router-view>
                 <!-- <router-view name="dialog"></router-view> -->
             </v-content>
             <v-footer color="indigo" class="pa-3 white--text" app>
                 <!-- Made with love by&nbsp;<a target="_blank" href="https://www.linkedin.com/in/kevinbouhadana">Kevin Bouhadana (172)</a> -->
                 ®2018
             </v-footer>
+            <user-details-dialog ref="userDetailsDialog"
+                :user-data="editedUser"
+                :groups-data="groups"
+                :show="dialogEdit"
+                @saveUser="onSaveUser"
+                @closeDialogEdit="onCloseDialogEdit"
+                @deleteUser="dialogDelete = true;"
+                :loading="isLoading"/>
+            <v-snackbar :timeout="0" color="red accent-2" v-model="snackbar">
+              {{ errorMessage }}
+              <v-btn dark flat @click.native="snackbar = false">Close</v-btn>
+            </v-snackbar>
         </v-app>
+
     </div>
 </template>
 
@@ -86,10 +101,18 @@
 import _ from 'lodash'
 import Axios from 'axios'
 import Config from 'src/Config.__ENV__.js'
+import UserDetailDialog from 'components/UserDetailDialog.vue'
 
 export default {
     data () {
         return {
+            dialogEdit: false,
+            dialogDelete: false,
+            editedUser: null,
+            groups: null,
+            isLoading: false,
+            snackbar: false,
+            errorMessage: '',
             drawer: true,
             userMenuItems: [
                 { icon: 'mdi-account', text: '(TODO prio 1) Profile', link: '/profile' },
@@ -178,17 +201,12 @@ export default {
         }
     },
     computed: {
-        // title() {
-        //     var regex = /{(.*?)}/
-        //     var tagValue = this.$route.meta.labels.title.match(regex)[1]
-        //
-        //     if(tagValue) {
-        //         return this.$route.meta.labels.title.replace(regex, this.$route.params[tagValue])
-        //     }
-        //     else {
-        //         return this.$route.meta.labels.title
-        //     }
-        // },
+        endpoint() {
+            return Config.endpoint
+        },
+        user() {
+            return this.$store.state.connectedUser
+        },
         displayTitle() {
             return _.has(this.$route, 'meta.labels.title')
         },
@@ -213,7 +231,6 @@ export default {
         }
     },
     methods: {
-
         clickMenu(item) {
             if (_.has(item, 'link')) {
                 if(item.link.indexOf('http') == 0) {
@@ -229,15 +246,131 @@ export default {
         },
         logoutUser() {
             this.$store.dispatch('logoutUser')
+        },
+        openUserDialog(userId) {
+            console.log('openUserDialog', userId)
+
+            const $this = this
+            Axios.get(Config.endpoint + 'users/' + userId)
+                .then(function(response) {
+                    $this.editedUser = response.data
+
+                    if(_.has($this.editedUser, 'groups') && !_.isEmpty($this.editedUser.groups)) {
+                        $this.editedUser.groups = _.map($this.editedUser.groups, function(group) {
+                            return group.id
+                        })
+                    }
+
+                    console.log('$this.editedUser', $this.editedUser)
+                })
+                .catch(this.displayError)
+
+            Axios.get(Config.endpoint + 'picklists/groups')
+                .then(function (response) {
+                    $this.groups = response.data
+                })
+                .catch(this.displayError);
+
+            this.dialogEdit = true
+        },
+
+        onCloseDialogEdit() {
+            const $this = this
+
+            this.dialogEdit = false
+            this.snackbar = false
+
+            setTimeout(() => {
+                $this.resetForm()
+            }, 300)
+        },
+        onSaveUser(userData) {
+            const $this = this
+
+            var payload = {}
+
+            _.each(userData, function(value, key) {
+                if(value !== $this.editedUser[key] && key !== 'confirmPassword') {
+                    payload[key] = value
+                }
+            })
+
+            console.log('payload', payload)
+
+            if(!_.isEmpty(payload)) {
+                Axios.post(Config.endpoint + 'users/' + this.editedUser.id, payload)
+                    .then(function(response) {
+                        $this.isLoading = false
+                        $this.onCloseDialogEdit()
+
+                        if($this.$route.name === 'page-list-users') {
+                            $this.$refs.view.fetchUsersData()
+                        }
+                    })
+                    .catch(this.displayError)
+
+                this.isLoading = true
+            }
+        },
+        deleteUser() {
+            const $this = this
+
+            // Axios.post(Config.endpoint + this.$route.meta.api.changeState.replace('{id}', this.editedEvent.data.id), {cancelled: true})
+            //     .then(function(response) {
+            //         $this.isLoading = false
+            //         $this.onCloseDialogEdit()
+            //         $this.dialogCancel = false
+            //         $this.$refs.calendar.fireMethod('refetchEvents')
+            //     })
+            //     .catch(this.displayError)
+        },
+        resetForm() {
+            this.$refs.userDetailsDialog.resetForm()
+            this.editedUser = null
+        },
+
+        displayError(error) {
+            this.isLoading = false
+
+            console.log('error', error)
+
+            if(_.has(error, 'response.data.message')) {
+                this.errorMessage = error.response.data.message
+                this.snackbar = true
+            }
+            else {
+                this.errorMessage = 'An error occured, please try again'
+                this.snackbar = true
+            }
         }
+    },
+    created() {
+        this.$root.$on('showUser', this.openUserDialog)
+    },
+    components: {
+        'user-details-dialog': UserDetailDialog
     }
-  }
+}
 </script>
 
 <style lang="scss" src="scss/main.scss"></style>
 
 <style lang="scss">
     #app {
+        .v-menu {
+            .v-avatar {
+                overflow: hidden;
+
+                .background {
+                    background-position: center;
+                    background-repeat: no-repeat;
+                    background-size: cover;
+                    width: 100%;
+                    height: 100%;
+                }
+            }
+        }
+
         .v-toolbar {
             img.logo {
                 height: 30px;

@@ -17,7 +17,7 @@
                         <v-flex xs12 sm6>
                             <v-select
                                 v-model="filterGroup" :items="groupPicklist"
-                                item-text="name" item-value="name"
+                                item-text="name" item-value="id"
                                 label="Filter by course or job" multiple
                                 deletable-chips clearable
                             >
@@ -52,7 +52,7 @@
         </v-layout>
         <v-layout row wrap>
             <v-flex d-flex v-for="(user, index) in userSelection" :key="user.id">
-                <v-card>
+                <v-card class="user-card" @click.native="clickUser(user)">
                     <v-card-media
                         :src="endpoint+'media/student_photos/'+(user.picture ? user.picture : 'cygnet.jpg')"
                         height="200px"
@@ -90,6 +90,7 @@
 
 <script>
 import moment from 'moment'
+import Axios from 'axios'
 import _ from 'lodash'
 import Config from 'src/Config.__ENV__.js'
 import GroupChip from 'components/GroupChip.vue'
@@ -98,6 +99,7 @@ export default {
     name: 'page-list-users',
     data() {
         return {
+            usersData: [],
             filterGroup: [],
             filterName: '',
             currentPage: 1,
@@ -115,14 +117,17 @@ export default {
             return _.slice(this.users, (this.currentPage-1)*this.totalToDisplay, (this.currentPage-1)*this.totalToDisplay+this.totalToDisplay)
         },
         users() {
-            var users = this.$store.state.users
             var that = this
 
+            var mappedUsers = that.usersData
+
+            console.log('this.filterName', this.filterName)
+
             if(this.filterGroup.length > 0) {
-                users = _.filter(users, function(user) {
+                mappedUsers = _.filter(that.usersData, function(user) {
                     var groupsInCommon = _.intersection(
                         _.map(user.groups, function(group) {
-                            return group.name
+                            return group.id
                         }),
                         that.filterGroup
                     )
@@ -130,8 +135,8 @@ export default {
                     return groupsInCommon.length > 0
                 })
             }
-            if(this.filterName.length > 0) {
-                users = _.filter(users, function(user) {
+            if(this.filterName && this.filterName.length > 0) {
+                mappedUsers = _.filter(mappedUsers.length > 1 ? mappedUsers : this.usersData, function(user) {
                     var name = _.lowerCase(user.first_name + user.last_Name)
                     var filter = _.chain(that.filterName).trim().lowerCase().value()
 
@@ -141,25 +146,41 @@ export default {
 
             // console.log('users filter', users)
 
-            return _.sortBy(users, 'first_name')
+            return _.sortBy(mappedUsers, 'first_name')
         },
         groupPicklist() {
             return _
-            .chain(this.$store.state.users)
-            .map(function(user) {
-                return user.groups
-            })
-            .flatten()
-            .uniqBy('name')
-            .sortBy('name')
-            .value()
+                .chain(this.usersData)
+                .map(function(user) {
+                    return user.groups
+                })
+                .flatten()
+                .uniqBy('name')
+                .sortBy('name')
+                .value()
             ;
         }
     },
     created() {
-        this.$store.dispatch('fetchUsersData')
+        this.fetchUsersData()
     },
     methods: {
+        fetchUsersData() {
+            const $this = this
+
+            Axios.get(Config.endpoint + 'users?includeGraduated=0')
+                .then(function (response) {
+                    $this.usersData = response.data
+                    console.log('fetchUsersData success', response.data)
+                })
+                .catch(function (error) {
+                    // TODO manage error
+                    console.log(error);
+                });
+        },
+        clickUser(user) {
+            this.$root.$emit('showUser', user.id)
+        },
         navigateUserDetails(userId) {
             this.$router.push({ name: 'page-user-details', params: { userId: userId }})
         },
@@ -177,6 +198,10 @@ export default {
 .page-list-users {
     .chips {
         margin-top: 15px;
+    }
+
+    .user-card{
+        cursor: pointer;
     }
 }
 </style>

@@ -29,6 +29,7 @@ class User implements UserInterface, EquatableInterface {
         $this->callsign = $user['callsign'];
         $this->title = $user['title'];
         $this->phone = $user['phone'];
+        $this->picture = $user['picture'];
         $this->graduated = (int) $user['graduated'];
         $this->calendarGroundschool = $user['calendar_groundschool'];
         $this->calendarZeusUsername = $user['calendar_zeus_username'];
@@ -102,6 +103,10 @@ class User implements UserInterface, EquatableInterface {
         return $this->phone;
     }
 
+    public function getPicture() {
+        return $this->picture;
+    }
+
     public function getGraduated() {
         return $this->graduated;
     }
@@ -155,5 +160,9 @@ class User implements UserInterface, EquatableInterface {
         }
 
         return true;
+    }
+
+    public function generateSalt() {
+        return substr(str_shuffle(str_repeat($x='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', ceil(8/strlen($x)) )),1,8);
     }
 }

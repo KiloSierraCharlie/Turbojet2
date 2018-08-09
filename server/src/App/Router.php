@@ -26,10 +26,11 @@ class Router {
         $this->app->post('/documents/{collectionSlug}', 'controller.document:addDocument');
         $this->app->post('/documents/{documentId}/edit', 'controller.document:editDocument'); // TODO use put
         $this->app->delete('/documents/{documentId}', 'controller.document:deleteDocument');
+        $this->app->get('/user', 'controller.user:getConnectedUser');
         $this->app->get('/users', 'controller.user:getUsers');
         $this->app->get('/users/{id}', 'controller.user:getUser');
         $this->app->post('/users/{id}', 'controller.user:editUser');
-        $this->app->get('/groups', 'controller.user:getGroups');
+        $this->app->get('/groups', 'controller.user:getAllGroups');
         $this->app->get('/picklists/groups', 'controller.user:getPicklistGroups')->bind('picklist-groups');
         $this->app->get('/bookings/{type}', 'controller.booking:getBookings');
         $this->app->post('/bookings/{type}', 'controller.booking:createBooking');

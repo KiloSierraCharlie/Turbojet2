@@ -32,7 +32,7 @@ class UserModel extends AbstractModel {
             $queryBuilder = $this->conn->createQueryBuilder();
 
             $queryBuilder
-                ->select('u.id', 'u.first_name', 'u.last_name', 'u.picture', 'u.title', 'u.graduated', 'GROUP_CONCAT(CONCAT(g.name, "::", g.type)) as groups')
+                ->select('u.id', 'u.first_name', 'u.last_name', 'u.picture', 'u.title', 'u.graduated', 'GROUP_CONCAT(CONCAT(g.id, "::", g.name, "::", g.type)) as groups')
                 ->from('users', 'u')
                 ->innerJoin('u', 'group_membership', 'gm', 'u.id = gm.id_user')
                 ->innerJoin('gm', 'groups', 'g', 'gm.id_group = g.id')
@@ -54,7 +54,7 @@ class UserModel extends AbstractModel {
                 $user['groups'] = array();
 
                 foreach ($tempGroups as &$group) {
-                    $user['groups'][] = array('name' => explode('::', $group)[0], 'type' => explode('::', $group)[1]);
+                    $user['groups'][] = array('id' => explode('::', $group)[0],'name' => explode('::', $group)[1], 'type' => explode('::', $group)[2]);
                 }
             }
             return $users;
@@ -106,21 +106,25 @@ class UserModel extends AbstractModel {
     * @return array The details of the user
     */
     public function getUserDetails($id) {
-        $user = $this->conn->fetchAssoc('
-            SELECT
-                id,
-                email,
-                first_name,
-                last_name,
-                room,
-                callsign,
-                title,
-                phone,
-                graduated
-            FROM users
-            WHERE id = ?
-        ', array($id));
+        $queryBuilder = $this->conn->createQueryBuilder();
 
+        $queryBuilder
+            ->select('u.id', 'u.first_name', 'u.last_name', 'u.email', 'u.room', 'u.callsign', 'u.title', 'u.phone', 'u.picture', 'u.title', 'u.graduated', 'GROUP_CONCAT(CONCAT(g.id, "::", g.name, "::", g.type)) as groups')
+            ->from('users', 'u')
+            ->innerJoin('u', 'group_membership', 'gm', 'u.id = gm.id_user')
+            ->innerJoin('gm', 'groups', 'g', 'gm.id_group = g.id')
+            ->where('u.id = :id')->setParameter(':id', $id)
+        ;
+
+        $stmt = $queryBuilder->execute();
+        $user = $stmt->fetch();
+
+        $tempGroups = $user['groups'] = explode(',', $user['groups']);
+        $user['groups'] = array();
+
+        foreach ($tempGroups as &$group) {
+            $user['groups'][] = array('id' => explode('::', $group)[0],'name' => explode('::', $group)[1], 'type' => explode('::', $group)[2]);
+        }
         return $user;
     }
 
@@ -143,7 +147,29 @@ class UserModel extends AbstractModel {
         }
     }
 
-    public function getGroups($nonActive = false) {
+    public function setGroups($id, $groups) {
+        try {
+            $queryBuilder = $this->conn->createQueryBuilder();
+
+            $queryBuilder->delete('group_membership');
+            $queryBuilder->where('id_user = :id')->setParameter('id', $id);
+            $queryBuilder->execute();
+
+            for ($i = 0; $i < count($groups); $i++) {
+                $queryBuilder->insert('group_membership');
+                $queryBuilder->setValue('id_user', ':id_user')->setParameter(':id_user', $id);
+                $queryBuilder->setValue('id_group', ':id_group')->setParameter(':id_group', (int)$groups[$i]);
+                $queryBuilder->execute();
+            }
+
+            return true;
+        }
+        catch(\Exception $e) {
+            return $e;
+        }
+    }
+
+    public function getAllGroups($nonActive = false) {
         $groups = $this->conn->fetchAll('
             SELECT
                 id,

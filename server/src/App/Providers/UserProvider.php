@@ -107,6 +107,35 @@ class UserProvider implements UserProviderInterface {
     }
 
     /**
+    * Search a user by his username
+    * @param  string $username
+    * @return User The Silex user instance
+    */
+    public function loadUserById($id) {
+        $stmt = $this->conn->executeQuery('
+            SELECT *
+            FROM users
+            WHERE id = ?
+        ', array(strtolower($id)));
+
+        if (!$user = $stmt->fetch()) {
+            throw new UsernameNotFoundException(sprintf('Id "%s" does not exist.', $id));
+        }
+
+        // Get user groups
+        $stmt = $this->conn->executeQuery('
+            SELECT *
+            FROM groups g
+            JOIN group_membership gm ON g.id = gm.id_group
+            WHERE gm.id_user = ?
+        ', array(strtolower($user['id'])));
+
+        $groups = $stmt->fetchAll();
+
+        return new User($user['email'], $user['password'], $user['salt'], explode(',', $user['roles']), $user, $groups);
+    }
+
+    /**
     * Delete tokens held by a user
     * @param  string $username
     * @return void

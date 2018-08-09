@@ -24,6 +24,7 @@ Vue.use(Vuex)
 */
 const state = {
     users: [],
+    connectedUser: null,
     dynamicMenu: [],
     userDetails: {},
     groups: []
@@ -76,6 +77,7 @@ const actions = {
         commit('setToken', token)
 
         dispatch('fetchDynamicMenuSections')
+        dispatch('fetchConnectedUserData')
     },
 
     /**
@@ -108,20 +110,14 @@ const actions = {
             });
     },
 
-    /**
-    * Get the user list from the server
-    *
-    * @param object Injection of the Store usefull function (dispatch, commit, state, etc.)
-    * @return promise a promise object linked to the ajax call: Any component that dispatch
-    * this action receive the promise object in response
-    */
-    fetchUsersData({ commit }, groupId) {
-        console.log('fetchUsersData')
 
-        return Axios.get(Config.endpoint + 'users?includeGraduated=0&groupId='+groupId)
+    fetchConnectedUserData({commit, state}) {
+        console.log('fetchConnectedUserData')
+
+        return Axios.get(Config.endpoint + 'user')
             .then(function (response) {
-                commit('setUsers', response.data)
-                console.log('fetchUsersData success', response.data)
+                commit('setConnectedUser', response.data)
+                console.log('fetchUserDetailData success', response.data)
             })
             .catch(function (error) {
                 // TODO manage error
@@ -182,8 +178,9 @@ const actions = {
 * mutation to ask the store to modify the data.
 */
 const mutations = {
-    setToken(state, token) {
+    setToken(state, token, userId) {
         state.authToken = token
+        state.userId = userId
 
         // Store the token also in the local storage so it can be retreived later even if the app is
         // terminated
@@ -207,9 +204,9 @@ const mutations = {
         Axios.defaults.headers.common['AuthToken'] = ''
     },
 
-    setUsers(state, data) {
-        console.log('setUsers', data)
-        state.users = data
+    setConnectedUser(state, data) {
+        console.log('setConnectedUser', data)
+        state.connectedUser = data
     },
 
     setUserDetails(state, data) {

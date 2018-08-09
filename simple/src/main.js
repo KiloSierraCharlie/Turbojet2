@@ -67,6 +67,7 @@ if (token) {
     Store.commit('setToken', token)
     Axios.defaults.headers.common['AuthToken'] = token
     Store.dispatch('fetchDynamicMenuSections')
+    Store.dispatch('fetchConnectedUserData')
 }
 
 console.info('Local storage --- initialized')

@@ -214,7 +214,7 @@ export default {
                     console.log('error', error)
 
                     if(_.has(error, 'response.data.message')) {
-                        this.errorMessage = error.response.data.message
+                        self.errorMessage = error.response.data.message
                         self.snackbar = true
                     }
                     else {

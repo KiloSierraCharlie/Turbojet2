@@ -1,7 +1,7 @@
 <template>
     <v-dialog class="booking-event" v-model="show" max-width="500px" persistent>
         <v-card>
-            <v-form enctype="multipart/form-data" ref="form" v-model="formIsValid">
+            <v-form enctype="multipart/form-data" ref="form">
                 <v-card-title>
                     <span class="headline">{{ formTitle }}</span>
                 </v-card-title>
@@ -78,7 +78,6 @@ export default {
     name: 'booking-event',
     data () {
         return {
-            formIsValid: false,
             isLoading: false,
             isLoadingMessage: 'Calculating ...',
             editMode: false

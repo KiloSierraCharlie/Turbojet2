@@ -43,17 +43,18 @@ class AuthController {
                 $errorMsg = $this->app['debug'] === true ? 'Incorrect password' : 'Bad credentials, please try again';
                 return $this->app->json(['message' => $errorMsg], 401);
             }
+
+            // Credentials are valids, we can create the token and returns it to the user
+            $userProvider->deleteUserTokens($username);
+            $token = $userProvider->generateToken($username);
+
+            return $this->app->json(['token' => $token]);
+
         } catch (UsernameNotFoundException $e) {
             // Incorrect username
             $errorMsg = $this->app['debug'] === true ? 'Incorrect username' : 'Bad credentials, please try again';
             return $this->app->json(['message' => $errorMsg], 401);
         }
-
-        // Credentials are valids, we can create the token and returns it to the user
-        $userProvider->deleteUserTokens($username);
-        $token = $userProvider->generateToken($username);
-
-        return $this->app->json(['token' => $token]);
     }
 
 
@@ -129,7 +130,7 @@ class AuthController {
             $encoder = $this->app['security.encoder_factory']->getEncoder($user);
 
             // Encode the password
-            $salt = $this->generateRandomString(8);
+            $salt = $user->generateSalt();
             $encodedPassword = $encoder->encodePassword($plainPassword, $salt);
 
         } catch (UsernameNotFoundException $e) {
@@ -188,9 +189,4 @@ class AuthController {
         // User found, we can retuns an encoded password
         return $this->app->json(['encodedPassword' => $encodedPassword]);
     }
-
-    private function generateRandomString($length = 10) {
-        return substr(str_shuffle(str_repeat($x='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', ceil($length/strlen($x)) )),1,$length);
-    }
-
 }
