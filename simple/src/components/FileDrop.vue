@@ -60,8 +60,7 @@ export default {
             processQueue: false,
             isDragOver: false,
             droppedFiles: [],
-            errorMessage: '',
-            // showRemoveAllButton: false
+            errorMessage: ''
         }
     },
     methods: {

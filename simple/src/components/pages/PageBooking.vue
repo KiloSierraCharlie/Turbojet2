@@ -193,8 +193,6 @@ export default {
 
             // New post / link => POST request
             if(!this.editedEvent.data.id) {
-                // console.log('this.editedEvent', this.editedEvent.start.local().format(), this.editedEvent.end.local().format())
-
                 var payload = {
                     start: this.editedEvent.start.format('YYYY-MM-DD HH:mm:ss'),
                     end: this.editedEvent.end.format('YYYY-MM-DD HH:mm:ss'),

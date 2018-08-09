@@ -31,21 +31,17 @@
                     <template v-for="item in mergedDrawerItems">
                         <v-list-group v-if="item.children" v-model="item.model" :key="item.text" :prepend-icon="item.icon">
                             <v-list-tile slot="activator">
-                                <!-- <v-list-tile-content> -->
                                     <v-list-tile-title>
                                         {{ item.text }}
                                     </v-list-tile-title>
-                                <!-- </v-list-tile-content> -->
                             </v-list-tile>
                             <v-list-tile v-for="(child, i) in item.children" :key="i" @click="clickMenu(child)" >
                                 <v-list-tile-action v-if="child.icon">
                                     <v-icon>{{ child.icon }}</v-icon>
                                 </v-list-tile-action>
-                                <!-- <v-list-tile-content> -->
                                     <v-list-tile-title>
                                         {{ child.text }}
                                     </v-list-tile-title>
-                                <!-- </v-list-tile-content> -->
                             </v-list-tile>
                         </v-list-group>
                         <v-list-tile v-else :key="item.text" @click="clickMenu(item)">
@@ -76,9 +72,12 @@
                 <router-view ref="view"></router-view>
                 <!-- <router-view name="dialog"></router-view> -->
             </v-content>
-            <v-footer color="indigo" class="pa-3 white--text" app>
-                <!-- Made with love by&nbsp;<a target="_blank" href="https://www.linkedin.com/in/kevinbouhadana">Kevin Bouhadana (172)</a> -->
-                ®2018
+            <v-footer color="indigo" class="px-2 white--text" height="auto" app>
+                <v-layout justify-center row wrap>
+                    <v-flex class="pt-3 pb-2" text-xs-center white--text xs12>
+                        Turbojet V2 - made with &nbsp;<v-icon class="subheading" color="white">mdi-heart</v-icon>&nbsp; by &nbsp;<a target="_blank" href="https://www.linkedin.com/in/kevinbouhadana">Kevin Bouhadana (172)</a>, based on initial concept by <a href="http://www.jamesharding.ca/" target="_blank">James Harding (140)</a>. maintained by a wonderfull lineage of IT Reps.
+                    </v-flex>
+                </v-layout>
             </v-footer>
             <user-details-dialog ref="userDetailsDialog"
                 :user-data="editedUser"
@@ -386,8 +385,13 @@ export default {
             }
         }
 
-        .footer {
-            padding-left: 10px;
+        .v-footer {
+            // padding-left: 10px;
+
+            a, a:visited {
+                color: white;
+
+            }
         }
     }
 </style>

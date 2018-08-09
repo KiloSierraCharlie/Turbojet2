@@ -87,11 +87,6 @@
                                     :disabled="!editMode"
                                     multiple
                                 />
-                                <!-- <v-select
-                                    v-model="computedData.group" :items="groupsData"
-                                    item-text="name" item-value="name"
-                                    label="Filter by course or job" multiple
-                                /> -->
                             </v-flex>
                             <v-flex xs12 sm6>
                                 <v-text-field
@@ -167,17 +162,6 @@ export default {
         computedData() {
             return this.editMode ? this.editedUserData : this.userData
         }
-        // formTitle () {
-        //     if(!this.eventData.data.id) {
-        //         return 'New booking'
-        //     }
-        //     else if(this.eventData.data.id && ! this.editMode) {
-        //         return 'View booking'
-        //     }
-        //     else if(this.eventData.data.id && this.editMode) {
-        //         return 'Edit booking'
-        //     }
-        // }
     },
     methods: {
         setEditMode(bool) {
@@ -192,8 +176,6 @@ export default {
         },
         closeDialog() {
             this.setEditMode(false)
-            // this.$refs.form.reset()
-            // this.$validator.reset()
             this.$emit('closeDialogEdit')
         },
         deleteDialog() {

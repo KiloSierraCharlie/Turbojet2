@@ -99,8 +99,6 @@ export default {
     methods: {
         closeDialog() {
             this.editMode = false
-            // this.$refs.form.reset()
-            // this.$validator.reset()
             this.$emit('closeDialogEdit')
         },
         cancelDialog() {

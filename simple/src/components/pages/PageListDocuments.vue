@@ -132,8 +132,6 @@ export default {
             headers: [
                 { text: 'Type', value: 'type', sortable: false },
                 { text: 'Name', value: 'names' }, // TODO nug on sort
-                // { text: 'Type', value: 'type' },
-                // { text: 'Size', value: 'size' },
                 { text: 'Last Updated', value: 'modifiedAt' },
                 { text: 'Actions', value: 'name', sortable: false }
             ],
@@ -160,13 +158,12 @@ export default {
     },
     methods: {
         fetchDocumentsData() {
-            var that = this
+            const $this = this
 
-            // this.$store.dispatch('fetchNewsData')
             Axios.get(Config.endpoint + 'documents/'+this.collectionSlug)
                 .then(function (response) {
                     console.log('fetch documents data success', response.data)
-                    that.documents = response.data
+                    $this.documents = response.data
 
                 })
                 .catch(function (error) {
@@ -198,41 +195,41 @@ export default {
         },
 
         deleteItem () {
-            var self = this
+            const $this = this
 
             Axios.delete(Config.endpoint + 'documents/'+this.documentToDelete)
                 .then(function(response) {
-                    self.isLoading = false
-                    self.documentToDelete = ''
-                    self.dialogDelete = false
-                    self.snackbar = false
-                    self.fetchDocumentsData()
+                    $this.isLoading = false
+                    $this.documentToDelete = ''
+                    $this.dialogDelete = false
+                    $this.snackbar = false
+                    $this.fetchDocumentsData()
                 })
                 .catch(function(error) {
-                    self.isLoading = false
+                    $this.isLoading = false
 
                     console.log('error', error)
 
                     if(_.has(error, 'response.data.message')) {
-                        self.errorMessage = error.response.data.message
-                        self.snackbar = true
+                        $this.errorMessage = error.response.data.message
+                        $this.snackbar = true
                     }
                     else {
-                        self.errorMessage = 'An error occured, please try again'
-                        self.snackbar = true
+                        $this.errorMessage = 'An error occured, please try again'
+                        $this.snackbar = true
                     }
                 })
         },
 
         closeDialogEdit () {
-            var self = this
+            const $this = this
 
             this.dialogEdit = false
             this.snackbar = false
             this.editedIndex = -1
 
             setTimeout(() => {
-                self.resetForm()
+                $this.resetForm()
             }, 300)
         },
 
@@ -249,8 +246,6 @@ export default {
                     if(res) {
                         var payload = new FormData();
                         payload.append('name', $this.editedDocument.name)
-
-                        // console.log('this.$refs.fileDrop.isValid()', this.$refs.fileDrop.isValid())
 
                         // TODO doc error red field if empty
                         if($this.docType === 'document' && $this.$refs.fileDrop.isValid()) {

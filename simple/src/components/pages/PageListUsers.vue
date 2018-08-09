@@ -71,10 +71,6 @@
                             </div>
                         </div>
                     </v-card-title>
-                    <!-- <v-card-actions>
-                        <v-btn flat color="orange">Share</v-btn>
-                        <v-btn flat color="orange">Explore</v-btn>
-                    </v-card-actions> -->
                 </v-card>
             </v-flex>
         </v-layout>
@@ -117,19 +113,19 @@ export default {
             return _.slice(this.users, (this.currentPage-1)*this.totalToDisplay, (this.currentPage-1)*this.totalToDisplay+this.totalToDisplay)
         },
         users() {
-            var that = this
+            const $this = this
 
-            var mappedUsers = that.usersData
+            var mappedUsers = $this.usersData
 
             console.log('this.filterName', this.filterName)
 
             if(this.filterGroup.length > 0) {
-                mappedUsers = _.filter(that.usersData, function(user) {
+                mappedUsers = _.filter($this.usersData, function(user) {
                     var groupsInCommon = _.intersection(
                         _.map(user.groups, function(group) {
                             return group.id
                         }),
-                        that.filterGroup
+                        $this.filterGroup
                     )
 
                     return groupsInCommon.length > 0
@@ -138,13 +134,11 @@ export default {
             if(this.filterName && this.filterName.length > 0) {
                 mappedUsers = _.filter(mappedUsers.length > 1 ? mappedUsers : this.usersData, function(user) {
                     var name = _.lowerCase(user.first_name + user.last_Name)
-                    var filter = _.chain(that.filterName).trim().lowerCase().value()
+                    var filter = _.chain($this.filterName).trim().lowerCase().value()
 
                     return name.indexOf(filter) !== -1
                 })
             }
-
-            // console.log('users filter', users)
 
             return _.sortBy(mappedUsers, 'first_name')
         },

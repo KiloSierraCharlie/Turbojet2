@@ -355,10 +355,11 @@ export default {
         },
 
         getPicklistData() {
-            var self = this
+            const $this = this
+
             Axios.get(Config.endpoint + 'picklists/groups')
                 .then(function (response) {
-                    self.groups = response.data
+                    $this.groups = response.data
                 })
                 .catch(function (error) {
                     // TODO manage error

@@ -124,10 +124,6 @@ export default {
 @import '~scss/variables';
 
 .group-chip {
-    // &.chip {
-    //     margin: 0;
-    // }
-
     &.v-chip .v-avatar {
         margin-left: -15px;
         margin-right: 0px;

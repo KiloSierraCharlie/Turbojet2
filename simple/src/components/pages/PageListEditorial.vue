@@ -82,9 +82,6 @@
                             <div v-html="post.content"></div>
                         </div>
                     </v-card-text>
-                    <!-- <v-card-actions>
-
-                    </v-card-actions> -->
                 </v-card>
 
             </v-flex xs12>
@@ -235,8 +232,6 @@ export default {
 
                         var error = function(error) {
                             $this.isLoading = false
-
-                            // console.log('error', error.response)
 
                             if(_.has(error, 'response.data.message')) {
                                 $this.errorMessage = error.response.data.message

@@ -25,13 +25,6 @@
             </div>
             <div>{{user.graduated}}</div>
         </v-form>
-
-            <!-- <v-text-field v-model="email" prepend-icon="person" :label="$t('login.email')" type="email" required></v-text-field>
-            <v-text-field v-model="password" prepend-icon="lock" :label="$t('login.password')" type="password" required></v-text-field>
-            <div class="text-xs-center">
-                <v-btn outline color="primary" @click="goRegister">Register</v-btn>
-                <v-btn color="primary" @click="onLogin">Login</v-btn>
-            </div> -->
     </v-container>
 </template>
 
@@ -78,19 +71,7 @@ export default {
         this.$store.dispatch('fetchUserDetailsData', this.userId)
     },
     methods: {
-        // editUserField(field, value) {
-        //     var payload = {
-        //         userId: this.userId
-        //     }
-        //     payload[field] = value
-        //
-        //     this.$store.dispatch('editUser', payload)
-        // },
         confirm(field) {
-            console.log('user', this.user)
-            console.log('value', this.localChange)
-
-            // this.editUserField(field, value)
             var payload = {
                 userId: this.userId
             }
