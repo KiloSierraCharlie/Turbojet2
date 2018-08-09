@@ -28,7 +28,7 @@
         </v-dialog>
         <v-snackbar :timeout="0" color="red accent-2" v-model="snackbar">
           {{ errorMessage }}
-          <v-btn dark flat @click.native="snackbar = false">Close</v-btn>
+          <v-btn dark flat @click.native="snackbar = false; errorMessage = ''">Close</v-btn>
         </v-snackbar>
     </v-container>
 </template>
@@ -251,7 +251,7 @@ export default {
             this.editedEvent.getPriceApi = ''
             this.editedEvent.priceIsLoading = false
 
-            // TODO bof
+            // TODO use assign and default object
             this.editedEvent.data = {
                 id: '',
                 id_resource: '',
@@ -302,7 +302,7 @@ export default {
 
                                 // if($this.$route.meta.settings.multiResources) {
                                 if($this.$route.meta.api.getResources) {
-                                    // TODO bug when barbecueue -> minivan
+                                    // TODO bug when barbecueue -> minivan -> book event
 
                                     if($this.$route.meta.settings.multiResources) {
                                         $this.$refs.calendar.fireMethod('changeView', 'agendaDay')
@@ -314,7 +314,6 @@ export default {
                                     $this.$refs.calendar.fireMethod('option', {
                                         groupByResource: true,
                                         resources: function(callbackResources, start, end, timezone) {
-                                            // Axios.get(Config.endpoint + this.$route.meta.api.getResources) // TODO
                                             Axios.get(Config.endpoint + $this.$route.meta.api.getResources)
                                                 .then(function (response) {
                                                     callbackResources(_.map(response.data, function(item) {
@@ -325,12 +324,22 @@ export default {
                                                     }))
 
                                                     callbackEvents(events)
-                                              })
-                                              .catch(function (error) {
-                                                    // TODO manage error
-                                                    console.log(error);
-                                              })
-                                      }
+                                                })
+                                                .catch(function (error) {
+                                                    $this.isLoading = false
+
+                                                    console.log('error', error)
+
+                                                    if(_.has(error, 'response.data.message')) {
+                                                        $this.errorMessage = error.response.data.message
+                                                        $this.snackbar = true
+                                                    }
+                                                    else {
+                                                        $this.errorMessage = 'An error occured, please try again'
+                                                        $this.snackbar = true
+                                                    }
+                                                })
+                                        }
                                     })
 
                                     $this.$refs.calendar.fireMethod('refetchResources')
@@ -346,8 +355,18 @@ export default {
                                 }
                             })
                             .catch(function (error) {
-                                // TODO manage error
-                                console.log(error);
+                                $this.isLoading = false
+
+                                console.log('error', error)
+
+                                if(_.has(error, 'response.data.message')) {
+                                    $this.errorMessage = error.response.data.message
+                                    $this.snackbar = true
+                                }
+                                else {
+                                    $this.errorMessage = 'An error occured, please try again'
+                                    $this.snackbar = true
+                                }
                             });
                     }
                 }

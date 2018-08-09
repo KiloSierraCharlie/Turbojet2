@@ -176,7 +176,7 @@
         </v-dialog>
         <v-snackbar :timeout="0" color="red accent-2" v-model="snackbar">
           {{ errorMessage }}
-          <v-btn dark flat @click.native="snackbar = false">Close</v-btn>
+          <v-btn dark flat @click.native="snackbar = false; errorMessage= ''">Close</v-btn>
         </v-snackbar>
     </v-container>
 </template>
@@ -341,13 +341,11 @@ export default {
                                 if (error.response && _.has(error, 'response.data.message')) {
                                     $this.errorMessage = error.response.data.message
                                     $this.snackbar = true
-                                    // $this.errorMsg = error.response.data.message
                                 }
                                 // no answer from the server, or no error message in the body
                                 else {
                                     $this.errorMessage = 'An error has occurred, please try again. If the problem persists please contact the student committee'
                                     $this.snackbar = true
-                                    // $this.errorMsg = 'An error has occurred, please try again. If the problem persists please contact the student committee'
                                 }
                             })
                     }
@@ -362,8 +360,18 @@ export default {
                     $this.groups = response.data
                 })
                 .catch(function (error) {
-                    // TODO manage error
-                    console.log(error);
+                    $this.isLoading = false
+
+                    console.log('error', error)
+
+                    if(_.has(error, 'response.data.message')) {
+                        $this.errorMessage = error.response.data.message
+                        $this.snackbar = true
+                    }
+                    else {
+                        $this.errorMessage = 'An error occured, please try again'
+                        $this.snackbar = true
+                    }
                 });
         }
     },

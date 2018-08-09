@@ -28,7 +28,7 @@
         </v-dialog>
         <v-snackbar :timeout="0" color="red accent-2" v-model="snackbar">
           {{ errorMessage }}
-          <v-btn dark flat @click.native="snackbar = false">Close</v-btn>
+          <v-btn dark flat @click.native="snackbar = false; errorMessage=''">Close</v-btn>
         </v-snackbar>
     </v-container>
 </template>
@@ -110,6 +110,7 @@ export default {
                     events(start, end, timezone, callbackEvents) {
                         Axios.get(Config.endpoint + $this.$route.meta.api.getAll +'?dateFrom='+moment(start).format()+'&dateTo='+moment(end).format())
                             .then(function (response) {
+
                                 var events = _.map(response.data, function(item) {
                                     return {
                                         title: ($this.$route.meta.settings.multiResources ? item.resource_name + '\n' : '') + item.user_name+'\n'+item.booking_reason,
@@ -130,7 +131,6 @@ export default {
                                     $this.$refs.calendar.fireMethod('option', {
                                         groupByResource: true,
                                         resources: function(callbackResources, start, end, timezone) {
-                                            // Axios.get(Config.endpoint + this.$route.meta.api.getResources) // TODO
                                             Axios.get(Config.endpoint + 'bookings/barbecue/resources')
                                                 .then(function (response) {
                                                     callbackResources(_.map(response.data, function(item) {
@@ -141,12 +141,22 @@ export default {
                                                     }))
 
                                                     callbackEvents(events)
+                                                })
+                                                .catch(function (error) {
+                                                    $this.isLoading = false
+
+                                                    console.log('error', error)
+
+                                                    if(_.has(error, 'response.data.message')) {
+                                                        $this.errorMessage = error.response.data.message
+                                                        $this.snackbar = true
+                                                    }
+                                                    else {
+                                                        $this.errorMessage = 'An error occured, please try again'
+                                                        $this.snackbar = true
+                                                    }
                                               })
-                                              .catch(function (error) {
-                                                    // TODO manage error
-                                                    console.log(error);
-                                              })
-                                      }
+                                        }
                                     })
 
                                     $this.$refs.calendar.fireMethod('refetchResources')
@@ -162,8 +172,18 @@ export default {
                                 }
                             })
                             .catch(function (error) {
-                                // TODO manage error
-                                console.log(error);
+                                $this.isLoading = false
+
+                                console.log('error', error)
+
+                                if(_.has(error, 'response.data.message')) {
+                                    $this.errorMessage = error.response.data.message
+                                    $this.snackbar = true
+                                }
+                                else {
+                                    $this.errorMessage = 'An error occured, please try again'
+                                    $this.snackbar = true
+                                }
                             });
                     }
                 }

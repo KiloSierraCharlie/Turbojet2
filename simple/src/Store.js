@@ -42,36 +42,6 @@ const getters = {}
 * Mainly used for assync treatments (e.g: ajax call) or other business logic specific treatments
 */
 const actions = {
-    /**
-    * Autenticte the user. Username is static = vendeur
-    *
-    * @param object Injection of the Store usefull function (dispatch, commit, state, etc.)
-    * @param Object the credentials {login, password}
-    * @return promise a promise object linked to the ajax call: Any component that dispatch
-    * this action receive the promise object in response
-    */
-    // authUser({ dispatch, commit, state }, payload) {
-    //     console.log("authUser", payload.username)
-    //     console.log("authUser password", payload.password)
-    //
-    //     return Axios.post(Config.endpoint + 'login', payload)
-    //         .then(function (response) {
-    //             // Store the token
-    //             commit('userAuthSuccess', response.data.token)
-    //
-    //             // Fetch user data
-    //             // dispatch('fetchUserData') // TODO
-    //
-    //             Router.push({ name: 'page-news' })
-    //
-    //             return response
-    //         })
-    //         .catch(function (error) {
-    //             throw error
-    //         })
-    //
-    // },
-    //
 
     userAuthSuccess({ dispatch, commit }, token) {
         commit('setToken', token)

@@ -99,7 +99,7 @@
         </v-layout row>
         <v-snackbar :timeout="0" color="red accent-2" v-model="snackbar">
           {{ errorMessage }}
-          <v-btn dark flat @click.native="snackbar = false">Close</v-btn>
+          <v-btn dark flat @click.native="snackbar = false; errorMessage = ''">Close</v-btn>
         </v-snackbar>
     </v-container>
 </template>
@@ -167,8 +167,18 @@ export default {
 
                 })
                 .catch(function (error) {
-                    // TODO manage error
-                    console.log(error);
+                    $this.isLoading = false
+
+                    console.log('error', error)
+
+                    if(_.has(error, 'response.data.message')) {
+                        $this.errorMessage = error.response.data.message
+                        $this.snackbar = true
+                    }
+                    else {
+                        $this.errorMessage = 'An error occured, please try again'
+                        $this.snackbar = true
+                    }
                 });
         },
 
@@ -247,7 +257,6 @@ export default {
                         var payload = new FormData();
                         payload.append('name', $this.editedDocument.name)
 
-                        // TODO doc error red field if empty
                         if($this.docType === 'document' && $this.$refs.fileDrop.isValid()) {
                             payload.append('file', $this.$refs.fileDrop.file)
                         }

@@ -97,7 +97,7 @@
         </v-layout>
         <v-snackbar :timeout="0" color="red accent-2" v-model="snackbar">
           {{ errorMessage }}
-          <v-btn dark flat @click.native="snackbar = false">Close</v-btn>
+          <v-btn dark flat @click.native="snackbar = false; errorMessage = ''">Close</v-btn>
         </v-snackbar>
     </v-container>
 </template>
