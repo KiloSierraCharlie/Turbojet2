@@ -8,12 +8,13 @@ import VueRouter from 'vue-router'
 import PageListUsers from 'components/pages/PageListUsers.vue'
 import PageListDocuments from 'components/pages/PageListDocuments.vue'
 import PageListEditorial from 'components/pages/PageListEditorial.vue'
-import PageUserDetails from 'components/pages/PageUserDetails.vue'
 import PageBooking from 'components/pages/PageBooking.vue'
 import BookingEvent from 'components/BookingEvent.vue'
 import PageLogin from 'components/pages/PageLogin.vue'
 import PageManager from 'components/pages/PageManager.vue'
 import PageCustom from 'components/pages/PageCustom.vue'
+import PageITReps from 'components/pages/PageITReps.vue'
+import PageMyZeusCalendar from 'components/pages/PageMyZeusCalendar.vue'
 import Store from './Store.js'
 
 Vue.use(VueRouter)
@@ -40,6 +41,16 @@ const router = new VueRouter({
                 },
                 settings: {
                     totalToDisplay: 10
+                }
+            }
+        },
+        {
+            path: '/my-zeus-calendar',
+            component: PageMyZeusCalendar,
+            name: 'page-my-zeus-calendar',
+            meta: {
+                labels: {
+                    title: 'My Zeus Calendar'
                 }
             }
         },
@@ -168,17 +179,6 @@ const router = new VueRouter({
             }
         },
         {
-            path: '/user/:userId',
-            component: PageUserDetails,
-            name: 'page-user-details',
-            props: true,
-            meta: {
-                labels: {
-                    title: 'User details'
-                }
-            }
-        },
-        {
             path: '/bookings',
             component: PageBooking,
             children: [
@@ -259,16 +259,6 @@ const router = new VueRouter({
             name: 'login'
         },
         {
-            path: '/profile',
-            component: PageListUsers,
-            name: 'profile',
-            meta: {
-                labels: {
-                    title: 'My Profile'
-                }
-            }
-        },
-        {
             path: '/settings',
             component: PageListUsers,
             name: 'settings',
@@ -277,6 +267,11 @@ const router = new VueRouter({
                     title: 'Settings'
                 }
             }
+        },
+        {
+            path: '/it-reps',
+            component: PageITReps,
+            name: 'page-it-reps'
         },
         // Fallback if no route matches, we redirect to the homepage
         {

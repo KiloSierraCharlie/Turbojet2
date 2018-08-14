@@ -133,10 +133,10 @@ export default {
         }
     },
     watch: {
-        '$route': 'fetchPagesData'
+        '$route': 'fetchData'
     },
     methods: {
-        fetchPagesData() {
+        fetchData() {
             const $this = this
 
             Axios.get(Config.endpoint + this.$route.meta.api.getAll)
@@ -155,7 +155,7 @@ export default {
                 });
         },
         onPageChange() {
-            this.fetchPagesData()
+            this.fetchData()
             window.scrollTo(0, 0)
         },
         randomColor() {
@@ -174,7 +174,7 @@ export default {
                             $this.isLoading = false
 
                             $this.closeDialogEdit()
-                            $this.fetchPagesData()
+                            $this.fetchData()
                             $this.$store.dispatch('fetchDynamicMenuSections')
                         }
 
@@ -266,7 +266,7 @@ export default {
                     $this.pageToDelete = ''
                     $this.dialogDelete = false
                     $this.snackbar = false
-                    $this.fetchPagesData()
+                    $this.fetchData()
                     $this.$store.dispatch('fetchDynamicMenuSections')
                 })
                 .catch(function(error) {
@@ -286,7 +286,7 @@ export default {
         }
     },
     created() {
-        this.fetchPagesData()
+        this.fetchData()
     },
     components: {
         'file-drop': FileDrop,

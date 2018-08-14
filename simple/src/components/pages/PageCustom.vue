@@ -50,13 +50,13 @@ export default {
         }
     },
     created() {
-        this.fetchPageData()
+        this.fetchData()
     },
     watch: {
-        '$route': 'fetchPageData'
+        '$route': 'fetchData'
     },
     methods: {
-        fetchPageData() {
+        fetchData() {
             const $this = this
 
             Axios.get(Config.endpoint + 'editorial/' + this.$props.section + '/' + this.$props.id)
@@ -78,7 +78,7 @@ export default {
             return moment(date).format("dddd, MMMM Do YYYY, h:mm a")
         },
         onPageChange() {
-            this.fetchPostsData()
+            this.fetchData()
             window.scrollTo(0, 0)
         },
         randomColor() {

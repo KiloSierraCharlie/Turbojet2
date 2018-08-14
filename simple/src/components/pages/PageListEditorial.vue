@@ -1,5 +1,5 @@
 <template>
-    <v-container fluid class="page-list-editorial">
+    <v-container fluid class="page-list-editorial pt-0">
         <v-layout row>
             <v-flex xs12>
                 <v-dialog v-model="dialogEdit" max-width="500px" fullscreen transition="dialog-bottom-transition" scrollable>
@@ -173,10 +173,10 @@ export default {
         }
     },
     created() {
-        this.fetchPostsData()
+        this.fetchData()
     },
     watch: {
-        '$route': 'fetchPostsData',
+        '$route': 'fetchData',
         dialogEdit (val) {
             val || this.closeDialogEdit()
         },
@@ -185,7 +185,7 @@ export default {
         }
     },
     methods: {
-        fetchPostsData() {
+        fetchData() {
             const $this = this
 
             Axios.get(Config.endpoint + this.$route.meta.api.getAll + '?from='+((this.currentPage-1)*this.totalToDisplay)+'&length='+this.totalToDisplay)
@@ -208,7 +208,7 @@ export default {
             this.$root.$emit('showUser', id)
         },
         onPageChange() {
-            this.fetchPostsData()
+            this.fetchData()
             window.scrollTo(0, 0)
         },
         randomColor() {
@@ -227,7 +227,7 @@ export default {
                             $this.isLoading = false
 
                             $this.closeDialogEdit()
-                            $this.fetchPostsData()
+                            $this.fetchData()
                         }
 
                         var error = function(error) {
@@ -313,7 +313,7 @@ export default {
                     $this.postToDelete = ''
                     $this.dialogDelete = false
                     $this.snackbar = false
-                    $this.fetchPostsData()
+                    $this.fetchData()
                 })
                 .catch(function(error) {
                     $this.isLoading = false

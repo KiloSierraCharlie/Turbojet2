@@ -187,7 +187,6 @@ import Axios from 'axios'
 import Config from 'src/Config.__ENV__.js'
 import VueRecaptcha from 'vue-recaptcha'
 import FileDrop from 'components/FileDrop.vue'
-import { required } from 'vuelidate/lib/validators'
 
 export default {
     data() {

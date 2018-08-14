@@ -148,7 +148,7 @@ export default {
         }
     },
     watch: {
-        '$route': 'fetchDocumentsData',
+        '$route': 'fetchData',
         dialogEdit (val) {
             val || this.closeDialogEdit()
         },
@@ -157,7 +157,7 @@ export default {
         }
     },
     methods: {
-        fetchDocumentsData() {
+        fetchData() {
             const $this = this
 
             Axios.get(Config.endpoint + 'documents/'+this.collectionSlug)
@@ -213,7 +213,7 @@ export default {
                     $this.documentToDelete = ''
                     $this.dialogDelete = false
                     $this.snackbar = false
-                    $this.fetchDocumentsData()
+                    $this.fetchData()
                 })
                 .catch(function(error) {
                     $this.isLoading = false
@@ -272,7 +272,7 @@ export default {
                             $this.isLoading = false
 
                             $this.closeDialogEdit()
-                            $this.fetchDocumentsData()
+                            $this.fetchData()
                         }
 
                         var error = function(error) {
@@ -371,7 +371,7 @@ export default {
         }
     },
     created() {
-        this.fetchDocumentsData()
+        this.fetchData()
     },
     components: {'file-drop': FileDrop}
 }

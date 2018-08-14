@@ -10,9 +10,7 @@
                         <v-list slot="activator" class="pa-0">
                             <v-list-tile avatar v-if="user">
                                 <v-list-tile-avatar>
-                                    <div class="background" :style="'background-image: url(' + endpoint + 'media/student_photos/'+ (user.picture ? user.picture : 'cygnet.jpg') + ')'">
-
-                                    </div>
+                                    <div class="background" :style="'background-image: url(' + endpoint + 'media/student_photos/'+ (user.picture ? user.picture : 'cygnet.jpg') + ')'"></div>
                                 </v-list-tile-avatar>
                                 <v-list-tile-content>
                                     <v-list-tile-title>{{user.firstName}} {{user.lastName}} <v-icon small>mdi-menu-down</v-icon></v-list-tile-title>
@@ -121,7 +119,7 @@ export default {
             drawerItems: [
                 { icon: 'mdi-message-alert', text: 'News', link: '/news' },
                 { icon: 'mdi-account-circle', text: 'Person Finder', link: '/users' },
-                { icon: 'mdi-calendar', text: '(TODO prio 1) My Calendar' },
+                { icon: 'mdi-calendar', text: 'My Zeus Calendar', link: '/my-zeus-calendar' },
                 { icon: 'mdi-cart', text: 'FTEBay', link: '/ftebay'  },
                 {
                     icon: 'mdi-domain',
@@ -162,9 +160,9 @@ export default {
                 },
                 {
                     icon: 'mdi-star-circle',
-                    text: '(TODO prio 2) Student Committee',
+                    text: 'The Student Committee',
                     children: [
-                        { icon: 'mdi-account-group', text: '(TODO) The Student Committee' },
+                        { icon: 'mdi-account-group', text: '(Coming soon) The members' },
                         { icon: 'mdi-cloud-download', text: 'Documents & Resources', link: '/documents/student-resources' }
                     ]
                 },
@@ -305,8 +303,8 @@ export default {
                         $this.isLoading = false
                         $this.onCloseDialogEdit()
 
-                        if($this.$route.name === 'page-list-users') {
-                            $this.$refs.view.fetchUsersData()
+                        if($this.$route.name === 'page-list-users' || $this.$route.name === 'page-my-zeus-calendar') {
+                            $this.$refs.view.fetchData()
                         }
                     })
                     .catch(this.displayError)

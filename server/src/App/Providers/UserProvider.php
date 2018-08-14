@@ -74,7 +74,7 @@ class UserProvider implements UserProviderInterface {
 
         $groups = $stmt->fetchAll();
 
-        return new User($user['email'], $user['password'], $user['salt'], explode(',', $user['roles']), $user, $groups);
+        return new User($user['email'], $user['password'], $user['salt'], array(), $user, $groups);
     }
 
     /**
@@ -103,7 +103,7 @@ class UserProvider implements UserProviderInterface {
 
         $groups = $stmt->fetchAll();
 
-        return new User($user['email'], $user['password'], $user['salt'], explode(',', $user['roles']), $user, $groups);
+        return new User($user['email'], $user['password'], $user['salt'], array(), $user, $groups);
     }
 
     /**
@@ -132,7 +132,7 @@ class UserProvider implements UserProviderInterface {
 
         $groups = $stmt->fetchAll();
 
-        return new User($user['email'], $user['password'], $user['salt'], explode(',', $user['roles']), $user, $groups);
+        return new User($user['email'], $user['password'], $user['salt'], array(), $user, $groups);
     }
 
     /**

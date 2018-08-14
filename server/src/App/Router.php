@@ -27,6 +27,7 @@ class Router {
         $this->app->post('/documents/{documentId}/edit', 'controller.document:editDocument'); // TODO use put
         $this->app->delete('/documents/{documentId}', 'controller.document:deleteDocument');
         $this->app->get('/user', 'controller.user:getConnectedUser');
+        $this->app->get('/user/calendar', 'controller.user:getUserCalendar');
         $this->app->get('/users', 'controller.user:getUsers');
         $this->app->get('/users/{id}', 'controller.user:getUser');
         $this->app->post('/users/{id}', 'controller.user:editUser');

@@ -1,5 +1,5 @@
 <template>
-    <v-dialog class="user-details-dialog" v-model="show" max-width="700px" persistent>
+    <v-dialog class="user-details-dialog" v-model="show" max-width="700px">
         <v-card v-if="userData && groupsData">
             <v-form enctype="multipart/form-data" ref="form">
                 <v-card-media
@@ -40,7 +40,7 @@
                             <v-flex xs12 sm6>
                                 <v-text-field
                                     v-model="computedData.email"
-                                    prepend-icon="person"
+                                    prepend-icon="mdi-at"
                                     label="Email"
                                     name="email"
                                     type="email"
@@ -53,7 +53,7 @@
                             <v-flex xs12 sm6>
                                 <v-text-field
                                     v-model="userData.phone"
-                                    prepend-icon="person"
+                                    prepend-icon="mdi-cellphone-iphone"
                                     label="Phone"
                                     name="phone"
                                     type="text"
@@ -65,8 +65,29 @@
                             </v-flex>
                             <v-flex xs12 sm6>
                                 <v-text-field
+                                    v-model="computedData.position"
+                                    prepend-icon="mdi-account-star"
+                                    label="Position"
+                                    name="position"
+                                    type="text"
+                                    :disabled="!editMode"
+                                />
+                            </v-flex>
+                            <v-flex xs12 sm6>
+                                <v-text-field
+                                    v-model="computedData.calendar_zeus_username"
+                                    prepend-icon="mdi-calendar"
+                                    label="Zeus Username"
+                                    name="calendarZeusUsername"
+                                    type="text"
+                                    :disabled="!editMode"
+                                />
+                            </v-flex>
+
+                            <v-flex xs12 sm6>
+                                <v-text-field
                                     v-model="computedData.room"
-                                    prepend-icon="person"
+                                    prepend-icon="mdi-map-marker"
                                     label="Room"
                                     name="room"
                                     type="text"
@@ -80,7 +101,7 @@
                                 <v-select
                                     :items="groupsData"
                                     v-model="computedData.groups"
-                                    prepend-icon="person"
+                                    prepend-icon="mdi-account-group"
                                     label="Course"
                                     name="course"
                                     single-line
@@ -112,6 +133,24 @@
                                     v-validate="{min:6, confirmed: 'password', required: computedData.password ? true : false}"
                                     :error="errors.has('passwordConfirm')"
                                     :error-messages="errors.collect('passwordConfirm')"
+                                    :disabled="!editMode"
+                                />
+                            </v-flex>
+                            <v-flex xs12 class="mt-3">
+                                <h3 class="subheading">Notifications preferences</h3>
+                                <v-switch
+                                    v-model="computedData.notification_news" color="indigo" hide-details
+                                    label="I want to receive emails for new announcement"
+                                    :disabled="!editMode"
+                                />
+                                <v-switch
+                                    v-model="computedData.notification_ftebay" color="indigo" hide-details
+                                    label="I want to receive emails for new ftebay offers"
+                                    :disabled="!editMode"
+                                />
+                                <v-switch
+                                    v-model="computedData.notification_zeus" color="indigo" hide-details
+                                    label="I want to receive emails for new zeus event"
                                     :disabled="!editMode"
                                 />
                             </v-flex>

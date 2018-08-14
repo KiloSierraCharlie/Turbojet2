@@ -15,6 +15,8 @@ class User implements UserInterface, EquatableInterface {
 
     public function __construct($username, $password, $salt, array $roles, $user, $groups)
     {
+        // Note: roles is a synfony interface field not used
+
         $this->username = $username;
         $this->password = $password;
         $this->salt = $salt;
@@ -27,13 +29,15 @@ class User implements UserInterface, EquatableInterface {
         $this->verified = (int) $user['verified'];
         $this->superAdmin = (int) $user['super_admin'];
         $this->callsign = $user['callsign'];
-        $this->title = $user['title'];
+        $this->position = $user['position'];
         $this->phone = $user['phone'];
         $this->picture = $user['picture'];
         $this->graduated = (int) $user['graduated'];
         $this->calendarGroundschool = $user['calendar_groundschool'];
         $this->calendarZeusUsername = $user['calendar_zeus_username'];
-        $this->calendarEnableEmailNotifications = $user['calendar_enable_email_notifications'];
+        $this->notification_zeus = $user['notification_zeus'];
+        $this->notification_news = $user['notification_news'];
+        $this->notification_ftebay = $user['notification_ftebay'];
         $this->groups = $groups;
 
         $this->userPermissions = array();
@@ -95,8 +99,8 @@ class User implements UserInterface, EquatableInterface {
         return $this->callsign;
     }
 
-    public function getTitle() {
-        return $this->title;
+    public function getPosition() {
+        return $this->position;
     }
 
     public function getPhone() {
@@ -119,8 +123,16 @@ class User implements UserInterface, EquatableInterface {
         return $this->calendarZeusUsername;
     }
 
-    public function getCalendarEnableEmailNotifications() {
-        return $this->calendarEnableEmailNotifications;
+    public function getNotificationZeus() {
+        return $this->notification_zeus;
+    }
+
+    public function getNotificationNews() {
+        return $this->notification_news;
+    }
+
+    public function getNotificationFtebay() {
+        return $this->notification_ftebay;
     }
 
     public function hasPermission($permissionName)  {

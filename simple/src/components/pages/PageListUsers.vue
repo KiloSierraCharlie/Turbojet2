@@ -61,7 +61,7 @@
                     <v-card-title primary-title>
                         <div>
                             <h3 class="headline mb-0">{{user.first_name}} {{user.last_name}}</h3>
-                            <div v-if="user.title">"{{user.title}}"</div>
+                            <div v-if="user.position">"{{user.position}}"</div>
                             <div class="chips">
                                 <group-chip
                                     v-for="group in user.groups"
@@ -162,16 +162,16 @@ export default {
         }
     },
     created() {
-        this.fetchUsersData()
+        this.fetchData()
     },
     methods: {
-        fetchUsersData() {
+        fetchData() {
             const $this = this
 
             Axios.get(Config.endpoint + 'users?includeGraduated=0')
                 .then(function (response) {
                     $this.usersData = response.data
-                    console.log('fetchUsersData success', response.data)
+                    console.log('fetchData success', response.data)
                 })
                 .catch(function (error) {
                     $this.isLoading = false

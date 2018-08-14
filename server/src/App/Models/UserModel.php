@@ -32,7 +32,7 @@ class UserModel extends AbstractModel {
             $queryBuilder = $this->conn->createQueryBuilder();
 
             $queryBuilder
-                ->select('u.id', 'u.first_name', 'u.last_name', 'u.picture', 'u.title', 'u.graduated', 'GROUP_CONCAT(CONCAT(g.id, "::", g.name, "::", g.type)) as groups')
+                ->select('u.id', 'u.first_name', 'u.last_name', 'u.picture', 'u.position', 'u.graduated', 'GROUP_CONCAT(CONCAT(g.id, "::", g.name, "::", g.type)) as groups')
                 ->from('users', 'u')
                 ->innerJoin('u', 'group_membership', 'gm', 'u.id = gm.id_user')
                 ->innerJoin('gm', 'groups', 'g', 'gm.id_group = g.id')
@@ -109,7 +109,9 @@ class UserModel extends AbstractModel {
         $queryBuilder = $this->conn->createQueryBuilder();
 
         $queryBuilder
-            ->select('u.id', 'u.first_name', 'u.last_name', 'u.email', 'u.room', 'u.callsign', 'u.title', 'u.phone', 'u.picture', 'u.title', 'u.graduated', 'GROUP_CONCAT(CONCAT(g.id, "::", g.name, "::", g.type)) as groups')
+            ->select('u.id', 'u.first_name', 'u.last_name', 'u.email', 'u.room', 'u.callsign',
+                'u.position', 'u.phone', 'u.picture', 'u.graduated', 'GROUP_CONCAT(CONCAT(g.id, "::", g.name, "::", g.type)) as groups',
+                'u.calendar_zeus_username', 'u.notification_zeus', 'u.notification_news', 'u.notification_ftebay')
             ->from('users', 'u')
             ->innerJoin('u', 'group_membership', 'gm', 'u.id = gm.id_user')
             ->innerJoin('gm', 'groups', 'g', 'gm.id_group = g.id')
