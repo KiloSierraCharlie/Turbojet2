@@ -37,6 +37,11 @@ class AuthController {
             $user = $userProvider->loadUserByUsername($username);
             $encoder = $this->app['security.encoder_factory']->getEncoder($user);
 
+            // Check user is not banned and his account is verified
+            if(!$user->getVerified() || $user->getBanned()) {
+                return $this->app->json(['message' => 'Your account has been banned or is not yet validated'], 401);
+            }
+
             // Check if the plain password is valid and it's value is equal to the encoded password
             if(!$encoder->isPasswordValid($user->getPassword() , $plainPassword, $user->getSalt())) {
                 // Incorrect password
@@ -59,7 +64,7 @@ class AuthController {
 
 
     public function register(Request $request) {
-        //TODO check email does not exists
+        //TODO check that user  email does not exists
 
         $username = $request->request->get('username');
         $plainPassword = $request->request->get('password');
@@ -113,7 +118,7 @@ class AuthController {
             return $this->app->json($response, 500);
         }
 
-        // Move the file in the correct path.e
+        // Move the file in the correct path
         if($file) {
             try {
                 $path = '../www/media/student_photos/';
@@ -150,11 +155,13 @@ class AuthController {
             return $this->app->json($response, 500);
         }
 
-        // Credentials are valids, we can create the token and returns it to the user
-        $userProvider->deleteUserTokens($username);
-        $token = $userProvider->generateToken($username);
+        // Send an email to admins
+        $body = 'A new user has registered and needs your validation:<br />
+        <strong>First name:</strong> '.$user->getFirstName().'<br /><strong>Last name:</strong> '.$user->getLastName();
 
-        return $this->app->json(['token' => $token]);
+        $this->app['controller.mailer']->sendMail('[Turbojet] New user', $body, $this->app['controller.mailer']::ALL_ADMIN);
+
+        return $this->app->json([], 200);
     }
 
     /**

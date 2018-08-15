@@ -8,7 +8,7 @@
                 </v-alert>
             </v-flex>
         </v-layout>
-        <v-layout row v-if="connectedUser">
+        <!-- <v-layout row v-if="connectedUser">
             <v-flex xs12>
                 <v-card class="pa-3 mb-4">
                     <v-layout row wrap>
@@ -19,7 +19,7 @@
                     </v-layout>
                 </v-card>
             </v-flex xs12>
-        </v-layout row>
+        </v-layout row> -->
         <v-layout row>
             <v-flex xs12>
                 <full-calendar ref="calendar" :event-sources="eventSources" :config="calendarConfig"></full-calendar>

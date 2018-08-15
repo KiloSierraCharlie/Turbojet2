@@ -255,6 +255,10 @@ export default {
                 .then(function(response) {
                     $this.editedUser = response.data
 
+                    $this.editedUser.notification_news = $this.editedUser.notification_news === '1' ? true : false
+                    $this.editedUser.notification_ftebay = $this.editedUser.notification_ftebay === '1' ? true : false
+                    $this.editedUser.notification_zeus = $this.editedUser.notification_zeus === '1' ? true : false
+
                     if(_.has($this.editedUser, 'groups') && !_.isEmpty($this.editedUser.groups)) {
                         $this.editedUser.groups = _.map($this.editedUser.groups, function(group) {
                             return group.id

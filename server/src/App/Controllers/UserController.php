@@ -196,4 +196,16 @@ class UserController {
 
         return $this->app->json($events, 200);
     }
+
+    public function getAdminUsers() {
+        return $this->userModel->getAdminUsers();
+    }
+
+    public function getNewsSubscriptionUsers() {
+        return $this->userModel->getNewsSubscriptionUsers();
+    }
+
+    public function getFtebaySubscriptionUsers() {
+        return $this->userModel->getFtebaySubscriptionUsers();
+    }
 }

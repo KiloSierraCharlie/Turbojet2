@@ -4,6 +4,7 @@ use Silex\Application;
 use Silex\Provider\ServiceControllerServiceProvider;
 use Silex\Provider\DoctrineServiceProvider;
 use Silex\Provider\SecurityServiceProvider;
+use Silex\Provider\SwiftmailerServiceProvider;
 use Symfony\Component\Security\Core\Encoder\Pbkdf2PasswordEncoder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,6 +18,7 @@ use App\Controllers\BookingController;
 use App\Controllers\MenuController;
 use App\Controllers\EditorialContentController;
 use App\Controllers\GroupController;
+use App\Controllers\MailerController;
 use App\Models\UserModel;
 use App\Models\DocumentModel;
 use App\Models\BookingModel;
@@ -56,13 +58,20 @@ $app->register(new DoctrineServiceProvider(), array(
 $app->register(new SecurityServiceProvider(), array(
     'security.firewalls' => array()
 ));
-// $app['security.default_encoder'] = function ($app) {
-//     return $app['security.encoder.pbkdf2'];
-// };
-//
+
 $app['security.default_encoder'] = function ($app) {
     return new Pbkdf2PasswordEncoder('sha1', false, 1000, 20);
 };
+
+$app->register(new SwiftmailerServiceProvider(), array(
+    'swiftmailer.options' => array(
+    'host' => 'smtp.gmail.com',
+    'port' => 465,
+    'username' => $app['settings']['SMTP']['username'],
+    'password' => $app['settings']['SMTP']['password'],
+    'encryption' => 'ssl',
+    'auth_mode' => 'login')
+));
 
 /*
 * Controllers containers
@@ -89,6 +98,10 @@ $app['controller.menu'] = function() use ($app) {
 
 $app['controller.editorialContent'] = function() use ($app) {
     return new EditorialContentController($app);
+};
+
+$app['controller.mailer'] = function() use ($app) {
+    return new MailerController($app);
 };
 
 

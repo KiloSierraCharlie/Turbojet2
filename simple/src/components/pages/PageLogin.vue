@@ -174,9 +174,13 @@
                 </v-form>
             </v-card>
         </v-dialog>
-        <v-snackbar :timeout="0" color="red accent-2" v-model="snackbar">
+        <v-snackbar :timeout="0" color="red accent-2" v-model="errorSnackbar">
           {{ errorMessage }}
-          <v-btn dark flat @click.native="snackbar = false; errorMessage= ''">Close</v-btn>
+          <v-btn dark flat @click.native="errorSnackbar = false; errorMessage= ''">Close</v-btn>
+        </v-snackbar>
+        <v-snackbar :timeout="0" color="success" v-model="confirmSnackbar">
+          {{ confirmMessage }}
+          <v-btn dark flat @click.native="confirmSnackbar = false; confirmMessage= ''">Close</v-btn>
         </v-snackbar>
     </v-container>
 </template>
@@ -210,8 +214,11 @@ export default {
             },
             groups: [],
             isLoading: false,
-            snackbar: false,
-            errorMessage: ''
+            errorSnackbar: false,
+            errorMessage: '',
+            confirmSnackbar: false,
+            confirmMessage: '',
+
         }
     },
     computed: {
@@ -239,7 +246,7 @@ export default {
             const $this = this
 
             this.register = false
-            this.snackbar = false
+            this.errorSnackbar = false
 
             setTimeout(() => {
                 $this.resetForm()
@@ -287,11 +294,15 @@ export default {
 
                         Axios.post(Config.endpoint + 'register', payload)
                             .then(function (response) {
-                                $this.$store.dispatch('userAuthSuccess', response.data.token)
-
-                                $this.$router.push({ name: 'page-news' })
-
+                                $this.register = false
                                 $this.isLoading = false
+
+                                $this.confirmSnackbar = true
+                                $this.confirmMessage = 'Account created, you will receive an email once it\'s been validated by an administrator'
+
+                                setTimeout(() => {
+                                    $this.resetForm()
+                                }, 300)
                             })
                             .catch(function (error) {
                                 console.log('register error', error)
@@ -339,12 +350,12 @@ export default {
                                 // error received from the server
                                 if (error.response && _.has(error, 'response.data.message')) {
                                     $this.errorMessage = error.response.data.message
-                                    $this.snackbar = true
+                                    $this.errorSnackbar = true
                                 }
                                 // no answer from the server, or no error message in the body
                                 else {
                                     $this.errorMessage = 'An error has occurred, please try again. If the problem persists please contact the student committee'
-                                    $this.snackbar = true
+                                    $this.errorSnackbar = true
                                 }
                             })
                     }
@@ -365,11 +376,11 @@ export default {
 
                     if(_.has(error, 'response.data.message')) {
                         $this.errorMessage = error.response.data.message
-                        $this.snackbar = true
+                        $this.errorSnackbar = true
                     }
                     else {
                         $this.errorMessage = 'An error occured, please try again'
-                        $this.snackbar = true
+                        $this.errorSnackbar = true
                     }
                 });
         }

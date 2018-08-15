@@ -278,6 +278,7 @@ export default {
         },
         resetForm() {
             this.$refs.form.reset()
+            this.$validator.reset()
             this.editedPost.id = ''
             this.editedPost.title = ''
             this.editedPost.content = ''

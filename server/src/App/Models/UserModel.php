@@ -14,20 +14,6 @@ class UserModel extends AbstractModel {
     * @return array An array with all the users found
     */
     public function getUsers($groupId, $includeGraduated = false) {
-        // TODO
-        // $filePath = '../assets/profile_pictures/';
-        // $files = scandir($filePath);
-        //
-        // foreach ($files as $key => $value) {
-        //     $queryBuilder = $this->conn->createQueryBuilder();
-        //     $queryBuilder
-        //         ->update('users')
-        //         ->set('picture', ':picture')->setParameter('picture', $value)
-        //         ->where('id = :id')->setParameter('id', str_replace('.jpg', '', $value))
-        //         ->execute();
-        // }
-        // exit();
-
         try {
             $queryBuilder = $this->conn->createQueryBuilder();
 
@@ -57,6 +43,7 @@ class UserModel extends AbstractModel {
                     $user['groups'][] = array('id' => explode('::', $group)[0],'name' => explode('::', $group)[1], 'type' => explode('::', $group)[2]);
                 }
             }
+
             return $users;
         }
         catch(\Exception $e) {
@@ -106,6 +93,7 @@ class UserModel extends AbstractModel {
     * @return array The details of the user
     */
     public function getUserDetails($id) {
+        // TODO Bools are returned as boolean. Caution, if changed, think to change the mapping in openUserDialog in UserDetailsDialog
         $queryBuilder = $this->conn->createQueryBuilder();
 
         $queryBuilder
@@ -127,6 +115,7 @@ class UserModel extends AbstractModel {
         foreach ($tempGroups as &$group) {
             $user['groups'][] = array('id' => explode('::', $group)[0],'name' => explode('::', $group)[1], 'type' => explode('::', $group)[2]);
         }
+
         return $user;
     }
 
@@ -195,5 +184,54 @@ class UserModel extends AbstractModel {
         ');
 
         return $groups;
+    }
+
+    public function getAdminUsers() {
+        $queryBuilder = $this->conn->createQueryBuilder();
+
+        $queryBuilder
+            ->select('email')
+            ->from('users')
+            ->where('super_admin = 1')
+        ;
+
+        $stmt = $queryBuilder->execute();
+        $users = $stmt->fetchAll(\PDO::FETCH_COLUMN);
+
+        return $users;
+    }
+
+    public function getFtebaySubscriptionUsers() {
+        $queryBuilder = $this->conn->createQueryBuilder();
+
+        $queryBuilder
+            ->select('email')
+            ->from('users')
+            ->where('notification_ftebay = 1')
+            ->andWhere('active = 1')
+            ->andWhere('banned = 0')
+        ;
+
+        $stmt = $queryBuilder->execute();
+        $users = $stmt->fetchAll(\PDO::FETCH_COLUMN);
+
+        return $users;
+    }
+
+    public function getNewsSubscriptionUsers() {
+        $queryBuilder = $this->conn->createQueryBuilder();
+
+        $queryBuilder
+            ->select('email')
+            ->from('users')
+            ->where('notification_news = 1')
+            ->andWhere('active = 1')
+            ->andWhere('banned = 0')
+        ;
+
+        $stmt = $queryBuilder->execute();
+        $users = $stmt->fetchAll(\PDO::FETCH_COLUMN);
+
+        return $users;
     }
 }
