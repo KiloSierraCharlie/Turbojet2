@@ -50,9 +50,9 @@
                     <!-- Event detail -->
                     <div v-if="eventData.data.id && !editMode">
                         <v-btn :disabled="loading" outline color="primary" @click="closeDialog">Close</v-btn>
-                        <v-btn :disabled="loading" color="error" @click="cancelDialog">Cancel</v-btn>
-                        <v-btn :loading="loading" color="primary" @click="editMode = true;">Edit</v-btn>
-                        <v-btn v-if="markAsPaidButton && !eventData.data.paid" :loading="loading" color="success" @click="paid">Mark as paid</v-btn>
+                        <v-btn v-show="hasPermissions" :disabled="loading" color="error" @click="cancelDialog">Cancel</v-btn>
+                        <v-btn v-show="hasPermissions" :loading="loading" color="primary" @click="editMode = true;">Edit</v-btn>
+                        <v-btn v-show="hasPermissions && markAsPaidButton && !eventData.data.paid" :loading="loading" color="success" @click="paid">Mark as paid</v-btn>
                     </div>
                     <!-- Edit event -->
                     <div v-else-if="eventData.data.id && editMode">
@@ -74,7 +74,7 @@
 import _ from 'lodash'
 
 export default {
-    props: ['show', 'event-data', 'loading', 'mark-as-paid-button'],
+    props: ['show', 'event-data', 'loading', 'mark-as-paid-button', 'has-permissions'],
     name: 'booking-event',
     data () {
         return {

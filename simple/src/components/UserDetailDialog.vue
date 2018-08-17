@@ -165,8 +165,8 @@
                     <!-- Event detail -->
                     <div v-if="!editMode">
                         <v-btn :disabled="loading" outline color="primary" @click="closeDialog">Close</v-btn>
-                        <v-btn :disabled="loading" color="error" @click="deleteDialog">Delete</v-btn>
-                        <v-btn :loading="loading" color="primary" @click="setEditMode(true)">Edit</v-btn>
+                        <v-btn v-show="hasPermissions" :disabled="loading" color="error" @click="deleteDialog">Delete</v-btn>
+                        <v-btn v-show="hasPermissions || isSameUser" :loading="loading" color="primary" @click="setEditMode(true)">Edit</v-btn>
                     </div>
                     <!-- Edit event -->
                     <div v-else-if="editMode">
@@ -184,7 +184,7 @@ import _ from 'lodash'
 import Config from 'src/Config.__ENV__.js'
 
 export default {
-    props: ['show', 'user-data', 'loading', 'groups-data'],
+    props: ['show', 'user-data', 'loading', 'groups-data','has-permissions', 'is-same-user'],
     name: 'booking-event',
     data () {
         return {

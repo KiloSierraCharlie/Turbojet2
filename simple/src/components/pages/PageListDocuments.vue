@@ -3,7 +3,7 @@
         <v-layout row>
             <v-flex xs12>
                 <v-dialog v-model="dialogEdit" max-width="500px" persistent>
-                    <v-btn slot="activator" color="primary" dark class="mb-2">New Document</v-btn>
+                    <v-btn v-show="connectedUser ? connectedUser.hasPermissions('permission_edit_document') : false" slot="activator" color="primary" dark class="mb-2">New Document</v-btn>
                     <v-card>
                             <v-card-title>
                                 <span class="headline">{{ formTitle }}</span>
@@ -70,7 +70,7 @@
                     </v-card>
                 </v-dialog>
                 <v-data-table
-                    :headers="headers"
+                    :headers="computedHeaders"
                     :items="documents"
                     hide-actions
                     class="elevation-1"
@@ -85,7 +85,7 @@
                         </td>
                         <td><a :href="getDocumentLink(data.item)" target="_blank">{{ data.item.name }}</a><v-icon class="ml-1" color="indigo" v-if="isNew(data.item.date_modified)">mdi-new-box</v-icon></td>
                         <td>{{ formatDate(data.item.date_modified) }}</td>
-                        <td class="justify-center layout px-0">
+                        <td v-if="connectedUser ? connectedUser.hasPermissions('permission_edit_document') : false" class="justify-center layout px-0">
                             <v-btn icon class="mx-0" @click="editItem(data.item)">
                                 <v-icon color="teal">mdi-pencil</v-icon>
                             </v-btn>
@@ -132,14 +132,26 @@ export default {
             headers: [
                 { text: 'Type', value: 'type', sortable: false },
                 { text: 'Name', value: 'names' }, // TODO bug on sort
-                { text: 'Last Updated', value: 'modifiedAt' },
-                { text: 'Actions', value: 'name', sortable: false }
+                { text: 'Last Updated', value: 'modifiedAt' }
             ],
             snackbar: false,
             errorMessage: ''
         }
     },
     computed: {
+        computedHeaders() {
+            if(this.connectedUser && this.connectedUser.hasPermissions('permission_edit_document')) {
+                return _.union(this.headers, [
+                    { text: 'Actions', value: 'name', sortable: false }
+                ])
+            }
+            else {
+                return this.headers
+            }
+        },
+        connectedUser() {
+            return this.$store.state.connectedUser
+        },
         formTitle () {
             var title = this.editedIndex === -1 ? 'New' : 'Edit'
             title += this.docType === 'document' ? ' Document' : ' Link'

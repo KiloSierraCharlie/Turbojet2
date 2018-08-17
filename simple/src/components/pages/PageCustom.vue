@@ -2,7 +2,7 @@
     <v-container fluid class="page-list-editorial">
         <v-layout row>
             <v-flex xs12>
-                <v-btn color="primary" @click="goPageManager">Page Manager</v-btn>
+                <!-- <v-btn v-show="connectedUser ? connectedUser.hasPermissions($route.meta.settings.permission) : false"color="primary" @click="goPageManager">Page Manager</v-btn> -->
                 <v-card v-if="page">
                     <v-card-title
                         :class="'white--text ' + randomColor()"

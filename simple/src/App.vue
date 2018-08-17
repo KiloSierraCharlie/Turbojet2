@@ -8,12 +8,12 @@
                 <v-toolbar flat class="elevation-1" color="transparent">
                     <v-menu offset-x>
                         <v-list slot="activator" class="pa-0">
-                            <v-list-tile avatar v-if="user">
+                            <v-list-tile avatar v-if="connectedUser">
                                 <v-list-tile-avatar>
-                                    <div class="background" :style="'background-image: url(' + endpoint + 'media/student_photos/'+ (user.picture ? user.picture : 'cygnet.jpg') + ')'"></div>
+                                    <div class="background" :style="'background-image: url(' + endpoint + 'media/student_photos/'+ (connectedUser.picture ? connectedUser.picture : 'cygnet.jpg') + ')'"></div>
                                 </v-list-tile-avatar>
                                 <v-list-tile-content>
-                                    <v-list-tile-title>{{user.firstName}} {{user.lastName}} <v-icon small>mdi-menu-down</v-icon></v-list-tile-title>
+                                    <v-list-tile-title>{{connectedUser.firstName}} {{connectedUser.lastName}} <v-icon small>mdi-menu-down</v-icon></v-list-tile-title>
                                 </v-list-tile-content>
                             </v-list-tile>
                         </v-list>
@@ -37,9 +37,9 @@
                                 <v-list-tile-action v-if="child.icon">
                                     <v-icon>{{ child.icon }}</v-icon>
                                 </v-list-tile-action>
-                                    <v-list-tile-title>
-                                        {{ child.text }}
-                                    </v-list-tile-title>
+                                <v-list-tile-title>
+                                    {{ child.text }}
+                                </v-list-tile-title>
                             </v-list-tile>
                         </v-list-group>
                         <v-list-tile v-else :key="item.text" @click="clickMenu(item)">
@@ -81,6 +81,8 @@
                 :user-data="editedUser"
                 :groups-data="groups"
                 :show="dialogEdit"
+                :is-same-user="editedUser ? editedUser.id === connectedUser.id : false"
+                :has-permissions="connectedUser ? connectedUser.hasPermissions('permission_edit_user') : false"
                 @saveUser="onSaveUser"
                 @closeDialogEdit="onCloseDialogEdit"
                 @deleteUser="dialogDelete = true;"
@@ -172,7 +174,7 @@ export default {
                     text: 'Career',
                     children: [
                         { icon: 'mdi-cloud-download', text: 'Documents & Resources', link: '/documents/career-resources' },
-                        { icon: 'mdi-settings', text: 'Page Manager', link: '/page-manager/page-career' }
+                        { icon: 'mdi-settings', text: 'Page Manager', link: '/page-manager/page-career', permission: 'permission_careers_rep' }
                     ],
                     customPagesPlaceholder: 'page-career'
                 },
@@ -181,7 +183,7 @@ export default {
                     text: 'Sport',
                     children: [
                         { icon: 'mdi-cloud-download', text: 'Documents & Resources', link: '/documents/sport-resources' },
-                        { icon: 'mdi-settings', text: 'Page Manager', link: '/page-manager/page-sport' }
+                        { icon: 'mdi-settings', text: 'Page Manager', link: '/page-manager/page-sport', permission: 'permission_sports_rep' }
                     ],
                     customPagesPlaceholder: 'page-sport'
                 },
@@ -190,7 +192,7 @@ export default {
                     text: 'Entertainment',
                     children: [
                         { icon: 'mdi-cloud-download', text: 'Documents & Resources', link: '/documents/entertainment-resources' },
-                        { icon: 'mdi-settings', text: 'Page Manager', link: '/page-manager/page-entertainment' }
+                        { icon: 'mdi-settings', text: 'Page Manager', link: '/page-manager/page-entertainment', permission: 'permission_entertainment_rep'}
                     ],
                     customPagesPlaceholder: 'page-entertainment'
                 }
@@ -198,10 +200,13 @@ export default {
         }
     },
     computed: {
+        _() {
+            return _
+        },
         endpoint() {
             return Config.endpoint
         },
-        user() {
+        connectedUser() {
             return this.$store.state.connectedUser
         },
         displayTitle() {
@@ -210,6 +215,37 @@ export default {
         mergedDrawerItems() {
             var mergedDrawerItems = _.cloneDeep(this.drawerItems)
             const $this = this
+
+            // var adminItems = _.filter(mergedDrawerItems, function(item) {
+            //     return _.has(item, 'permission')
+            // });
+            //
+            // var noAdminItems = _.filter(mergedDrawerItems, function(item) {
+            //     return !_.has(item, 'permission')
+            // });
+
+            // console.log('adminItems', adminItems)
+            // console.log('noAdminItems', noAdminItems)
+
+            // _.each(adminItems, function(item) {
+            //     if(connectedUser ? connectedUser.hasPermissions(item.permission) : false) {
+            //
+            //     }
+            // }
+            //
+
+            console.log('mergedDrawerItems', mergedDrawerItems)
+
+            _.each(mergedDrawerItems, function(item) {
+                console.log('_.has(item, children.permission)', _.has(item, 'children.permission'))
+                if(_.has(item, 'children')) {
+                    _.remove(item.children, function(child) {
+                            return !_.has(child, 'permission') || !$this.connectedUser ? true : !$this.connectedUser.hasPermissions(child.permission)
+                    })
+                }
+            })
+
+            console.log('mergedDrawerItems2', mergedDrawerItems)
 
             _.each(this.$store.state.dynamicMenu, function(page) {
                 var menuIndex = _.findIndex(mergedDrawerItems, { 'customPagesPlaceholder': page.type})
@@ -245,7 +281,7 @@ export default {
             this.$store.dispatch('logoutUser')
         },
         openUserProfile() {
-            this.$root.$emit('showUser', this.$store.state.connectedUser.id)
+            this.$root.$emit('showUser', this.connectedUser.id)
         },
         openUserDialog(userId) {
             console.log('openUserDialog', userId)
@@ -318,6 +354,8 @@ export default {
         },
         deleteUser() {
             const $this = this
+
+            // TODO delete or ban user
 
             // Axios.post(Config.endpoint + this.$route.meta.api.changeState.replace('{id}', this.editedEvent.data.id), {cancelled: true})
             //     .then(function(response) {

@@ -224,12 +224,16 @@ export default {
     computed: {
         backgroundImage() {
             return _.sample([
-                'stock-photo-14127925.jpg',
-                'stock-photo-146305243.jpg',
                 'stock-photo-202413751.jpg',
-                'stock-photo-223792207.jpg',
-                'stock-photo-227877121.jpg',
-                'stock-photo-241687465.jpg'
+                'stock-photo-241687465.jpg',
+                '32545605703_da157f563c_k.jpg',
+                '17834084238_cf249eea2f_k.jpg',
+                '6852968917_45a0e3718c_o.jpg',
+                '9420551811_3f46ab307e_k.jpg',
+                '6635883637_19678f38b4_o.jpg',
+                '4553065262_3a71c1825b_o.jpg',
+                '16400282722_86d1dee4e6_o.jpg',
+                '35332726055_c8fd88581a_o.jpg'
             ])
         },
         recaptchaKey() {

@@ -98,7 +98,7 @@ const router = new VueRouter({
                             imageUpload: 'editorial-image-upload'
                         },
                         settings: {
-
+                            permission: 'permission_sports_rep'
                         }
                     }
                 },
@@ -119,7 +119,7 @@ const router = new VueRouter({
                             imageUpload: 'editorial-image-upload'
                         },
                         settings: {
-
+                            permission: 'permission_careers_rep'
                         }
                     }
                 },
@@ -140,7 +140,7 @@ const router = new VueRouter({
                             imageUpload: 'editorial-image-upload'
                         },
                         settings: {
-
+                            permission: 'permission_entertainment_rep'
                         }
                     }
                 }

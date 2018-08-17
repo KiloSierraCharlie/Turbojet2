@@ -3,7 +3,7 @@
         <v-layout row>
             <v-flex xs12>
                 <v-dialog v-model="dialogEdit" max-width="500px" fullscreen transition="dialog-bottom-transition" scrollable>
-                    <v-btn slot="activator" color="primary" dark class="mb-2">{{ buttonLabel }}</v-btn>
+                    <v-btn v-show="connectedUser ? connectedUser.hasPermissions('permission_edit_announcement') : false" slot="activator" color="primary" dark class="mb-2">{{ buttonLabel }}</v-btn>
                     <v-card tile>
                         <v-form enctype="multipart/form-data" ref="form" v-model="formIsValid">
                             <v-toolbar card dark color="primary">
@@ -57,7 +57,7 @@
                     >
                         <span class="headline">{{post.title}}</span>
                         <v-spacer></v-spacer>
-                        <v-menu left>
+                        <v-menu left v-show="connectedUser ? connectedUser.hasPermissions('permission_edit_announcement') : false">
                             <v-btn slot="activator" icon dark>
                                 <v-icon>mdi-settings</v-icon>
                             </v-btn>
@@ -159,6 +159,9 @@ export default {
         }
     },
     computed: {
+        connectedUser() {
+            return this.$store.state.connectedUser
+        },
         isEdit() {
             return this.editedIndex !== -1
         },

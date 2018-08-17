@@ -9,6 +9,7 @@
             :event-data="editedEvent"
             :show="dialogEdit"
             :mark-as-paid-button="$route.meta.api.markAsPaid"
+            :has-permissions="connectedUser ? connectedUser.hasPermissions('permission_edit_minivan_booking') : false"
             @saveBooking="onSaveBooking"
             @closeDialogEdit="onCloseDialogEdit"
             @bookingPaid="onBookingPaid"
@@ -96,6 +97,11 @@ export default {
     watch: {
         '$route': 'fetchData',
     },
+    computed: {
+        connectedUser() {
+            return this.$store.state.connectedUser
+        }
+    },
     methods: {
         getEventColor(start, end) {
             const now = moment()
@@ -113,6 +119,12 @@ export default {
         onDateSelect(start, end, jsEvent, view, resource) {
             console.log('select', start.format(), end.format())
             console.log('select local', start.local().format(), end.local().format())
+
+            if(!this.connectedUser.hasPermissions('permission_make_minivan_booking')) {
+                this.errorMessage = 'You don\'t have permission to book the van. Please contact the Treasurer'
+                this.snackbar = true
+                return
+            }
 
             const $this = this
 
@@ -377,7 +389,7 @@ export default {
     mounted() {
         console.log('this.$route', this.$route)
 
-        this.fetchEvents()
+        this.fetchData()
     }
 }
 </script>

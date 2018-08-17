@@ -34,7 +34,9 @@ const state = {
 /**
 * Getters to be used if we need to apply treatment to the state data before a component get it
 */
-const getters = {}
+const getters = {
+
+}
 
 
 /**
@@ -134,10 +136,6 @@ const actions = {
             .catch(function (error) {
                 throw error
             })
-    },
-
-    fetchNewsData({ commit }) {
-
     }
 }
 
@@ -177,6 +175,38 @@ const mutations = {
     setConnectedUser(state, data) {
         console.log('setConnectedUser', data)
         state.connectedUser = data
+
+
+        // Compute permissions in one place
+        state.connectedUser.permissions = []
+
+        if(state.connectedUser.superAdmin) {
+            state.connectedUser.permissions.push('superAdmin')
+        }
+
+        // user permissions
+        _.each(data.userPermissions, function(value, key) {
+            if(key.indexOf('permission_') === 0 && value === '1') {
+                state.connectedUser.permissions.push(key)
+            }
+        })
+
+        // group permissions
+        _.each(data.groups, function(group) {
+            _.each(group, function(value, key) {
+                if(key.indexOf('permission_') === 0 && value === '1') {
+                    state.connectedUser.permissions.push(key)
+                }
+            })
+        })
+
+        state.connectedUser.permissions = _.uniq(state.connectedUser.permissions)
+
+        console.log('state.connectedUser.permissions', state.connectedUser.permissions)
+
+        state.connectedUser.hasPermissions = function(name) {
+            return this.permissions.indexOf(name) !== -1 || this.permissions.indexOf('superAdmin') !== -1
+        }
     },
 
     setUserDetails(state, data) {

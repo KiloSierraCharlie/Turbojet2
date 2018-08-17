@@ -3,7 +3,7 @@
         <v-layout row>
             <v-flex xs12>
                 <v-dialog v-model="dialogEdit" max-width="500px" fullscreen transition="dialog-bottom-transition" scrollable>
-                    <v-btn slot="activator" color="primary" dark class="mb-2">New Page</v-btn>
+                    <v-btn v-show="connectedUser ? connectedUser.hasPermissions($route.meta.settings.permission) : false" slot="activator" color="primary" dark class="mb-2">New Page</v-btn>
                     <v-card tile>
                         <v-form enctype="multipart/form-data" ref="form" v-model="formIsValid">
                             <v-toolbar card dark color="primary">
@@ -61,7 +61,7 @@
                 </v-dialog>
 
                 <v-data-table
-                    :headers="headers"
+                    :headers="computedHeaders"
                     :items="pages"
                     hide-actions
                     class="elevation-1"
@@ -69,7 +69,7 @@
                     <template slot="items" slot-scope="data">
                         <td><v-icon>mdi-file-document-box</v-icon></td>
                         <td><router-link :to="'/pages/'+data.item.type+'/'+data.item.id">{{ data.item.title }}</router-link></td>
-                        <td class="justify-center layout px-0">
+                        <td class="justify-center layout px-0" v-if="connectedUser ? connectedUser.hasPermissions($route.meta.settings.permission) : false">
                             <v-btn icon class="mx-0" @click="editPage(data.item)">
                                 <v-icon color="teal">mdi-pencil</v-icon>
                             </v-btn>
@@ -120,14 +120,26 @@ export default {
             pages: [],
             headers: [
                 { text: 'Icon', value: 'icon' },
-                { text: 'Name', value: 'names' }, // TODO bug on sort
-                { text: 'Actions', value: 'name', sortable: false }
+                { text: 'Name', value: 'names' } // TODO bug on sort
             ],
             snackbar: false,
             errorMessage: ''
         }
     },
     computed: {
+        computedHeaders() {
+            if(this.connectedUser && this.connectedUser.hasPermissions(this.$route.meta.settings.permission)) {
+                return _.union(this.headers, [
+                    { text: 'Actions', value: 'name', sortable: false }
+                ])
+            }
+            else {
+                return this.headers
+            }
+        },
+        connectedUser() {
+            return this.$store.state.connectedUser
+        },
         formTitle () {
             return this.editedIndex === -1 ? 'New Page' : 'Edit Page'
         }
