@@ -2,7 +2,7 @@
     <v-container fluid class="page-manager">
         <v-layout row>
             <v-flex xs12>
-                <v-dialog v-model="dialogEdit" max-width="500px" fullscreen transition="dialog-bottom-transition">
+                <v-dialog v-model="dialogEdit" max-width="500px" fullscreen transition="dialog-bottom-transition" scrollable>
                     <v-btn v-show="connectedUser ? connectedUser.hasPermissions($route.meta.settings.permission) : false" slot="activator" color="primary" dark class="mb-2">New Page</v-btn>
                     <v-card tile>
                         <v-form enctype="multipart/form-data" ref="form" v-model="formIsValid">

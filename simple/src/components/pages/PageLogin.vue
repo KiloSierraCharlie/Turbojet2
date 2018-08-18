@@ -38,7 +38,7 @@
             </v-flex>
             <v-flex sm6 md8 lg9 :style="'background: url(/public/login-backgrounds/'+backgroundImage+') center center / cover no-repeat'" />
         </v-layout>
-        <v-dialog v-model="register" fullscreen hide-overlay transition="dialog-bottom-transition">
+        <v-dialog v-model="register" fullscreen hide-overlay transition="dialog-bottom-transition" scrollable>
             <v-card tile>
                 <v-form enctype="multipart/form-data" ref="form" v-model="formIsValid" data-vv-scope="register-form">
                     <v-toolbar card dark color="primary">
