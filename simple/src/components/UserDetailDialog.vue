@@ -109,7 +109,7 @@
                                     multiple
                                 />
                             </v-flex>
-                            <v-flex xs12 sm6>
+                            <v-flex xs12 sm6 v-show="isSameUser || hasPermissions" >
                                 <v-text-field
                                     v-model="computedData.password"
                                     prepend-icon="lock"
@@ -123,7 +123,7 @@
                                     :disabled="!editMode"
                                 />
                             </v-flex>
-                            <v-flex xs12 sm6>
+                            <v-flex xs12 sm6 v-show="isSameUser || hasPermissions" >
                                 <v-text-field
                                     v-model="computedData.confirmPassword"
                                     prepend-icon="lock"
@@ -136,7 +136,7 @@
                                     :disabled="!editMode"
                                 />
                             </v-flex>
-                            <v-flex xs12 class="mt-3">
+                            <v-flex v-show="isSameUser || hasPermissions" xs12 class="mt-3">
                                 <h3 class="subheading">Notifications preferences</h3>
                                 <v-switch
                                     v-model="computedData.notification_news" color="indigo" hide-details

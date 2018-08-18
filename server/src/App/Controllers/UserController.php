@@ -5,7 +5,6 @@ namespace App\Controllers;
 use Silex\Application;
 use App\Providers\UserProvider;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\DomCrawler\Crawler;
 
 class UserController {
     protected $app;
@@ -138,74 +137,19 @@ class UserController {
         return $this->app->json($groups, 200);
     }
 
-    public function getUserCalendar(Request $request) {
-        $queryParams = $request->query;
-        $dateFrom = $queryParams->get('dateFrom');
-        $dateTo = $queryParams->get('dateTo');
-
-        if(!$dateFrom || !$dateTo) {
-            return $this->app->json(['message' => 'Please fill all fields correcly'], 400);
-        }
-
-        if(empty($this->app['user']->getCalendarZeusUsername())) {
-            return $this->app->json([], 200);
-        }
-
-        $url = 'http://chronos.ftejerez.com:8090/chronos/services/crm/apps/login_handler.php';
-
-        // ([A-Z0-1]*)(EC\-[A-Z0-1]{3})Programmed329312([0-9]{2}\:[0-9]{2})([0-9]{2}\:[0-9]{2})([0-9]{2}\/[0-9]{2}\/[0-9]{4})
-
-        $data = array(
-    		'startDate' => $dateFrom,
-            'finishDate' => $dateTo,
-            'checkAll' => '1',
-            'showUser' => '1',
-            'islogged' => '1'
-    	);
-    	$options = array(
-    		'http' => array (
-    			'method' => 'POST',
-    			'content' => http_build_query($data),
-                'header' => "Content-Type: application/x-www-form-urlencoded"
-
-    		)
-    	);
-    	$context  = stream_context_create($options);
-    	$xml = file_get_contents($url, false, $context);
-
-        $crawler = new Crawler($xml);
-
-        $events = array();
-        $crawler->filter('userLogin userEvents userEvent')->each(function (Crawler $node, $i) use (&$events) {
-            if($node->filter('captain')->text() === $this->app['user']->getCalendarZeusUsername() || $node->filter('crew1')->text() === $this->app['user']->getCalendarZeusUsername()) {
-
-                // Sending back UTC dates so they can be displayed in Madrid timezone in front
-                $start = \DateTime::createFromFormat('d/m/Y H:i', $node->filter('eventStartDate')->text() . ' ' . $node->filter('eventStartTime')->text(), new \DateTimeZone('UTC'));
-                $end = \DateTime::createFromFormat('d/m/Y H:i', $node->filter('eventStartDate')->text() . ' ' . $node->filter('eventFinishTime')->text(), new \DateTimeZone('UTC'));
-
-                $events[] = array(
-                    'start' => $start->format(\DateTime::ISO8601),
-                    'end' => $end->format(\DateTime::ISO8601),
-                    'captain' => $node->filter('captain')->text(),
-                    'crew1' => $node->filter('crew1')->text(),
-                    'exercise' => $node->filter('exerciseTitle')->text(),
-                    'registration' => $node->filter('registration')->text()
-                );
-            }
-        });
-
-        return $this->app->json($events, 200);
-    }
-
-    public function getAdminUsers() {
+    public function getAdminUsersEmails() {
         return $this->userModel->getAdminUsers();
     }
 
-    public function getNewsSubscriptionUsers() {
+    public function getUserEmailFromZeusUsername() {
+        return $this->userModel->getUserFromZeusUsername();
+    }
+
+    public function getNewsSubscriptionUsersEmails() {
         return $this->userModel->getNewsSubscriptionUsers();
     }
 
-    public function getFtebaySubscriptionUsers() {
+    public function getFtebaySubscriptionUsersEmails() {
         return $this->userModel->getFtebaySubscriptionUsers();
     }
 }

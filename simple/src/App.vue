@@ -67,7 +67,7 @@
                         </v-flex>
                     </v-layout>
                 </v-container>
-                <router-view ref="view"></router-view>
+                <router-view ref="view" class="mb-5"></router-view>
                 <!-- <router-view name="dialog"></router-view> -->
             </v-content>
             <v-footer color="indigo" class="px-2 white--text" height="auto" app>
@@ -216,37 +216,25 @@ export default {
             var mergedDrawerItems = _.cloneDeep(this.drawerItems)
             const $this = this
 
-            // var adminItems = _.filter(mergedDrawerItems, function(item) {
-            //     return _.has(item, 'permission')
-            // });
-            //
-            // var noAdminItems = _.filter(mergedDrawerItems, function(item) {
-            //     return !_.has(item, 'permission')
-            // });
-
-            // console.log('adminItems', adminItems)
-            // console.log('noAdminItems', noAdminItems)
-
-            // _.each(adminItems, function(item) {
-            //     if(connectedUser ? connectedUser.hasPermissions(item.permission) : false) {
-            //
-            //     }
-            // }
-            //
-
-            console.log('mergedDrawerItems', mergedDrawerItems)
-
+            // Hide menu items which necessitate special permission (e.g: reps)
+            // if the user does not have those permissions
             _.each(mergedDrawerItems, function(item) {
-                console.log('_.has(item, children.permission)', _.has(item, 'children.permission'))
                 if(_.has(item, 'children')) {
                     _.remove(item.children, function(child) {
-                            return !_.has(child, 'permission') || !$this.connectedUser ? true : !$this.connectedUser.hasPermissions(child.permission)
+                        if(_.has(child, 'permission') && $this.connectedUser && !$this.connectedUser.hasPermissions(child.permission)) {
+                            return true
+                        }
+                        else if(!$this.connectedUser) {
+                            return true
+                        }
+                        else {
+                            return false
+                        }
                     })
                 }
             })
 
-            console.log('mergedDrawerItems2', mergedDrawerItems)
-
+            // Load dynamically loaded page (i.e pages created in base by Student committee Reps)
             _.each(this.$store.state.dynamicMenu, function(page) {
                 var menuIndex = _.findIndex(mergedDrawerItems, { 'customPagesPlaceholder': page.type})
 

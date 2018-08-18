@@ -3,8 +3,10 @@
         <v-layout row class="mb-3">
             <v-flex xs12>
                 <v-alert :value="true" color="error" icon="warning" outline>
-                  ALL EVENTS ARE LOCAL TIME.<br>
-                  To configure your ZEUS calendar, please complete your zeus username in <a @click="openUserProfile">your profile pages</a>.
+                    ALL EVENTS ARE LOCAL TIME.<br>
+                    ZEUS IS THE OFFICIAL SOURCE OF DATA FOR YOUR FLIGHTS. YOU SHOULD NOT USE TURBOJET ZEUS CALENDAR AS THE SOLE SOURCE OF INFORMATION FOR Y0UR EVENTS.<br>
+                    To configure your ZEUS calendar, please complete your zeus username in <a @click="openUserProfile">your profile pages</a>.<br>
+                    You can also choose to receive zeus notifications when a new zeus event is created.
                 </v-alert>
             </v-flex>
         </v-layout>

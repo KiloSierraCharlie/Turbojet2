@@ -186,6 +186,21 @@ class UserModel extends AbstractModel {
         return $groups;
     }
 
+    public function getUserFromZeusUsername($username) {
+        $queryBuilder = $this->conn->createQueryBuilder();
+
+        $queryBuilder
+            ->select('email')
+            ->from('users')
+            ->where('calendar_zeus_username = :username')->setParameter(':username', $username);
+        ;
+
+        $stmt = $queryBuilder->execute();
+        $users = $stmt->fetchAll(\PDO::FETCH_COLUMN);
+
+        return $users;
+    }
+
     public function getAdminUsers() {
         $queryBuilder = $this->conn->createQueryBuilder();
 

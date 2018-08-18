@@ -19,11 +19,13 @@ use App\Controllers\MenuController;
 use App\Controllers\EditorialContentController;
 use App\Controllers\GroupController;
 use App\Controllers\MailerController;
+use App\Controllers\ZeusCalendarController;
 use App\Models\UserModel;
 use App\Models\DocumentModel;
 use App\Models\BookingModel;
 use App\Models\MenuModel;
 use App\Models\EditorialContentModel;
+use App\Models\ZeusCalendarModel;
 use App\Models\GroupModel;
 use App\Providers\UserProvider;
 use App\Router;
@@ -104,6 +106,10 @@ $app['controller.mailer'] = function() use ($app) {
     return new MailerController($app);
 };
 
+$app['controller.zeusCalendarController'] = function() use ($app) {
+    return new ZeusCalendarController($app);
+};
+
 
 /*
 * Models containers
@@ -126,6 +132,10 @@ $app['model.menu'] = function() use ($app) {
 
 $app['model.editorialContent'] = function() use ($app) {
     return new EditorialContentModel($app['db']);
+};
+
+$app['model.zeusCalendar'] = function() use ($app) {
+    return new ZeusCalendarModel($app['db']);
 };
 
 /*
