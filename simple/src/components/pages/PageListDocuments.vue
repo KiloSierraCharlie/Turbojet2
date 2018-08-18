@@ -389,8 +389,4 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
-    .page-list-documents {
-
-    }
-</style>
+<style scoped lang="scss"></style>

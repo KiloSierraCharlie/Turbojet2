@@ -341,5 +341,11 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
+    .page-list-editorial {
+        .v-card img {
+            max-width: 100%;
+
+        }
+    }
 </style>

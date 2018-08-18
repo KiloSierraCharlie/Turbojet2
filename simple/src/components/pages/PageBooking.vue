@@ -394,8 +394,4 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
-    .page-booking {
-
-    }
-</style>
+<style scoped lang="scss"></style>

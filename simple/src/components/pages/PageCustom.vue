@@ -1,5 +1,5 @@
 <template>
-    <v-container fluid class="page-list-editorial">
+    <v-container fluid class="page-custom">
         <v-layout row>
             <v-flex xs12>
                 <!-- <v-btn v-show="connectedUser ? connectedUser.hasPermissions($route.meta.settings.permission) : false"color="primary" @click="goPageManager">Page Manager</v-btn> -->
@@ -91,5 +91,11 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
+    .page-custom {
+        .v-card img {
+            max-width: 100%;
+
+        }
+    }
 </style>
