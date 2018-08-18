@@ -40,6 +40,6 @@ class Router {
         $this->app->post('/bookings/{type}/{id}/changeState', 'controller.booking:changeBookingState');
         $this->app->get('/bookings/{type}/calculatePrice', 'controller.booking:getBookingPrice');
         $this->app->get('/bookings/{type}/resources', 'controller.booking:getResources');
-        $this->app->get('/zeus-calendar/parse', 'controller.zeusCalendarController:parseZeusCalendar');
+        $this->app->get('/zeus-calendar/parse', 'controller.zeusCalendarController:parseZeusCalendar')->bind('parseZeusCalendar');
     }
 }

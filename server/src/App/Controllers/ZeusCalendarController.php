@@ -19,7 +19,7 @@ class ZeusCalendarController {
             Get all events at +30days
          */
         $dateFrom = date('d-m-Y');
-        $dateTo = date('d-m-Y', strtotime('+1 days'));
+        $dateTo = date('d-m-Y', strtotime('+30 days'));
 
         $url = 'http://chronos.ftejerez.com:8090/chronos/services/crm/apps/login_handler.php';
 
@@ -62,7 +62,7 @@ class ZeusCalendarController {
             }
         });
 
-        var_dump($newEvents);
+        // var_dump($newEvents);
         // exit();
 
         /*
@@ -79,13 +79,13 @@ class ZeusCalendarController {
             $oldEvents['event_'.$event['id']] = $event;
         }
 
-        var_dump($oldEvents);
+        // var_dump($oldEvents);
         // exit();
 
         $diffEvents = $this->compareEvents($oldEvents, $newEvents);
         // $diffEvents = \array_values(\array_diff($newEvents, $oldEvents));
 
-        var_dump($diffEvents);
+        // var_dump($diffEvents);
         // exit();
 
         /*
@@ -98,7 +98,7 @@ class ZeusCalendarController {
                 $usersMail[$oldEvents[$id]['captain']]['old'] = [];
                 $usersMail[$oldEvents[$id]['captain']]['new'] = [];
             }
-            if(!empty($oldEvents[$id]['crew1']) && array_key_exists($oldEvents[$id]['crew1'], $usersMail)) {
+            if(!empty($oldEvents[$id]['crew1']) && !array_key_exists($oldEvents[$id]['crew1'], $usersMail)) {
                 $usersMail[$oldEvents[$id]['crew1']] = [];
                 $usersMail[$oldEvents[$id]['crew1']]['old'] = [];
                 $usersMail[$oldEvents[$id]['crew1']]['new'] = [];
@@ -117,7 +117,7 @@ class ZeusCalendarController {
                 $usersMail[$newEvents[$id]['captain']]['old'] = [];
                 $usersMail[$newEvents[$id]['captain']]['new'] = [];
             }
-            if(!empty($newEvents[$id]['crew1']) && array_key_exists($newEvents[$id]['crew1'], $usersMail)) {
+            if(!empty($newEvents[$id]['crew1']) && !array_key_exists($newEvents[$id]['crew1'], $usersMail)) {
                 $usersMail[$newEvents[$id]['crew1']] = [];
                 $usersMail[$newEvents[$id]['crew1']]['old'] = [];
                 $usersMail[$newEvents[$id]['crew1']]['new'] = [];
@@ -138,7 +138,7 @@ class ZeusCalendarController {
                 $usersMail[$newEvents[$id]['captain']]['old'] = [];
                 $usersMail[$newEvents[$id]['captain']]['new'] = [];
             }
-            if(!empty($newEvents[$id]['crew1']) && array_key_exists($newEvents[$id]['crew1'], $usersMail)) {
+            if(!empty($newEvents[$id]['crew1']) && !array_key_exists($newEvents[$id]['crew1'], $usersMail)) {
                 $usersMail[$newEvents[$id]['crew1']] = [];
                 $usersMail[$newEvents[$id]['crew1']]['old'] = [];
                 $usersMail[$newEvents[$id]['crew1']]['new'] = [];
@@ -151,7 +151,7 @@ class ZeusCalendarController {
             }
         }
 
-        var_dump($usersMail);
+        // var_dump($usersMail);
         // exit();
 
         $emailList = [];
@@ -165,6 +165,7 @@ class ZeusCalendarController {
                 $emailList[$user] .= 'Title: ' . $event['exercise_title'] . '<br>Start Time: ' . $event['start'] . 'z<br>End Time: ' . $event['end'] . 'z<br>P1: ' . $event['captain']  . '<br>P2: ' . $event['crew1'] . '<br>Aircraft: ' .$event['registration']. '<br><br>';
             }
             $emailList[$user] .= '<strong>New Events:</strong><br>';
+
             foreach ($events['new'] as $event) {
                 $emailList[$user] .= 'Title: ' . $event['exercise_title'] . '<br>Start Time: ' . $event['start'] . 'z<br>End Time: ' . $event['end'] . 'z<br>P1: ' . $event['captain']  . '<br>P2: ' . $event['crew1'] . '<br>Aircraft: ' .$event['registration']. '<br><br>';
             }
@@ -173,11 +174,8 @@ class ZeusCalendarController {
 
         $mailResult = '';
         foreach ($emailList as $user => $body) {
-
-            // TODO get user email
-            $mailResult = $this->app['controller.mailer']->sendMail('[Turbojet] A Flight Calendar Event Has Been Altered', $body, $user);
-            var_dump('mail sent ' . $mailResult );
-            // exit();
+            $mailResult = $this->app['controller.mailer']->sendMail('[Turbojet] A Flight Calendar Event Has Been Altered', $body, $user, TRUE);
+            // var_dump('mail sent ' . $mailResult );
         }
 
         /*

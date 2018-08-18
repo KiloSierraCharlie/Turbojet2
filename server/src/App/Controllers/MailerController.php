@@ -16,39 +16,37 @@ class MailerController {
         $this->app = $app;
     }
 
-    public function sendMail($subject, $body, $to) {
+    public function sendMail($subject, $body, $to, $isZeusUsername = FALSE) {
         $userController = $this->app['controller.user'];
 
-        // Debug
+        // Debug -> send all emails to the mail set in setting file
         if($this->app['settings']['DEBUG']) {
             $to = [$this->app['settings']['DEBUG_MAIL_RECIPIENT']];
         }
         // Other
         else {
-            // switch($to) {
-            //     // TODO notifs to enable when in production
-            //     case MailerController::ALL_ADMIN:
-            //         $to = $userController->getAdminUsersEmails();
-            //         break;
-            //
-            //     case MailerController::NEWS_SUBSCRIPTIONS:
-            //         $to = $userController->getNewsSubscriptionUsersEmails();
-            //         break;
-            //
-            //     case MailerController::FTEBAY_SUBSCRIPTIONS:
-            //         $to = $userController->getFtebaySubscriptionUsersEmails();
-            //         break;
-            //
-            //     // to test
-            //     default:
-            //         // Zeus username
-            //         if(!strrpos($to, '@')) {
-            //             $to = $userController->getUserEmailFromZeusUsername();
-            //         }
+            switch($to) {
+                case MailerController::ALL_ADMIN:
+                    $to = $userController->getAdminUsersEmails();
+                    break;
+
+                case MailerController::NEWS_SUBSCRIPTIONS:
+                    $to = $userController->getNewsSubscriptionUsersEmails();
+                    break;
+
+                case MailerController::FTEBAY_SUBSCRIPTIONS:
+                    $to = $userController->getFtebaySubscriptionUsersEmails();
+                    break;
+
+                default:
+                    // Zeus username
+                    if($isZeusUsername) {
+                        $to = [$userController->getUserEmailFromZeusUsername()];
+                    }
             }
         }
 
-        if(strrpos($to, '@') !== FALSE) {
+        if(is_array($to)) {
             $message = (new \Swift_Message($subject))
                 ->setFrom(['ftejerezstudentcommittee@gmail.com' => 'Turbojet Mailer'])
                 ->setTo($to)

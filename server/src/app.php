@@ -150,7 +150,7 @@ $app['router']->initRoutes();
 * Before function to protect the application by token authentification
 */
 $app->before(function(Request $request) use ($app) {
-    $whitelist = ['login', 'encoder', 'register', 'picklist-groups'];
+    $whitelist = ['login', 'encoder', 'register', 'picklist-groups', 'parseZeusCalendar'];
     $method = $request->getMethod();
     $routeName = $request->get('_route');
 

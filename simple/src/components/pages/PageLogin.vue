@@ -159,11 +159,11 @@
                                                 <file-drop ref="fileDrop" label="Your picture (we must be able to see your face): *" allowed-types="images" />
                                             </v-flex>
                                             <v-flex xs12>
-                                                <vue-recaptcha :sitekey="recaptchaKey" @verify="onCaptchaVerify"></vue-recaptcha>
+                                                <vue-recaptcha ref="captcha" :sitekey="recaptchaKey" @verify="onCaptchaVerify"></vue-recaptcha>
                                             </v-flex>
                                             <v-flex xs12>
                                                 <v-btn color="primary" outline @click="closeRegister">Back</v-btn>
-                                                <v-btn color="primary" @click="onRegister">Register</v-btn>
+                                                <v-btn color="primary" :loading="isLoading" @click="onRegister">Register</v-btn>
                                             </v-flex>
                                         </v-layout>
                                     </v-container>
@@ -260,15 +260,16 @@ export default {
         resetForm() {
             this.$refs.form.reset()
             this.$validator.reset()
-            this.firstName = ''
-            this.lastName = ''
-            this.room = ''
-            this.group = ''
-            this.email = ''
-            this.phone = ''
-            this.password = ''
-            this.confirmPassword = ''
-            this.captchaReponse = ''
+            this.$refs.captcha.reset()
+            this.registerFormData.firstName = ''
+            this.registerFormData.lastName = ''
+            this.registerFormData.room = ''
+            this.registerFormData.group = ''
+            this.registerFormData.email = ''
+            this.registerFormData.phone = ''
+            this.registerFormData.password = ''
+            this.registerFormData.confirmPassword = ''
+            this.registerFormData.captchaReponse = ''
         },
 
         onRegister(e) {
@@ -308,10 +309,10 @@ export default {
                                     $this.resetForm()
                                 }, 300)
                             })
-                            .catch(function (error) {
-                                console.log('register error', error)
-
-                                $this.isLoading = false
+                            .catch(function(error) {
+                                $this.displayError(error)
+                                $this.$refs.captcha.reset()
+                                $this.registerFormData.captchaReponse = ''
                             })
                     }
                 })
@@ -347,21 +348,7 @@ export default {
 
                                 $this.isLoading = false
                             })
-                            .catch(function (error) {
-                                console.log('login error', error)
-                                $this.isLoading = false
-
-                                // error received from the server
-                                if (error.response && _.has(error, 'response.data.message')) {
-                                    $this.errorMessage = error.response.data.message
-                                    $this.errorSnackbar = true
-                                }
-                                // no answer from the server, or no error message in the body
-                                else {
-                                    $this.errorMessage = 'An error has occurred, please try again. If the problem persists please contact the student committee'
-                                    $this.errorSnackbar = true
-                                }
-                            })
+                            .catch($this.displayError)
                     }
                 })
         },
@@ -387,6 +374,22 @@ export default {
                         $this.errorSnackbar = true
                     }
                 });
+        },
+
+        displayError(error) {
+            console.log('login error', error)
+            this.isLoading = false
+
+            // error received from the server
+            if (error.response && _.has(error, 'response.data.message')) {
+                this.errorMessage = error.response.data.message
+                this.errorSnackbar = true
+            }
+            // no answer from the server, or no error message in the body
+            else {
+                this.errorMessage = 'An error has occurred, please try again. If the problem persists please contact the student committee'
+                this.errorSnackbar = true
+            }
         }
     },
     created() {
