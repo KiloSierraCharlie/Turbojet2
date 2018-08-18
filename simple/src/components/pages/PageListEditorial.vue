@@ -2,7 +2,7 @@
     <v-container fluid class="page-list-editorial pt-0">
         <v-layout row>
             <v-flex xs12>
-                <v-dialog v-model="dialogEdit" max-width="500px" fullscreen transition="dialog-bottom-transition" scrollable>
+                <v-dialog v-model="dialogEdit" max-width="500px" fullscreen transition="dialog-bottom-transition">
                     <v-btn v-show="connectedUser ? connectedUser.hasPermissions('permission_edit_announcement') : false" slot="activator" color="primary" dark class="mb-2">{{ buttonLabel }}</v-btn>
                     <v-card tile>
                         <v-form enctype="multipart/form-data" ref="form" v-model="formIsValid">
