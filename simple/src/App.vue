@@ -13,7 +13,7 @@
                                     <div class="background" :style="'background-image: url(' + endpoint + 'media/student_photos/'+ (connectedUser.picture ? connectedUser.picture : 'cygnet.jpg') + ')'"></div>
                                 </v-list-tile-avatar>
                                 <v-list-tile-content>
-                                    <v-list-tile-title>{{connectedUser.firstName}} {{connectedUser.lastName}} <v-icon small>mdi-menu-down</v-icon></v-list-tile-title>
+                                    <v-list-tile-title>{{connectedUser.firstName}}<v-icon small>mdi-menu-down</v-icon></v-list-tile-title>
                                 </v-list-tile-content>
                             </v-list-tile>
                         </v-list>
