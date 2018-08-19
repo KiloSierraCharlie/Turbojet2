@@ -105,7 +105,12 @@ if (process.env.NODE_ENV === 'production') {
         new UglifyJsPlugin({
           uglifyOptions: {
             compress: {
-              warnings: false
+              warnings: false,
+              drop_debugger: true,
+              drop_console: true
+            },
+            output: {
+                comments: false
             }
           },
           sourceMap: true
