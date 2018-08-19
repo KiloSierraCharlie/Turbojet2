@@ -216,8 +216,6 @@ export default {
         closeDialog() {
             this.setEditMode(false)
             this.$emit('closeDialogEdit')
-            this.dialog = false
-            console.log("Cerrando dialogo");
         },
         deleteDialog() {
             this.$emit('deleteUser')
