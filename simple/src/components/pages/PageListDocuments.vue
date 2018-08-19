@@ -200,7 +200,7 @@ export default {
 
         getDocumentLink(documentItem) {
             if(documentItem.type === 'document') {
-                return 'http://api.turbojet.com/media/documents/'+documentItem.path
+                return 'http://api.fteturbojet.com/media/documents/'+documentItem.path
             }
             else if(documentItem.type === 'link') {
                 return documentItem.path
