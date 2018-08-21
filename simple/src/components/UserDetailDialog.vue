@@ -52,7 +52,7 @@
                             </v-flex>
                             <v-flex xs12 sm6>
                                 <v-text-field
-                                    v-model="userData.phone"
+                                    v-model="computedData.phone"
                                     prepend-icon="mdi-cellphone-iphone"
                                     label="Phone"
                                     name="phone"
