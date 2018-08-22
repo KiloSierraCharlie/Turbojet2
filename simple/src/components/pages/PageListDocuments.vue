@@ -200,7 +200,7 @@ export default {
 
         getDocumentLink(documentItem) {
             if(documentItem.type === 'document') {
-                return 'http://api.fteturbojet.com/media/documents/'+documentItem.path
+                return Config.endpoint + '/media/documents/'+documentItem.path
             }
             else if(documentItem.type === 'link') {
                 return documentItem.path
