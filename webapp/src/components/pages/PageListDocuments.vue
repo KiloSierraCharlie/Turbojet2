@@ -2,13 +2,14 @@
     <v-container fluid class="page-list-documents">
         <v-layout row>
             <v-flex xs12>
-                <v-dialog v-model="dialogEdit" max-width="500px" persistent>
+                <v-dialog v-model="dialogEdit" max-width="500px" scrollable persistent>
                     <v-btn v-show="connectedUser ? connectedUser.hasPermissions('permission_edit_document') : false" slot="activator" color="primary" dark class="mb-2">New Document</v-btn>
                     <v-card>
                             <v-card-title>
                                 <span class="headline">{{ formTitle }}</span>
                             </v-card-title>
-                            <v-card-text>
+                            <v-divider></v-divider>
+                            <v-card-text style="height: 300px;">
                                 <v-radio-group v-if="editedIndex === -1" v-model="docType">
                                     <v-radio label="Document" value="document"></v-radio>
                                     <v-radio label="Link" value="link"></v-radio>
@@ -50,6 +51,7 @@
                                     />
                                 </v-form>
                             </v-card-text>
+                            <v-divider></v-divider>
                             <v-card-actions>
                                 <v-spacer></v-spacer>
                                 <v-btn :disabled="isLoading" outline color="primary" @click="closeDialogEdit">Cancel</v-btn>
