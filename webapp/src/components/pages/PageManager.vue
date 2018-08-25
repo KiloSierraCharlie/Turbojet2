@@ -170,9 +170,6 @@ export default {
             this.fetchData()
             window.scrollTo(0, 0)
         },
-        randomColor() {
-            return _.sample(this.colors)
-        },
         formatDate(date) {
             return moment(date).format("dddd, MMMM Do YYYY, h:mm a")
         },

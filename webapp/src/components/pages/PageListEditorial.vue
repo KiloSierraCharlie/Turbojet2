@@ -53,7 +53,7 @@
                 </v-dialog>
                 <v-card v-for="(post, index) in posts" :key="post.id" :class="{'mt-4': index !== 0}">
                     <v-card-title
-                        :class="'white--text ' + randomColor()"
+                        :class="'white--text ' + post.color"
                         src="/static/doc-images/cards/docks.jpg"
                     >
                         <span class="headline">{{post.title}}</span>
@@ -194,7 +194,10 @@ export default {
 
             Axios.get(Config.endpoint + this.$route.meta.api.getAll + '?from='+((this.currentPage-1)*this.totalToDisplay)+'&length='+this.totalToDisplay)
                 .then(function (response) {
-                    $this.posts = response.data.posts
+                    $this.posts = _.map(response.data.posts, function(post) {
+                        post.color = $this.randomColor()
+                        return post
+                    })
                     $this.totalPages = _.toInteger(response.data.totalPages)
                 })
                 .catch(function (error) {
