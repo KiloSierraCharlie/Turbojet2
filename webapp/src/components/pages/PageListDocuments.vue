@@ -96,6 +96,11 @@
                             </v-btn>
                         </td>
                     </template>
+                    <template slot="no-data">
+                        <v-alert :value="true" type="info">
+                            Sorry, nothing to display here :(
+                        </v-alert>
+                    </template>
                   </v-data-table>
             </v-flex xs12>
         </v-layout row>
