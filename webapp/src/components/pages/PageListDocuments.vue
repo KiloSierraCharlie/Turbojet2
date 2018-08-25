@@ -138,8 +138,8 @@ export default {
             documents: [],
             headers: [
                 { text: 'Type', value: 'type', sortable: false },
-                { text: 'Name', value: 'names' }, // TODO bug on sort
-                { text: 'Last Updated', value: 'modifiedAt' }
+                { text: 'Name', value: 'name', sortable: true },
+                { text: 'Last Updated', value: 'date_modified', sortable: true }
             ],
             snackbar: false,
             errorMessage: ''
@@ -149,7 +149,7 @@ export default {
         computedHeaders() {
             if(this.connectedUser && this.connectedUser.hasPermissions('permission_edit_document')) {
                 return _.union(this.headers, [
-                    { text: 'Actions', value: 'name', sortable: false }
+                    { text: 'Actions', value: 'actions', sortable: false }
                 ])
             }
             else {

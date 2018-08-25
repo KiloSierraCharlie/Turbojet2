@@ -69,7 +69,7 @@
                     <template slot="items" slot-scope="data">
                         <td><v-icon>mdi-file-document-box</v-icon></td>
                         <td><router-link :to="'/pages/'+data.item.type+'/'+data.item.id">{{ data.item.title }}</router-link></td>
-                        <td class="justify-center layout px-0" v-if="connectedUser ? connectedUser.hasPermissions($route.meta.settings.permission) : false">
+                        <td class="layout px-0" v-if="connectedUser ? connectedUser.hasPermissions($route.meta.settings.permission) : false">
                             <v-btn icon class="mx-0" @click="editPage(data.item)">
                                 <v-icon color="teal">mdi-pencil</v-icon>
                             </v-btn>
@@ -124,8 +124,8 @@ export default {
             showSettings: false,
             pages: [],
             headers: [
-                { text: 'Icon', value: 'icon' },
-                { text: 'Name', value: 'names' } // TODO bug on sort
+                { text: 'Icon', value: 'icon', sortable: false},
+                { text: 'Name', value: 'title' }
             ],
             snackbar: false,
             errorMessage: ''
@@ -135,7 +135,7 @@ export default {
         computedHeaders() {
             if(this.connectedUser && this.connectedUser.hasPermissions(this.$route.meta.settings.permission)) {
                 return _.union(this.headers, [
-                    { text: 'Actions', value: 'name', sortable: false }
+                    { text: 'Actions', value: 'actions', sortable: false }
                 ])
             }
             else {
