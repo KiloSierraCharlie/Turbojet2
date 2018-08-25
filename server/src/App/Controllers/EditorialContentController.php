@@ -79,7 +79,7 @@ class EditorialContentController {
             $body = '<p>A new announcement has been posted on turbojet by
             <strong>'.$this->app['user']->getFirstName() . ' ' . $this->app['user']->getLastName() . '</strong>:<br />
             <strong>'. $title . '</strong></p>
-            <p>(you can unsuscribe from these emails in your profile on www.turbojet.com)</p>';
+            <p>(you can unsuscribe from these emails in your profile on www.fteturbojet.com)</p>';
 
             $this->app['controller.mailer']->sendMail('[Turbojet] New Announcement', $body, $this->app['controller.mailer']::NEWS_SUBSCRIPTIONS);
         }
@@ -87,7 +87,7 @@ class EditorialContentController {
             $body = '<p>A new FTEbay offer has been posted on turbojet by
             <strong>'.$this->app['user']->getFirstName() . ' ' . $this->app['user']->getLastName() . '</strong>:<br />
             <strong>'. $title . '</strong></p>
-            <p>(you can unsuscribe from these emails in your profile on www.turbojet.com)</p>';
+            <p>(you can unsuscribe from these emails in your profile on www.fteturbojet.com)</p>';
 
             $this->app['controller.mailer']->sendMail('[Turbojet] New FTEbay', $body, $this->app['controller.mailer']::FTEBAY_SUBSCRIPTIONS);
         }
