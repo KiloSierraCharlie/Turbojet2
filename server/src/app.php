@@ -67,7 +67,7 @@ $app['security.default_encoder'] = function ($app) {
 
 $app->register(new SwiftmailerServiceProvider(), array(
     'swiftmailer.options' => array(
-    'host' => 'smtp.gmail.com',
+    'host' => 'fteturbojet.com',
     'port' => 465,
     'username' => $app['settings']['SMTP']['username'],
     'password' => $app['settings']['SMTP']['password'],
