@@ -9,7 +9,7 @@
             :event-data="editedEvent"
             :show="dialogEdit"
             :mark-as-paid-button="$route.meta.api.markAsPaid"
-            :has-permissions="connectedUser ? connectedUser.hasPermissions('permission_edit_minivan_booking') : false"
+            :has-permissions="connectedUser ? connectedUser.hasPermissions('permission_edit_booking') : false"
             @saveBooking="onSaveBooking"
             @closeDialogEdit="onCloseDialogEdit"
             @bookingPaid="onBookingPaid"
