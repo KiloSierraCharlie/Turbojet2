@@ -101,12 +101,12 @@
             <p id="title">Episode II</p>
             <p id="subtitle">THE CODER'S MENACE - A NEW WEBSITE</p>
             <br>
-            <p>James Harding  - course 140 -  IT REP in 2014 and creator of turbojet V1</p>
-            <p>Andrew McHarg  - course 142 -  IT REP in 2015</p>
-            <p>Johnny Moore  - course 157 -  IT REP in 2017</p>
-            <p>Andy Smith  - course 140 -  IT REP in 2017</p>
+            <p>Francisco Jesús Jiménez Hidalgo  - course 180 -  IT REP in 2017</p>
             <p>Kevin Bouhadana - course 172 -  IT REP in 2018 and creator of turbojet V2</p>
-            <p>Francisco Jesús Jiménez Hidalgo  - course 140 -  IT REP in 2017</p>
+            <p>Andy Smith  - course 169 -  IT REP in 2017</p>
+            <p>Johnny Moore  - course 157 -  IT REP in 2017</p>
+            <p>Andrew McHarg  - course 142 -  IT REP in 2015</p>
+            <p>James Harding  - course 140 -  IT REP in 2014 and creator of turbojet V1</p>
             <p>Do not forget to pay them some beers next time you see them :-)</p>
           </div>
         </div>
