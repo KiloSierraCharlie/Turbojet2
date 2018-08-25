@@ -47,6 +47,10 @@ class EditorialContentModel extends AbstractModel {
                     ->andWhere('type = :type')->setParameter(':type', $type);
                 ;
 
+                if($type === 'ftebay') {
+                    $queryBuilder->andWhere('expiry_date > NOW()');
+                }
+
                 $stmt = $queryBuilder->execute();
                 $total = $stmt->fetchColumn(0);
 
