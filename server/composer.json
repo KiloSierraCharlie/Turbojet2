@@ -1,13 +1,14 @@
 {
     "require": {
-      "silex/silex": "~2.0",
-      "doctrine/dbal": "~2.7.1",
-      "symfony/security": "^4.0.8",
-      "jdesrosiers/silex-cors-provider": "~1.6.0",
+        "silex/silex": "~2.0",
+        "doctrine/dbal": "~2.7.1",
+        "symfony/security": "^4.0.8",
+        "jdesrosiers/silex-cors-provider": "~1.6.0",
         "symfony/dom-crawler": "^4.1",
-        "swiftmailer/swiftmailer": "^6.1"
+        "swiftmailer/swiftmailer": "^6.1",
+        "symfony/css-selector": "^4.1"
     },
     "autoload": {
-      "psr-0": { "App": "src/" }
+        "psr-0": { "App": "src/" }
     }
 }

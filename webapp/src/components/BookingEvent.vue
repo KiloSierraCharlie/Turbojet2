@@ -1,11 +1,12 @@
 <template>
-    <v-dialog class="booking-event" v-model="show" max-width="500px" persistent>
+    <v-dialog class="booking-event" v-model="show" max-width="500px" scrollable persistent>
         <v-card>
-            <v-form enctype="multipart/form-data" ref="form">
-                <v-card-title>
-                    <span class="headline">{{ formTitle }}</span>
-                </v-card-title>
-                <v-card-text>
+            <v-card-title>
+                <span class="headline">{{ formTitle }}</span>
+            </v-card-title>
+            <v-divider></v-divider>
+            <v-card-text style="height: 300px;">
+                <v-form enctype="multipart/form-data" ref="form">
                     <v-text-field
                         v-if="eventData.data.id"
                         v-model="eventData.data.id"
@@ -44,28 +45,29 @@
                         :error-messages="errors.collect('booking_reason')"
                         :disabled="eventData.data.id && !editMode ? true : false"
                     />
-                </v-card-text>
-                <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <!-- Event detail -->
-                    <div v-if="eventData.data.id && !editMode">
-                        <v-btn :disabled="loading" outline color="primary" @click="closeDialog">Close</v-btn>
-                        <v-btn v-show="hasPermissions" :disabled="loading" color="error" @click="cancelDialog">Cancel</v-btn>
-                        <v-btn v-show="hasPermissions" :loading="loading" color="primary" @click="editMode = true;">Edit</v-btn>
-                        <v-btn v-show="hasPermissions && markAsPaidButton && !eventData.data.paid" :loading="loading" color="success" @click="paid">Mark as paid</v-btn>
-                    </div>
-                    <!-- Edit event -->
-                    <div v-else-if="eventData.data.id && editMode">
-                        <v-btn :disabled="loading" outline color="primary" @click="editMode = false;">Back</v-btn>
-                        <v-btn :loading="loading" color="primary" @click="save">Save</v-btn>
-                    </div>
-                    <!-- New event -->
-                    <div v-else>
-                        <v-btn :disabled="loading" outline color="primary" @click="closeDialog">Close</v-btn>
-                        <v-btn :loading="loading" color="primary" @click="save">Save</v-btn>
-                    </div>
-                </v-card-actions>
-            </v-form>
+                </v-form>
+            </v-card-text>
+            <v-divider></v-divider>
+            <v-card-actions>
+                <v-spacer></v-spacer>
+                <!-- Event detail -->
+                <div v-if="eventData.data.id && !editMode">
+                    <v-btn :disabled="loading" outline color="primary" @click="closeDialog">Close</v-btn>
+                    <v-btn v-show="hasPermissions" :disabled="loading" color="error" @click="cancelDialog">Cancel</v-btn>
+                    <v-btn v-show="hasPermissions" :loading="loading" color="primary" @click="editMode = true;">Edit</v-btn>
+                    <v-btn v-show="hasPermissions && markAsPaidButton && !eventData.data.paid" :loading="loading" color="success" @click="paid">Mark as paid</v-btn>
+                </div>
+                <!-- Edit event -->
+                <div v-else-if="eventData.data.id && editMode">
+                    <v-btn :disabled="loading" outline color="primary" @click="editMode = false;">Back</v-btn>
+                    <v-btn :loading="loading" color="primary" @click="save">Save</v-btn>
+                </div>
+                <!-- New event -->
+                <div v-else>
+                    <v-btn :disabled="loading" outline color="primary" @click="closeDialog">Close</v-btn>
+                    <v-btn :loading="loading" color="primary" @click="save">Save</v-btn>
+                </div>
+            </v-card-actions>
         </v-card>
     </v-dialog>
 </template>

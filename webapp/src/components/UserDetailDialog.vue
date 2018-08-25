@@ -1,13 +1,12 @@
 <template>
-    <v-dialog class="user-details-dialog" v-model="show" max-width="700px">
+    <v-dialog class="user-details-dialog" v-model="show" max-width="700px" scrollable persistent>
         <v-card v-if="userData && groupsData">
-            <v-form enctype="multipart/form-data" ref="form">
-                <v-card-media
-                    :src="endpoint+'media/student_photos/'+(userData.picture ? userData.picture : 'cygnet.jpg')"
-                    height="300px"
-                />
-
-                <v-card-title primary-title>
+            <v-card-media
+                :src="endpoint+'media/student_photos/'+(userData.picture ? userData.picture : 'cygnet.jpg')"
+                height="300px"
+            />
+            <v-card-text style="height: 300px;">
+                <v-form enctype="multipart/form-data" ref="form">
                     <v-container fluid>
                         <v-layout row wrap>
                             <v-flex xs12 sm6>
@@ -52,7 +51,7 @@
                             </v-flex>
                             <v-flex xs12 sm6>
                                 <v-text-field
-                                    v-model="userData.phone"
+                                    v-model="computedData.phone"
                                     prepend-icon="mdi-cellphone-iphone"
                                     label="Phone"
                                     name="phone"
@@ -159,22 +158,23 @@
                             </v-flex> -->
                         </v-layout>
                     </v-container>
-                </v-card-title>
-                <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <!-- Event detail -->
-                    <div v-if="!editMode">
-                        <v-btn :disabled="loading" outline color="primary" @click="closeDialog">Close</v-btn>
-                        <v-btn v-show="hasPermissions" :disabled="loading" color="error" @click="deleteDialog">Delete</v-btn>
-                        <v-btn v-show="hasPermissions || isSameUser" :loading="loading" color="primary" @click="setEditMode(true)">Edit</v-btn>
-                    </div>
-                    <!-- Edit event -->
-                    <div v-else-if="editMode">
-                        <v-btn :disabled="loading" outline color="primary" @click="setEditMode(false)">Back</v-btn>
-                        <v-btn :loading="loading" color="primary" @click="save">Save</v-btn>
-                    </div>
-                </v-card-actions>
-            </v-form>
+                </v-form>
+            </v-card-text>
+             <v-divider></v-divider>
+            <v-card-actions>
+                <v-spacer></v-spacer>
+                <!-- Event detail -->
+                <div v-if="!editMode">
+                    <v-btn :disabled="loading" outline color="primary" @click="closeDialog">Close</v-btn>
+                    <v-btn v-show="hasPermissions" :disabled="loading" color="error" @click="deleteDialog">Delete</v-btn>
+                    <v-btn v-show="hasPermissions || isSameUser" :loading="loading" color="primary" @click="setEditMode(true)">Edit</v-btn>
+                </div>
+                <!-- Edit event -->
+                <div v-else-if="editMode">
+                    <v-btn :disabled="loading" outline color="primary" @click="setEditMode(false)">Back</v-btn>
+                    <v-btn :loading="loading" color="primary" @click="save">Save</v-btn>
+                </div>
+            </v-card-actions>
         </v-card>
     </v-dialog>
 </template>

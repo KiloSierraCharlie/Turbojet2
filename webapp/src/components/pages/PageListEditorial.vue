@@ -5,16 +5,16 @@
                 <v-dialog v-model="dialogEdit" max-width="500px" fullscreen transition="dialog-bottom-transition">
                     <v-btn v-show="connectedUser ? connectedUser.hasPermissions('permission_edit_announcement') : false" slot="activator" color="primary" dark class="mb-2">{{ buttonLabel }}</v-btn>
                     <v-card tile>
-                        <v-form enctype="multipart/form-data" ref="form" v-model="formIsValid">
-                            <v-toolbar card dark color="primary">
-                                <v-spacer></v-spacer>
-                                <v-toolbar-title>{{ formTitle }}</v-toolbar-title>
-                                <v-spacer></v-spacer>
-                                <v-btn icon @click="closeDialogEdit" dark>
-                                    <v-icon>close</v-icon>
-                                </v-btn>
-                            </v-toolbar>
-                            <v-card-text class="dialog-content">
+                        <v-toolbar card dark color="primary">
+                            <v-spacer></v-spacer>
+                            <v-toolbar-title>{{ formTitle }}</v-toolbar-title>
+                            <v-spacer></v-spacer>
+                            <v-btn icon @click="closeDialogEdit" dark>
+                                <v-icon>close</v-icon>
+                            </v-btn>
+                        </v-toolbar>
+                        <v-card-text class="dialog-content">
+                            <v-form enctype="multipart/form-data" ref="form" v-model="formIsValid">
                                 <v-text-field
                                     v-model="editedPost.title"
                                     label="Title"
@@ -30,13 +30,14 @@
                                     @imageAdded="handleImageAdded"
                                 >
                                 </vue-editor>
-                            </v-card-text>
-                            <v-card-actions>
-                                <v-spacer></v-spacer>
-                                <v-btn :disabled="isLoading" outline color="primary" @click="closeDialogEdit">Cancel</v-btn>
-                                <v-btn :loading="isLoading" color="primary" @click="savePost">Save</v-btn>
-                            </v-card-actions>
-                        </v-form>
+                            </v-form>
+                        </v-card-text>
+                        <v-card-actions>
+                            <v-spacer></v-spacer>
+                            <v-btn :disabled="isLoading" outline color="primary" @click="closeDialogEdit">Cancel</v-btn>
+                            <v-btn :loading="isLoading" color="primary" @click="savePost">Save</v-btn>
+                        </v-card-actions>
+
                     </v-card>
                 </v-dialog>
                 <v-dialog v-model="dialogDelete" max-width="500px" persistent>
@@ -52,7 +53,7 @@
                 </v-dialog>
                 <v-card v-for="(post, index) in posts" :key="post.id" :class="{'mt-4': index !== 0}">
                     <v-card-title
-                        :class="'white--text ' + randomColor()"
+                        :class="'white--text ' + post.color"
                         src="/static/doc-images/cards/docks.jpg"
                     >
                         <span class="headline">{{post.title}}</span>
@@ -193,7 +194,10 @@ export default {
 
             Axios.get(Config.endpoint + this.$route.meta.api.getAll + '?from='+((this.currentPage-1)*this.totalToDisplay)+'&length='+this.totalToDisplay)
                 .then(function (response) {
-                    $this.posts = response.data.posts
+                    $this.posts = _.map(response.data.posts, function(post) {
+                        post.color = $this.randomColor()
+                        return post
+                    })
                     $this.totalPages = _.toInteger(response.data.totalPages)
                 })
                 .catch(function (error) {

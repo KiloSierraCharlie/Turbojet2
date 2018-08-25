@@ -5,7 +5,7 @@
                 <!-- <v-btn v-show="connectedUser ? connectedUser.hasPermissions($route.meta.settings.permission) : false"color="primary" @click="goPageManager">Page Manager</v-btn> -->
                 <v-card v-if="page">
                     <v-card-title
-                        :class="'white--text ' + randomColor()"
+                        :class="'white--text ' + page.color"
                         src="/static/doc-images/cards/docks.jpg"
                     >
                         <span class="headline">{{page.title}}</span>
@@ -62,6 +62,7 @@ export default {
             Axios.get(Config.endpoint + 'editorial/' + this.$props.section + '/' + this.$props.id)
                 .then(function (response) {
                     $this.page = response.data
+                    $this.page.color = $this.randomColor()
                 })
                 .catch(function (error) {
                     if(_.has(error, 'response.data.message')) {

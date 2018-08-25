@@ -13,7 +13,7 @@
                                     <div class="background" :style="'background-image: url(' + endpoint + 'media/student_photos/'+ (connectedUser.picture ? connectedUser.picture : 'cygnet.jpg') + ')'"></div>
                                 </v-list-tile-avatar>
                                 <v-list-tile-content>
-                                    <v-list-tile-title>{{connectedUser.firstName}} {{connectedUser.lastName}} <v-icon small>mdi-menu-down</v-icon></v-list-tile-title>
+                                    <v-list-tile-title>{{connectedUser.firstName}}<v-icon small>mdi-menu-down</v-icon></v-list-tile-title>
                                 </v-list-tile-content>
                             </v-list-tile>
                         </v-list>
@@ -67,13 +67,13 @@
                         </v-flex>
                     </v-layout>
                 </v-container>
-                <router-view ref="view" class="mb-5"></router-view>
+                <router-view ref="view" :class="{'mb-5': $route.name !== 'page-it-reps'}"></router-view>
                 <!-- <router-view name="dialog"></router-view> -->
             </v-content>
-            <v-footer color="indigo" class="px-2 white--text" height="auto" app>
+            <v-footer v-if="$route.name !== 'page-it-reps'" color="indigo" class="px-2 white--text" height="auto" app>
                 <v-layout justify-center row wrap>
                     <v-flex class="pt-3 pb-2" text-xs-center white--text xs12>
-                        Turbojet V2 - made with &nbsp;<v-icon class="subheading" color="white">mdi-heart</v-icon>&nbsp; by &nbsp;<a target="_blank" href="https://www.linkedin.com/in/kevinbouhadana">Kevin Bouhadana (172)</a>, based on initial concept by <a href="http://www.jamesharding.ca/" target="_blank">James Harding (140)</a>. maintained by a wonderfull lineage of IT Reps.
+                        Turbojet V2.0.1 made with &nbsp;<v-icon class="subheading" color="white">mdi-heart</v-icon>&nbsp; by &nbsp;<a target="_blank" href="https://www.linkedin.com/in/kevinbouhadana">Kevin Bouhadana (172)</a>, based on initial concept by <a href="http://www.jamesharding.ca/" target="_blank">James Harding (140)</a>. maintained by a <router-link to="/it-reps">lineage of wonderfull IT Reps</router-link>.
                     </v-flex>
                 </v-layout>
             </v-footer>
@@ -92,7 +92,6 @@
               <v-btn dark flat @click.native="snackbar = false; errorMessage = ''">Close</v-btn>
             </v-snackbar>
         </v-app>
-
     </div>
 </template>
 

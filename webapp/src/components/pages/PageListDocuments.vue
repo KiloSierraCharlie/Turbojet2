@@ -2,13 +2,14 @@
     <v-container fluid class="page-list-documents">
         <v-layout row>
             <v-flex xs12>
-                <v-dialog v-model="dialogEdit" max-width="500px" persistent>
+                <v-dialog v-model="dialogEdit" max-width="500px" scrollable persistent>
                     <v-btn v-show="connectedUser ? connectedUser.hasPermissions('permission_edit_document') : false" slot="activator" color="primary" dark class="mb-2">New Document</v-btn>
                     <v-card>
                             <v-card-title>
                                 <span class="headline">{{ formTitle }}</span>
                             </v-card-title>
-                            <v-card-text>
+                            <v-divider></v-divider>
+                            <v-card-text style="height: 300px;">
                                 <v-radio-group v-if="editedIndex === -1" v-model="docType">
                                     <v-radio label="Document" value="document"></v-radio>
                                     <v-radio label="Link" value="link"></v-radio>
@@ -50,6 +51,7 @@
                                     />
                                 </v-form>
                             </v-card-text>
+                            <v-divider></v-divider>
                             <v-card-actions>
                                 <v-spacer></v-spacer>
                                 <v-btn :disabled="isLoading" outline color="primary" @click="closeDialogEdit">Cancel</v-btn>
@@ -94,6 +96,11 @@
                             </v-btn>
                         </td>
                     </template>
+                    <template slot="no-data">
+                        <v-alert :value="true" type="info">
+                            Sorry, nothing to display here :(
+                        </v-alert>
+                    </template>
                   </v-data-table>
             </v-flex xs12>
         </v-layout row>
@@ -131,8 +138,8 @@ export default {
             documents: [],
             headers: [
                 { text: 'Type', value: 'type', sortable: false },
-                { text: 'Name', value: 'names' }, // TODO bug on sort
-                { text: 'Last Updated', value: 'modifiedAt' }
+                { text: 'Name', value: 'name', sortable: true },
+                { text: 'Last Updated', value: 'date_modified', sortable: true }
             ],
             snackbar: false,
             errorMessage: ''
@@ -142,7 +149,7 @@ export default {
         computedHeaders() {
             if(this.connectedUser && this.connectedUser.hasPermissions('permission_edit_document')) {
                 return _.union(this.headers, [
-                    { text: 'Actions', value: 'name', sortable: false }
+                    { text: 'Actions', value: 'actions', sortable: false }
                 ])
             }
             else {
@@ -200,7 +207,7 @@ export default {
 
         getDocumentLink(documentItem) {
             if(documentItem.type === 'document') {
-                return 'http://api.turbojet.local/media/documents/'+documentItem.path
+                return Config.endpoint + '/media/documents/'+documentItem.path
             }
             else if(documentItem.type === 'link') {
                 return documentItem.path

@@ -5,16 +5,16 @@
                 <v-dialog v-model="dialogEdit" max-width="500px" fullscreen transition="dialog-bottom-transition">
                     <v-btn v-show="connectedUser ? connectedUser.hasPermissions($route.meta.settings.permission) : false" slot="activator" color="primary" dark class="mb-2">New Page</v-btn>
                     <v-card tile>
-                        <v-form enctype="multipart/form-data" ref="form" v-model="formIsValid">
-                            <v-toolbar card dark color="primary">
-                                <v-spacer></v-spacer>
-                                <v-toolbar-title>{{ formTitle }}</v-toolbar-title>
-                                <v-spacer></v-spacer>
-                                <v-btn icon @click="closeDialogEdit" dark>
-                                    <v-icon>close</v-icon>
-                                </v-btn>
-                            </v-toolbar>
-                            <v-card-text class="dialog-content">
+                        <v-toolbar card dark color="primary">
+                            <v-spacer></v-spacer>
+                            <v-toolbar-title>{{ formTitle }}</v-toolbar-title>
+                            <v-spacer></v-spacer>
+                            <v-btn icon @click="closeDialogEdit" dark>
+                                <v-icon>close</v-icon>
+                            </v-btn>
+                        </v-toolbar>
+                        <v-card-text class="dialog-content">
+                            <v-form enctype="multipart/form-data" ref="form" v-model="formIsValid">
                                 <!-- <v-text-field
                                     v-model="editedPage.menu_icon"
                                     label="Icon"
@@ -39,13 +39,13 @@
                                     @imageAdded="handleImageAdded"
                                 >
                                 </vue-editor>
-                            </v-card-text>
-                            <v-card-actions>
-                                <v-spacer></v-spacer>
-                                <v-btn :disabled="isLoading" outline color="primary" @click="closeDialogEdit">Cancel</v-btn>
-                                <v-btn :loading="isLoading" color="primary" @click="savePage">Save</v-btn>
-                            </v-card-actions>
-                        </v-form>
+                            </v-form>
+                        </v-card-text>
+                        <v-card-actions>
+                            <v-spacer></v-spacer>
+                            <v-btn :disabled="isLoading" outline color="primary" @click="closeDialogEdit">Cancel</v-btn>
+                            <v-btn :loading="isLoading" color="primary" @click="savePage">Save</v-btn>
+                        </v-card-actions>
                     </v-card>
                 </v-dialog>
                 <v-dialog v-model="dialogDelete" max-width="500px" persistent>
@@ -69,7 +69,7 @@
                     <template slot="items" slot-scope="data">
                         <td><v-icon>mdi-file-document-box</v-icon></td>
                         <td><router-link :to="'/pages/'+data.item.type+'/'+data.item.id">{{ data.item.title }}</router-link></td>
-                        <td class="justify-center layout px-0" v-if="connectedUser ? connectedUser.hasPermissions($route.meta.settings.permission) : false">
+                        <td class="layout px-0" v-if="connectedUser ? connectedUser.hasPermissions($route.meta.settings.permission) : false">
                             <v-btn icon class="mx-0" @click="editPage(data.item)">
                                 <v-icon color="teal">mdi-pencil</v-icon>
                             </v-btn>
@@ -77,6 +77,11 @@
                                 <v-icon color="pink">mdi-delete-forever</v-icon>
                             </v-btn>
                         </td>
+                    </template>
+                    <template slot="no-data">
+                        <v-alert :value="true" type="info">
+                            Sorry, nothing to display here :(
+                        </v-alert>
                     </template>
                   </v-data-table>
             </v-flex xs12>
@@ -119,8 +124,8 @@ export default {
             showSettings: false,
             pages: [],
             headers: [
-                { text: 'Icon', value: 'icon' },
-                { text: 'Name', value: 'names' } // TODO bug on sort
+                { text: 'Icon', value: 'icon', sortable: false},
+                { text: 'Name', value: 'title' }
             ],
             snackbar: false,
             errorMessage: ''
@@ -130,7 +135,7 @@ export default {
         computedHeaders() {
             if(this.connectedUser && this.connectedUser.hasPermissions(this.$route.meta.settings.permission)) {
                 return _.union(this.headers, [
-                    { text: 'Actions', value: 'name', sortable: false }
+                    { text: 'Actions', value: 'actions', sortable: false }
                 ])
             }
             else {
@@ -169,9 +174,6 @@ export default {
         onPageChange() {
             this.fetchData()
             window.scrollTo(0, 0)
-        },
-        randomColor() {
-            return _.sample(this.colors)
         },
         formatDate(date) {
             return moment(date).format("dddd, MMMM Do YYYY, h:mm a")
