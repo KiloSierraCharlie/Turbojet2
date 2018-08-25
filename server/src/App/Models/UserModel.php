@@ -63,6 +63,13 @@ class UserModel extends AbstractModel {
             $queryBuilder->setValue('phone', ':phone')->setParameter(':phone', $phone);
             $queryBuilder->setValue('picture', ':picture')->setParameter(':picture', $picture);
             $queryBuilder->execute();
+            $id = $this->conn->lastInsertId();
+
+            $queryBuilder = $this->conn->createQueryBuilder();
+            $queryBuilder->insert('group_membership');
+            $queryBuilder->setValue('id_user', ':idUser')->setParameter(':idUser', $id);
+            $queryBuilder->setValue('id_group', ':idGroup')->setParameter(':idGroup', $group);
+            $queryBuilder->execute();
 
             return true;
         }
