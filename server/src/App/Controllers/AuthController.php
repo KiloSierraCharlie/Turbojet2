@@ -108,7 +108,7 @@ class AuthController {
         $userModel = $this->app['model.user'];
         $userProvider = new UserProvider($this->app['db']);
 
-        if(($result = $userModel->createUser($username, $firstName, $lastName, $room, $group, $phone)) instanceof \Exception) {
+        if(($result = $userModel->createUser($username, $firstName, $lastName, $room, $group, $phone, $file->getClientOriginalName())) instanceof \Exception) {
             $response = ['message' => 'An error has occured during the user creation'];
 
             if($this->app['debug'] === true) {

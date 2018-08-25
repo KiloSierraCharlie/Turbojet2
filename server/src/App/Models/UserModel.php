@@ -51,7 +51,7 @@ class UserModel extends AbstractModel {
         }
     }
 
-    public function createUser($username, $firstName, $lastName, $room, $group, $phone) {
+    public function createUser($username, $firstName, $lastName, $room, $group, $phone, $picture) {
         try {
             $queryBuilder = $this->conn->createQueryBuilder();
 
@@ -61,6 +61,7 @@ class UserModel extends AbstractModel {
             $queryBuilder->setValue('last_name', ':lastName')->setParameter(':lastName', $lastName);
             $queryBuilder->setValue('room', ':room')->setParameter(':room', $room);
             $queryBuilder->setValue('phone', ':phone')->setParameter(':phone', $phone);
+            $queryBuilder->setValue('picture', ':picture')->setParameter(':picture', $picture);
             $queryBuilder->execute();
 
             return true;
