@@ -13,7 +13,12 @@ import Store from 'src/Store.js'
 import Router from 'src/Router.js'
 import Config from 'src/Config.__ENV__.js'
 import Vuetify from 'vuetify'
-Vue.use(Vuetify)
+import colors from 'vuetify/es5/util/colors'
+Vue.use(Vuetify, {
+  theme: {
+    primary: colors.blue.darken2
+  }
+})
 window.jQuery = window.$ = require('jquery')
 import FullCalendar from 'vue-full-calendar'
 import "fullcalendar-scheduler"
