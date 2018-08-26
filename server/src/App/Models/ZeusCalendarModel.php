@@ -25,14 +25,12 @@ class ZeusCalendarModel extends AbstractModel {
             return 0;
         }
 
-        $queryBuilder = $this->conn->createQueryBuilder();
-        $queryBuilder
-            ->delete('zeus_events_cache')
-            ->where('id IN (:ids)')->setParameter('ids', $ids, Connection::PARAM_STR_ARRAY)
-            ->execute()
-        ;
+        foreach ($ids as $id) {
+            $id = str_replace("event_", "", $id);
+            $sql .= 'DELETE FROM `zeus_events_cache` WHERE `zeus_events_cache`.`id` = '.$id.'; ';
+        }
 
-        return 1;
+        return $this->conn->executeUpdate($sql);
     }
 
     public function updateEvents($ids, $events) {
