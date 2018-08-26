@@ -75,21 +75,21 @@ class EditorialContentController {
             return $this->app->json(['message' => 'Error during the storage in base of the document data'], 500);
         }
 
-        if($type == 'news') {
+        if($type === 'news') {
             $body = '<p>A new announcement has been posted on Turbojet by
             <strong>'.$this->app['user']->getFirstName() . ' ' . $this->app['user']->getLastName() . '</strong>:<br /><br />
             <strong>'. $title . '</strong></p>
             <br />
-            <p>To read the full announcement, you can visit <a href="https://fteturbojet.com">www.fteturbojet.com</a></p>';
+            <p>To read the full announcement, you can visit <a href="https://www.fteturbojet.com">www.fteturbojet.com</a></p>';
 
             $this->app['controller.mailer']->sendMail('[Turbojet] New Announcement', $body, $this->app['controller.mailer']::NEWS_SUBSCRIPTIONS);
         }
-        else if ($type == 'ftebay') {
+        else if ($type === 'ftebay') {
             $body = '<p>A new FTEbay offer has been posted on Turbojet by
             <strong>'.$this->app['user']->getFirstName() . ' ' . $this->app['user']->getLastName() . '</strong>:<br /><br />
             <strong>'. $title . '</strong></p>
             <br />
-            <p>To read the full offer, you can visit <a href="https://fteturbojet.com/ftebay">www.fteturbojet.com/ftebay</a></p>';
+            <p>To read the full offer, you can visit <a href="https://www.fteturbojet.com/ftebay">www.fteturbojet.com/ftebay</a></p>';
 
             $this->app['controller.mailer']->sendMail('[Turbojet] New FTEbay', $body, $this->app['controller.mailer']::FTEBAY_SUBSCRIPTIONS);
         }

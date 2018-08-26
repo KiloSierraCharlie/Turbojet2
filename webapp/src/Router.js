@@ -40,7 +40,9 @@ const router = new VueRouter({
                     imageUpload: 'editorial-image-upload'
                 },
                 settings: {
-                    totalToDisplay: 10
+                    totalToDisplay: 10,
+                    editPermissions: 'permission_edit_announcement',
+                    createPermissions: 'permission_edit_announcement'
                 }
             }
         },
@@ -164,7 +166,8 @@ const router = new VueRouter({
                     imageUpload: 'editorial-image-upload'
                 },
                 settings: {
-                    totalToDisplay: 100
+                    totalToDisplay: 100,
+                    editPermissions: 'permission_edit_ftebay_listing'
                 }
             }
         },

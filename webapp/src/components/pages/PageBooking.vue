@@ -9,7 +9,7 @@
             :event-data="editedEvent"
             :show="dialogEdit"
             :mark-as-paid-button="$route.meta.api.markAsPaid"
-            :has-permissions="connectedUser ? connectedUser.hasPermissions('permission_edit_booking') : false"
+            :has-permissions="connectedUser ? connectedUser.id === editedEvent.data.id_user || connectedUser.hasPermissions('permission_edit_booking') : false"
             @saveBooking="onSaveBooking"
             @closeDialogEdit="onCloseDialogEdit"
             @bookingPaid="onBookingPaid"
@@ -83,6 +83,7 @@ export default {
                 data: {
                     id: '',
                     id_resource: '',
+                    id_user: '',
                     user_name: '',
                     price: '',
                     paid: false,
@@ -98,6 +99,9 @@ export default {
         '$route': 'fetchData',
     },
     computed: {
+        _() {
+            return _
+        },
         connectedUser() {
             return this.$store.state.connectedUser
         }
@@ -175,6 +179,7 @@ export default {
             this.editedEvent.data = {
                 id: event.data.id,
                 id_resource: event.data.id_resource,
+                id_user: event.data.id_user,
                 user_name: event.data.user_name,
                 price: event.data.price,
                 paid: event.data.paid === "1" ? true : false,
