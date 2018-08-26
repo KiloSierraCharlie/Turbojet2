@@ -139,7 +139,7 @@
                                 <h3 class="subheading">Notifications preferences</h3>
                                 <v-switch
                                     v-model="computedData.notification_news" color="indigo" hide-details
-                                    label="I want to receive emails for new announcement"
+                                    label="I want to receive emails for new announcements"
                                     :disabled="!editMode"
                                 />
                                 <v-switch
@@ -149,7 +149,7 @@
                                 />
                                 <v-switch
                                     v-model="computedData.notification_zeus" color="indigo" hide-details
-                                    label="I want to receive emails for new zeus event"
+                                    label="I want to receive emails for new zeus events"
                                     :disabled="!editMode"
                                 />
                             </v-flex>
