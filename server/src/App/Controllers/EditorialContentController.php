@@ -76,18 +76,20 @@ class EditorialContentController {
         }
 
         if($type == 'news') {
-            $body = '<p>A new announcement has been posted on turbojet by
-            <strong>'.$this->app['user']->getFirstName() . ' ' . $this->app['user']->getLastName() . '</strong>:<br />
+            $body = '<p>A new announcement has been posted on Turbojet by
+            <strong>'.$this->app['user']->getFirstName() . ' ' . $this->app['user']->getLastName() . '</strong>:<br /><br />
             <strong>'. $title . '</strong></p>
-            <p>(you can unsuscribe from these emails in your profile on www.turbojet.com)</p>';
+            <br />
+            <p>To read the full announcement, you can visit <a href="https://fteturbojet.com">www.fteturbojet.com</a></p>';
 
             $this->app['controller.mailer']->sendMail('[Turbojet] New Announcement', $body, $this->app['controller.mailer']::NEWS_SUBSCRIPTIONS);
         }
         else if ($type == 'ftebay') {
-            $body = '<p>A new FTEbay offer has been posted on turbojet by
-            <strong>'.$this->app['user']->getFirstName() . ' ' . $this->app['user']->getLastName() . '</strong>:<br />
+            $body = '<p>A new FTEbay offer has been posted on Turbojet by
+            <strong>'.$this->app['user']->getFirstName() . ' ' . $this->app['user']->getLastName() . '</strong>:<br /><br />
             <strong>'. $title . '</strong></p>
-            <p>(you can unsuscribe from these emails in your profile on www.turbojet.com)</p>';
+            <br />
+            <p>To read the full offer, you can visit <a href="https://fteturbojet.com/ftebay">www.fteturbojet.com/ftebay</a></p>';
 
             $this->app['controller.mailer']->sendMail('[Turbojet] New FTEbay', $body, $this->app['controller.mailer']::FTEBAY_SUBSCRIPTIONS);
         }

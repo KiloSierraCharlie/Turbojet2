@@ -15,4 +15,6 @@
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [QSA,L]
+    
+    lsapi_phpini /home/ftetehti/api.fteturbojet.com/www/php.ini 
 </IfModule>
