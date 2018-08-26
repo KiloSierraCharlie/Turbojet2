@@ -202,7 +202,8 @@ const router = new VueRouter({
                         settings: {
                             minimumHours: 1,
                             maximumHours: 8,
-                            multiResources: false
+                            multiResources: false,
+                            permissions: 'permission_make_minivan_booking'
                         }
                     }
                 },

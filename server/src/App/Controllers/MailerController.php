@@ -24,7 +24,7 @@ class MailerController {
 
         // Debug -> send all emails to the mail set in setting file
         if($this->app['settings']['DEBUG']) {
-            $to = [$this->app['settings']['DEBUG_MAIL_RECIPIENT']];
+            $to = $this->app['settings']['DEBUG_MAIL_RECIPIENT'];
         }
         // Other
         else {

@@ -120,8 +120,8 @@ export default {
             console.log('select', start.format(), end.format())
             console.log('select local', start.local().format(), end.local().format())
 
-            if(!this.connectedUser.hasPermissions('permission_make_minivan_booking')) {
-                this.errorMessage = 'You don\'t have permission to book the van. Please contact the Treasurer'
+            if(_.has(this.$route, 'meta.settings.permissions') && !this.connectedUser.hasPermissions(this.$route.meta.settings.permissions)) {
+                this.errorMessage = 'You don\'t have permission to create booking. Please contact the IT rep if you think this is a mistake.'
                 this.snackbar = true
                 return
             }
