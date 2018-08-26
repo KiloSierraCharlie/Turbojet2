@@ -141,8 +141,8 @@ class UserController {
         return $this->userModel->getAdminUsers();
     }
 
-    public function getUserEmailFromZeusUsername() {
-        return $this->userModel->getUserFromZeusUsername();
+    public function getUserEmailFromZeusUsername($username) {
+        return $this->userModel->getUserFromZeusUsername($username);
     }
 
     public function getNewsSubscriptionUsersEmails() {

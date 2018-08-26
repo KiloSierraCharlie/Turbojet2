@@ -44,7 +44,7 @@ class MailerController {
                 default:
                     // Zeus username
                     if($isZeusUsername) {
-                        $to = [$userController->getUserEmailFromZeusUsername()];
+                        $to = [$userController->getUserEmailFromZeusUsername($to)];
                     }
             }
         }
