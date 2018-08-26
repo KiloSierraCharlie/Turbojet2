@@ -192,6 +192,7 @@ const router = new VueRouter({
                     meta: {
                         labels: {
                             title: 'Minivan Booking',
+                            bookingReason: 'Trip location'
                         },
                         api: {
                             getAll: 'bookings/minivan',
@@ -217,6 +218,7 @@ const router = new VueRouter({
                     meta: {
                         labels: {
                             title: 'TV Booking',
+                            bookingReason: 'Watching'
                         },
                         api: {
                             getAll: 'bookings/tv',
@@ -239,6 +241,7 @@ const router = new VueRouter({
                     meta: {
                         labels: {
                             title: 'Barbecue Booking',
+                            bookingReason: 'Booking reason'
                         },
                         api: {
                             getAll: 'bookings/barbecue',

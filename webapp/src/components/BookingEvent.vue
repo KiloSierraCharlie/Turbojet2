@@ -38,7 +38,7 @@
                     />
                     <v-text-field
                         v-model="eventData.data.booking_reason"
-                        label="Trip location"
+                        :label="bookingReasonLabel"
                         name="booking_reason"
                         v-validate="{required: true}"
                         :error="errors.has('booking_reason')"
@@ -76,7 +76,7 @@
 import _ from 'lodash'
 
 export default {
-    props: ['show', 'event-data', 'loading', 'mark-as-paid-button', 'has-permissions'],
+    props: ['show', 'event-data', 'loading', 'mark-as-paid-button', 'has-permissions', 'booking-reason-label'],
     name: 'booking-event',
     data () {
         return {

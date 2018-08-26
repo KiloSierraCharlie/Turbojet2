@@ -8,6 +8,7 @@
         <router-view ref="dialog"
             :event-data="editedEvent"
             :show="dialogEdit"
+            :booking-reason-label="$route.meta.labels.bookingReason"
             :mark-as-paid-button="$route.meta.api.markAsPaid"
             :has-permissions="connectedUser ? connectedUser.id === editedEvent.data.id_user || connectedUser.hasPermissions('permission_edit_booking') : false"
             @saveBooking="onSaveBooking"

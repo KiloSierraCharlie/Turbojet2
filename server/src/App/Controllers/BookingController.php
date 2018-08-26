@@ -82,7 +82,7 @@ class BookingController {
         }
 
         // Check the user has the permission to edit offers or is the author
-        if(!$this->app['user']->hasPermission('permission_make_minivan_booking')) {
+        if($type === 'minivan' && !$this->app['user']->hasPermission('permission_make_minivan_booking')) {
             return $this->app->json(['message' => 'You don\'t have the permission to create this booking'], 403);
         }
 
@@ -109,7 +109,7 @@ class BookingController {
         $authorId = $this->bookingModel->getBookingAuthorId($id);
 
         // Check the user has the permission to edit booking or is the author
-        if(!$this->app['user']->hasPermission('permission_edit_minivan_booking') && $this->app['user']->getId() !== $authorId) {
+        if(!$this->app['user']->hasPermission('permission_edit_booking') && $this->app['user']->getId() !== $authorId) {
             return $this->app->json(['message' => 'You don\'t have the permission to edit this booking'], 403);
         }
 
@@ -124,7 +124,7 @@ class BookingController {
 
     public function markAsPaid(Request $request, $type, $id) {
         // Check the user has the permission to edit booking
-        if(!$this->app['user']->hasPermission('permission_edit_minivan_booking')) {
+        if(!$this->app['user']->hasPermission('permission_edit_booking')) {
             return $this->app->json(['message' => 'You don\'t have the permission to edit this booking'], 403);
         }
 
@@ -142,7 +142,7 @@ class BookingController {
         $isCancelled = $request->request->get('cancelled');
 
         // Check the user has the permission to edit offers or is the author
-        if(!$this->app['user']->hasPermission('permission_edit_minivan_booking') && $this->app['user']->getId() !== $authorId) {
+        if(!$this->app['user']->hasPermission('permission_edit_booking') && $this->app['user']->getId() !== $authorId) {
             return $this->app->json(['message' => 'You don\'t have the permission to edit this booking'], 403);
         }
 
