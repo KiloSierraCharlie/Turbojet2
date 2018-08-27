@@ -121,7 +121,7 @@ export default {
 
                                 var events = _.map(response.data, function(item) {
                                     return {
-                                        title: item.exercise+'\n'+item.registration+'\nCPT: '+item.captain+(item.crew1 ? '\nC1: '+item.crew1 : ''),
+                                        title: item.exercise_title+'\n'+item.registration+'\nCPT: '+item.captain+(item.crew1 ? '\nC1: '+item.crew1 : ''),
                                         start: moment(item.start).format(),
                                         end: moment(item.end).format(),
                                         allDay: false,

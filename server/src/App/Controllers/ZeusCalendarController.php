@@ -235,6 +235,19 @@ class ZeusCalendarController {
         $dateFrom = $queryParams->get('dateFrom');
         $dateTo = $queryParams->get('dateTo');
 
+        $zeusUserName = $this->app['user']->getCalendarZeusUsername();
+
+        if(($events = $this->zeusCalendarModel->getUserEvents($zeusUserName)) === false) {
+            return $this->app->json(['message' => 'An error has occured during the users events retrieval'], 500);
+        }
+
+        foreach ($events as &$event) {
+            // Sending back UTC dates so they can be displayed in Madrid timezone in front
+            $event['start'] = \DateTime::createFromFormat('Y-m-d H:i:s', $event['start'], new \DateTimeZone('UTC'))->format(\DateTime::ISO8601);
+            $event['end'] = \DateTime::createFromFormat('Y-m-d H:i:s', $event['end'], new \DateTimeZone('UTC'))->format(\DateTime::ISO8601);
+        }
+
+
         return $this->app->json($events, 200);
     }
 
