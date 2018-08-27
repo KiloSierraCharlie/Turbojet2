@@ -225,7 +225,7 @@ export default {
             return _.sample(this.colors)
         },
         formatDate(date) {
-            return moment(date).format("dddd, MMMM Do YYYY, h:mm a")
+            return moment.tz(date, 'UTC').tz('Europe/Madrid').format("dddd, MMMM Do YYYY, h:mm a")
         },
         savePost() {
             const $this = this
