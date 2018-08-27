@@ -186,14 +186,16 @@ class AuthController {
             $encoder = $this->app['security.encoder_factory']->getEncoder($user);
 
             // Encode the password
-            $encodedPassword = $encoder->encodePassword($plainPassword, $user->getSalt());
+            $salt = $user->generateSalt();
+            $encodedPassword = $encoder->encodePassword($plainPassword, $salt);
 
         } catch (UsernameNotFoundException $e) {
             // Incorrect username
-            return $this->app->json(['message' => 'Username not found'], 401);
+            $errorMsg = $this->app['debug'] === true ? 'Incorrect username' : 'Bad credentials, please try again';
+            return $this->app->json(['message' => $errorMsg], 401);
         }
 
         // User found, we can retuns an encoded password
-        return $this->app->json(['encodedPassword' => $encodedPassword]);
+        return $this->app->json(['encodedPassword' => $encodedPassword, 'salt' => $salt]);
     }
 }
