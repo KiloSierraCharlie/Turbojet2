@@ -175,7 +175,7 @@ class ZeusCalendarController {
 
         $mailResult = '';
         foreach ($emailList as $user => $body) {
-            $mailResult = $this->app['controller.mailer']->sendMail('[Turbojet] A Flight Calendar Event Has Been Altered', $body, $user, TRUE);
+            $mailResult = $this->app['controller.mailer']->sendMail('[Turbojet] A Flight Calendar Event Has Been Altered', $body, $user);
             // var_dump('mail sent ' . $mailResult );
         }
 

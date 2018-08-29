@@ -16,7 +16,7 @@ class MailerController {
         $this->app = $app;
     }
 
-    public function sendMail($subject, $body, $to, $isZeusUsername = FALSE) {
+    public function sendMail($subject, $body, $to) {
         $userController = $this->app['controller.user'];
 
         $email_start="<!DOCTYPE html><html lang='en' dir='ltr'><head><meta charset='utf-8'><title></title><style media='screen'>* {padding: 0px;margin: 0px;font-family: 'Open Sans', sans-serif;}body {background: #f6f6f6;}.card {background: #fff;border-radius: 2px;margin: 32px auto;position: relative;width: 95%;box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);}.title {padding: 16px;background: #1976d2;color: #fafafa;line-height: 64px;}.title h2 {display: inline;}.title img {width: 32px;height: 32px;position: relative;bottom: -8px;margin-left: 16px;}.content {padding: 32px;}.footer {background: #ddd;padding: 16px 32px;}</style></head><body><div class='card'><div class='title'><img src='http://api.fteturbojet.com/media/icon.png' />&nbsp;<h2>Turbojet mailer</h2></div><div class='content'>";
@@ -42,9 +42,11 @@ class MailerController {
                     break;
 
                 default:
-                    // Zeus username
-                    if($isZeusUsername) {
-                        $to = $userController->getUserEmailFromZeusUsername($to);
+                    $user_email = $userController->getUserEmailFromZeusUsername($to);
+                    if(!empty($user_email)) {
+                        $to = $user_email;
+                    } else {
+                        return 0;
                     }
             }
         }
