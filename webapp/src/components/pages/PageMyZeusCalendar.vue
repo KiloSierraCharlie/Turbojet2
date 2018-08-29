@@ -3,25 +3,27 @@
         <v-layout row class="mb-3">
             <v-flex xs12>
                 <v-alert :value="true" color="error" icon="warning" outline>
-                    ALL EVENTS ARE LOCAL TIME.<br>
-                    ZEUS IS THE OFFICIAL SOURCE OF DATA FOR YOUR FLIGHTS. YOU SHOULD NOT USE TURBOJET ZEUS CALENDAR AS THE SOLE SOURCE OF INFORMATION FOR Y0UR EVENTS.<br>
-                    To configure your ZEUS calendar, please complete your zeus username in <a @click="openUserProfile">your profile pages</a>.<br>
-                    You can also choose to receive zeus notifications when a new zeus event is created.
+                    ALL EVENTS ARE LOCAL TIME.<br>Zeus is the official source of data for your flights. You should not use turbojet calendar as the sole source of information for your events.<br>
                 </v-alert>
             </v-flex>
         </v-layout>
-        <!-- <v-layout row v-if="connectedUser">
+        <v-layout row v-if="connectedUser" class="mb-4">
             <v-flex xs12>
-                <v-card class="pa-3 mb-4">
-                    <v-layout row wrap>
-                        <v-flex xs12>
-                            You can subscribe to this calendar with your device. You will then be able to receive directly the events on your device.<br>
-                            To subscribe to this calendar: <a href="webcal://fteturbojet.com/calendar/ical/685/">Click here</a> or copy and past this link in your web browser <strong>webcal://api.fteturbojet.com/ical/{{connectedUser.id}}</strong>
-                        </v-flex>
-                    </v-layout>
-                </v-card>
-            </v-flex xs12>
-        </v-layout row> -->
+                <v-expansion-panel>
+                    <v-expansion-panel-content>
+                        <div slot="header">Configure your calendar</div>
+                        <v-card>
+                            <v-card-text class="pl-4 pr-4">
+                                To configure your ZEUS calendar, please fill your zeus username in <a @click="openUserProfile">your profile</a>.<br>
+                                You can also choose to receive zeus notifications when a new zeus event is created.<br><br>
+                                To subscribe to this calendar from your device using iCal: <a target="_blank" :href="Config.endpoint + 'zeus-calendar/ical/' + connectedUser.calendarZeusUsername+ '?ApiKey=' + Config.apikey">click here</a>
+                                or copy and past this link in your web browser:<br> <strong>{{Config.endpoint}}zeus-calendar/ical/{{connectedUser.calendarZeusUsername}}?ApiKey={{Config.apikey}}</strong>
+                            </v-card-text>
+                        </v-card>
+                    </v-expansion-panel-content>
+                </v-expansion-panel>
+            </v-flex>
+        </v-layout row>
         <v-layout row>
             <v-flex xs12>
                 <full-calendar ref="calendar" :event-sources="eventSources" :config="calendarConfig"></full-calendar>
@@ -77,6 +79,9 @@ export default {
     computed: {
         connectedUser() {
             return this.$store.state.connectedUser
+        },
+        Config() {
+            return Config
         }
     },
     methods: {
@@ -92,6 +97,14 @@ export default {
             else {
                 return '#3f51b5'
             }
+        },
+        getIcal() {
+            //
+            // Axios.get(Config.endpoint + 'zeus-calendar/ical/' + this.connectedUser.calendarZeusUsername)
+            //     .then(function (response) {
+            //         // response.data
+            //     })
+            //     .catch(displayError);
         },
         displayError(error) {
             this.isLoading = false
@@ -152,7 +165,7 @@ export default {
                                     $this.errorMessage = 'An error occured, please try again'
                                     $this.snackbar = true
                                 }
-                            });
+                            })
                     }
                 }
             ]

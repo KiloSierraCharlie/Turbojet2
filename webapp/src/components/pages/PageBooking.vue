@@ -1,5 +1,12 @@
 <template>
     <v-container fluid class="page-booking">
+        <v-layout row class="mb-3">
+            <v-flex xs12>
+                <v-alert :value="true" color="info" icon="info" outline>
+                    To book an event from a touch device: Press and hold the box you would like your event to start from, wait 1 second then slide your finger downward in order to extend the timeslot. Release your finger when you're happy.
+                </v-alert>
+            </v-flex>
+        </v-layout>
         <v-layout row>
             <v-flex xs12>
                 <full-calendar ref="calendar" :event-sources="eventSources" :config="calendarConfig"></full-calendar>
