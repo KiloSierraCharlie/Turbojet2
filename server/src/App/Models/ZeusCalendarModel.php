@@ -41,6 +41,7 @@ class ZeusCalendarModel extends AbstractModel {
             return 0;
         }
 
+        $sql = '';
         foreach ($ids as $id) {
             $id = str_replace("event_", "", $id);
             $sql .= 'DELETE FROM `zeus_events_cache` WHERE `zeus_events_cache`.`id` = '.$id.'; ';
