@@ -258,13 +258,13 @@ class ZeusCalendarController {
             return $this->app->json(['message' => 'An error has occured during the users events retrieval'], 500);
         }
 
-        $icalEvents = "BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//hacksw/handcal//NONSGML v1.0//EN\n";
+        $icalEvents = "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//hacksw/handcal//NONSGML v1.0//EN\r\n";
 
         foreach ($events as $event) {
             // 20180829T173000Z
             $start = \DateTime::createFromFormat('Y-m-d H:i:s', $event['start'], new \DateTimeZone('UTC'))->format('Ymd\THis\Z');
             $end = \DateTime::createFromFormat('Y-m-d H:i:s', $event['end'], new \DateTimeZone('UTC'))->format('Ymd\THis\Z');
-            $icalEvents .= "BEGIN:VEVENT\nUID:" . md5(uniqid(mt_rand(), true)) . "@fteturbojet.com\nDTSTAMP:" . gmdate('Ymd').'T'. gmdate('His') . "Z\nDTSTART:".$start."\nDTEND:".$end."\nSUMMARY: ".$event['exercise_title'] . "\nDESCRIPTION:Captain: " . $event['captain'] . "\\nP1: " . $event['crew1'] . "\\nRegistration: " . $event['registration'] .  "\nEND:VEVENT\n";
+            $icalEvents .= "BEGIN:VEVENT\r\nUID:" . $event['id'] . "@fteturbojet.com\r\nDTSTAMP:" . gmdate('Ymd').'T'. gmdate('His') . "Z\r\nDTSTART:".$start."\r\nDTEND:".$end."\r\nSUMMARY: ".$event['exercise_title'] . "\r\nDESCRIPTION:Captain: " . $event['captain'] . "\\nP1: " . $event['crew1'] . "\\nRegistration: " . $event['registration'] .  "\r\nEND:VEVENT\r\n";
         }
         $icalEvents .= "END:VCALENDAR";
 
@@ -273,7 +273,7 @@ class ZeusCalendarController {
             200,
             array(
                 'Content-Type' => 'text/calendar; charset=utf-8',
-                'Content-Disposition' => 'attachment; filename="calendar.ics"'
+                'Content-Disposition' => 'inline; filename="calendar.ics"'
             )
         );
     }
