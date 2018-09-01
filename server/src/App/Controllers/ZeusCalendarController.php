@@ -273,7 +273,7 @@ class ZeusCalendarController {
             200,
             array(
                 'Content-Type' => 'text/calendar; charset=utf-8',
-                'Content-Disposition' => 'attachment; filename="calendar.ics"'
+                'Content-Disposition' => 'inline; filename="calendar.ics"'
             )
         );
     }
