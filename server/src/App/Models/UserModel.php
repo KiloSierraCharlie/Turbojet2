@@ -228,11 +228,13 @@ class UserModel extends AbstractModel {
         $queryBuilder = $this->conn->createQueryBuilder();
 
         $queryBuilder
-            ->select('email')
-            ->from('users')
-            ->where('notification_ftebay = 1')
-            ->andWhere('active = 1')
-            ->andWhere('banned = 0')
+            ->from('users', 'u')
+            ->innerJoin('u', 'group_membership', 'gm', 'u.id = gm.id_user')
+            ->innerJoin('gm', 'groups', 'g', 'gm.id_group = g.id')
+            ->where('u.notification_ftebay = 1')
+            ->andWhere('g.active = 1')
+            ->andWhere('u.verified = 1')
+            ->andWhere('u.banned = 0')
         ;
 
         $stmt = $queryBuilder->execute();
@@ -245,11 +247,14 @@ class UserModel extends AbstractModel {
         $queryBuilder = $this->conn->createQueryBuilder();
 
         $queryBuilder
-            ->select('email')
-            ->from('users')
-            ->where('notification_news = 1')
-            ->andWhere('active = 1')
-            ->andWhere('banned = 0')
+            ->select('u.email')
+            ->from('users', 'u')
+            ->innerJoin('u', 'group_membership', 'gm', 'u.id = gm.id_user')
+            ->innerJoin('gm', 'groups', 'g', 'gm.id_group = g.id')
+            ->where('u.notification_news = 1')
+            ->andWhere('g.active = 1')
+            ->andWhere('u.verified = 1')
+            ->andWhere('u.banned = 0')
         ;
 
         $stmt = $queryBuilder->execute();
