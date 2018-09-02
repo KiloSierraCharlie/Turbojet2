@@ -169,8 +169,8 @@ class ZeusCalendarController {
             foreach ($events['new'] as $event) {
                 $emailList[$user] .= 'Title: ' . $event['exercise_title'] . '<br>Start Time: ' . $event['start'] . 'z<br>End Time: ' . $event['end'] . 'z<br>P1: ' . $event['captain']  . '<br>P2: ' . $event['crew1'] . '<br>Aircraft: ' .$event['registration']. '<br><br>';
             }
+            $emailList[$user] .= '<br><br><span style="color: #D32F2F; font-size:small;">Disclaimer: Zeus is the only official source for your flights</span>';
         }
-        $emailList[$user] .= '<span style="color: #D32F2F">DISCLAIMER: ZEUS IS THE OFFICIAL SOURCE OF DATA FOR YOUR FLIGHTS. YOU SHOULD NOT USE TURBOJET NOR ITS EMAIL NOTIFICATIONS AS THE SOLE SOURCE OF INFORMATION FOR Y0UR EVENTS.</span>';
         var_dump($emailList);
 
         $mailResult = '';
