@@ -55,6 +55,7 @@
                             <v-layout align-center justify-center>
                                 <v-flex xs12 sm10 md8 lg6>
                                     <v-container fluid grid-list-xl class="pa-0">
+                                        <p>If you need help or there is a problem during registration, please send an email to <a href="mailto:support@fteturbojet.com">support@fteturbojet.com</a></p>
                                         <v-layout row wrap>
                                             <v-flex xs12 sm6>
                                                 <v-text-field
@@ -303,7 +304,7 @@ export default {
                                 $this.isLoading = false
 
                                 $this.confirmSnackbar = true
-                                $this.confirmMessage = 'Account created, you will receive an email once it\'s been validated by an administrator'
+                                $this.confirmMessage = 'Your account has been successfully created and is pending validation from one of our admins.'
 
                                 setTimeout(() => {
                                     $this.resetForm()
