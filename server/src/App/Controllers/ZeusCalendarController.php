@@ -5,6 +5,7 @@ namespace App\Controllers;
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\DomCrawler\Crawler;
+use Symfony\Component\HttpFoundation\Response;
 
 class ZeusCalendarController {
     // protected $bookingModel;
@@ -159,7 +160,6 @@ class ZeusCalendarController {
             $emailList[$user] = '';
             $emailList[$user] .= 'The following flights have been altered on the schedule. ';
             $emailList[$user] .= 'Please check Zeus.<br><br>';
-            $emailList[$user] .= '<span style="color: #D32F2F">DISCLAIMER: ZEUS IS THE OFFICIAL SOURCE OF DATA FOR YOUR FLIGHTS. YOU SHOULD NOT USE TURBOJET NOR ITS EMAIL NOTIFICATIONS AS THE SOLE SOURCE OF INFORMATION FOR Y0UR EVENTS.</span><br><br>';
             $emailList[$user] .= '<strong>Old Events:</strong><br>';
             foreach ($events['old'] as $event) {
                 $emailList[$user] .= 'Title: ' . $event['exercise_title'] . '<br>Start Time: ' . $event['start'] . 'z<br>End Time: ' . $event['end'] . 'z<br>P1: ' . $event['captain']  . '<br>P2: ' . $event['crew1'] . '<br>Aircraft: ' .$event['registration']. '<br><br>';
@@ -169,12 +169,13 @@ class ZeusCalendarController {
             foreach ($events['new'] as $event) {
                 $emailList[$user] .= 'Title: ' . $event['exercise_title'] . '<br>Start Time: ' . $event['start'] . 'z<br>End Time: ' . $event['end'] . 'z<br>P1: ' . $event['captain']  . '<br>P2: ' . $event['crew1'] . '<br>Aircraft: ' .$event['registration']. '<br><br>';
             }
+            $emailList[$user] .= '<br><br><span style="color: #D32F2F; font-size:small;">Disclaimer: Zeus is the only official source for your flights</span>';
         }
         var_dump($emailList);
 
         $mailResult = '';
         foreach ($emailList as $user => $body) {
-            $mailResult = $this->app['controller.mailer']->sendMail('[Turbojet] A Flight Calendar Event Has Been Altered', $body, $user, TRUE);
+            $mailResult = $this->app['controller.mailer']->sendMail('[Turbojet] A Flight Calendar Event Has Been Altered', $body, $user);
             // var_dump('mail sent ' . $mailResult );
         }
 
@@ -235,7 +236,45 @@ class ZeusCalendarController {
         $dateFrom = $queryParams->get('dateFrom');
         $dateTo = $queryParams->get('dateTo');
 
+        $zeusUserName = $this->app['user']->getCalendarZeusUsername();
+
+        if(($events = $this->zeusCalendarModel->getUserEvents($zeusUserName)) === false) {
+            return $this->app->json(['message' => 'An error has occured during the users events retrieval'], 500);
+        }
+
+        foreach ($events as &$event) {
+            // Sending back UTC dates so they can be displayed in Madrid timezone in front
+            $event['start'] = \DateTime::createFromFormat('Y-m-d H:i:s', $event['start'], new \DateTimeZone('UTC'))->format(\DateTime::ISO8601);
+            $event['end'] = \DateTime::createFromFormat('Y-m-d H:i:s', $event['end'], new \DateTimeZone('UTC'))->format(\DateTime::ISO8601);
+        }
+
+
         return $this->app->json($events, 200);
     }
 
+    public function generateIcal(Request $request, $zeusUserName) {
+
+        if(($events = $this->zeusCalendarModel->getUserEvents($zeusUserName)) === false) {
+            return $this->app->json(['message' => 'An error has occured during the users events retrieval'], 500);
+        }
+
+        $icalEvents = "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//hacksw/handcal//NONSGML v1.0//EN\r\n";
+
+        foreach ($events as $event) {
+            // 20180829T173000Z
+            $start = \DateTime::createFromFormat('Y-m-d H:i:s', $event['start'], new \DateTimeZone('UTC'))->format('Ymd\THis\Z');
+            $end = \DateTime::createFromFormat('Y-m-d H:i:s', $event['end'], new \DateTimeZone('UTC'))->format('Ymd\THis\Z');
+            $icalEvents .= "BEGIN:VEVENT\r\nUID:" . $event['id'] . "@fteturbojet.com\r\nDTSTAMP:" . gmdate('Ymd').'T'. gmdate('His') . "Z\r\nDTSTART:".$start."\r\nDTEND:".$end."\r\nSUMMARY: ".$event['exercise_title'] . "\r\nDESCRIPTION:Captain: " . $event['captain'] . "\\nP1: " . $event['crew1'] . "\\nRegistration: " . $event['registration'] .  "\r\nEND:VEVENT\r\n";
+        }
+        $icalEvents .= "END:VCALENDAR";
+
+        return new Response(
+            $icalEvents,
+            200,
+            array(
+                'Content-Type' => 'text/calendar; charset=utf-8',
+                'Content-Disposition' => 'inline; filename="calendar.ics"'
+            )
+        );
+    }
 }

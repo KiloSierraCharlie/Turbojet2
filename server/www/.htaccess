@@ -12,9 +12,13 @@
 
     RewriteEngine On
     #RewriteBase /path/to/app
+
+    RewriteCond %{HTTPS} !=on
+    RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [QSA,L]
-    
-    lsapi_phpini /home/ftetehti/api.fteturbojet.com/www/php.ini 
+
+    lsapi_phpini /home/ftetehti/api.fteturbojet.com/www/php.ini
 </IfModule>

@@ -3,7 +3,7 @@
         <v-layout row>
             <v-flex xs12>
                 <v-dialog v-model="dialogEdit" max-width="500px" fullscreen transition="dialog-bottom-transition">
-                    <v-btn v-show="connectedUser ? connectedUser.hasPermissions('permission_edit_announcement') : false" slot="activator" color="primary" dark class="mb-2">{{ buttonLabel }}</v-btn>
+                    <v-btn v-show="connectedUser ? !_.has($route, 'meta.settings.createPermissions') || (_.has($route, 'meta.settings.createPermissions') && connectedUser.hasPermissions($route.meta.settings.createPermissions)) : false" slot="activator" color="primary" dark class="mb-2">{{ buttonLabel }}</v-btn>
                     <v-card tile>
                         <v-toolbar card dark color="primary">
                             <v-spacer></v-spacer>
@@ -58,7 +58,7 @@
                     >
                         <span class="headline">{{post.title}}</span>
                         <v-spacer></v-spacer>
-                        <v-menu left v-show="connectedUser ? connectedUser.hasPermissions('permission_edit_announcement') : false">
+                        <v-menu left v-show="connectedUser ? post.id_user === connectedUser.id || (_.has($route, 'meta.settings.editPermissions') && connectedUser.hasPermissions($route.meta.settings.editPermissions)) : false">
                             <v-btn slot="activator" icon dark>
                                 <v-icon>mdi-settings</v-icon>
                             </v-btn>
@@ -160,6 +160,9 @@ export default {
         }
     },
     computed: {
+        _() {
+            return _
+        },
         connectedUser() {
             return this.$store.state.connectedUser
         },
@@ -222,7 +225,7 @@ export default {
             return _.sample(this.colors)
         },
         formatDate(date) {
-            return moment(date).format("dddd, MMMM Do YYYY, h:mm a")
+            return moment.tz(date, 'UTC').tz('Europe/Madrid').format("dddd, MMMM Do YYYY, h:mm a")
         },
         savePost() {
             const $this = this

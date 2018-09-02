@@ -1,5 +1,12 @@
 <template>
     <v-container fluid class="page-booking">
+        <v-layout row class="mb-3">
+            <v-flex xs12>
+                <v-alert :value="true" color="info" icon="info" outline>
+                    To book an event from a touch device: Press and hold the box you would like your event to start from, wait 1 second then slide your finger downward in order to extend the timeslot. Release your finger when you're happy.
+                </v-alert>
+            </v-flex>
+        </v-layout>
         <v-layout row>
             <v-flex xs12>
                 <full-calendar ref="calendar" :event-sources="eventSources" :config="calendarConfig"></full-calendar>
@@ -8,8 +15,9 @@
         <router-view ref="dialog"
             :event-data="editedEvent"
             :show="dialogEdit"
+            :booking-reason-label="$route.meta.labels.bookingReason"
             :mark-as-paid-button="$route.meta.api.markAsPaid"
-            :has-permissions="connectedUser ? connectedUser.hasPermissions('permission_edit_booking') : false"
+            :has-permissions="connectedUser ? connectedUser.id === editedEvent.data.id_user || connectedUser.hasPermissions('permission_edit_booking') : false"
             @saveBooking="onSaveBooking"
             @closeDialogEdit="onCloseDialogEdit"
             @bookingPaid="onBookingPaid"
@@ -83,6 +91,7 @@ export default {
                 data: {
                     id: '',
                     id_resource: '',
+                    id_user: '',
                     user_name: '',
                     price: '',
                     paid: false,
@@ -98,6 +107,9 @@ export default {
         '$route': 'fetchData',
     },
     computed: {
+        _() {
+            return _
+        },
         connectedUser() {
             return this.$store.state.connectedUser
         }
@@ -120,8 +132,8 @@ export default {
             console.log('select', start.format(), end.format())
             console.log('select local', start.local().format(), end.local().format())
 
-            if(!this.connectedUser.hasPermissions('permission_make_minivan_booking')) {
-                this.errorMessage = 'You don\'t have permission to book the van. Please contact the Treasurer'
+            if(_.has(this.$route, 'meta.settings.permissions') && !this.connectedUser.hasPermissions(this.$route.meta.settings.permissions)) {
+                this.errorMessage = 'You don\'t have permission to create booking. Please contact the IT rep if you think this is a mistake.'
                 this.snackbar = true
                 return
             }
@@ -175,6 +187,7 @@ export default {
             this.editedEvent.data = {
                 id: event.data.id,
                 id_resource: event.data.id_resource,
+                id_user: event.data.id_user,
                 user_name: event.data.user_name,
                 price: event.data.price,
                 paid: event.data.paid === "1" ? true : false,

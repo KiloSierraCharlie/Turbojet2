@@ -70,10 +70,10 @@
                 <router-view ref="view" :class="{'mb-5': $route.name !== 'page-it-reps'}"></router-view>
                 <!-- <router-view name="dialog"></router-view> -->
             </v-content>
-            <v-footer v-if="$route.name !== 'page-it-reps'" color="primary" class="px-2 white--text" height="auto" app>
+            <v-footer v-if="$route.name !== 'page-it-reps'" color="primary" class="hidden-xs-only px-2 white--text" height="auto" app>
                 <v-layout justify-center row wrap>
                     <v-flex class="pt-2 pb-2" text-xs-center white--text xs12>
-                        Turbojet V{{version}} made with &nbsp;<v-icon class="subheading" color="white">mdi-heart</v-icon>&nbsp; by &nbsp;<a target="_blank" href="https://www.linkedin.com/in/kevinbouhadana">Kevin Bouhadana (172)</a>, based on initial concept by <a href="http://www.jamesharding.ca/" target="_blank">James Harding (140)</a>. maintained by a <router-link to="/it-reps">lineage of wonderfull IT Reps</router-link>.
+                        Turbojet V{{version}} made with &nbsp;<v-icon class="subheading" color="white">mdi-heart</v-icon>&nbsp; by &nbsp;<a target="_blank" href="https://www.linkedin.com/in/kevinbouhadana">Kevin Bouhadana (172)</a>, based on initial concept by <a href="http://www.jamesharding.ca/" target="_blank">James Harding (140)</a>. maintained by a <router-link to="/it-reps">lineage of wonderful IT Reps</router-link>.
                     </v-flex>
                 </v-layout>
             </v-footer>

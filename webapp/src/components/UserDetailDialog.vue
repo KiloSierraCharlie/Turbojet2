@@ -19,7 +19,7 @@
                                     v-validate="{required: true}"
                                     :error="errors.has('firstName')"
                                     :error-messages="errors.collect('firstName')"
-                                    :disabled="!editMode"
+                                    :disabled="!editMode || !hasPermissions"
                                 />
                             </v-flex>
                             <v-flex xs12 sm6>
@@ -33,7 +33,29 @@
                                     v-validate="{required: true}"
                                     :error="errors.has('lastName')"
                                     :error-messages="errors.collect('lastName')"
-                                    :disabled="!editMode"
+                                    :disabled="!editMode || !hasPermissions"
+                                />
+                            </v-flex>
+                            <v-flex xs12 sm6>
+                                <v-select
+                                    :items="groupsData"
+                                    v-model="computedData.groups"
+                                    prepend-icon="mdi-account-group"
+                                    label="Course"
+                                    name="course"
+                                    single-line
+                                    :disabled="!editMode || !hasPermissions"
+                                    multiple
+                                />
+                            </v-flex>
+                            <v-flex xs12 sm6>
+                                <v-text-field
+                                    v-model="computedData.position"
+                                    prepend-icon="mdi-account-star"
+                                    label="Position"
+                                    name="position"
+                                    type="text"
+                                    :disabled="!editMode || !hasPermissions"
                                 />
                             </v-flex>
                             <v-flex xs12 sm6>
@@ -64,16 +86,6 @@
                             </v-flex>
                             <v-flex xs12 sm6>
                                 <v-text-field
-                                    v-model="computedData.position"
-                                    prepend-icon="mdi-account-star"
-                                    label="Position"
-                                    name="position"
-                                    type="text"
-                                    :disabled="!editMode"
-                                />
-                            </v-flex>
-                            <v-flex xs12 sm6>
-                                <v-text-field
                                     v-model="computedData.calendar_zeus_username"
                                     prepend-icon="mdi-calendar"
                                     label="Zeus Username"
@@ -94,18 +106,6 @@
                                     :error="errors.has('room')"
                                     :error-messages="errors.collect('room')"
                                     :disabled="!editMode"
-                                />
-                            </v-flex>
-                            <v-flex xs12 sm6>
-                                <v-select
-                                    :items="groupsData"
-                                    v-model="computedData.groups"
-                                    prepend-icon="mdi-account-group"
-                                    label="Course"
-                                    name="course"
-                                    single-line
-                                    :disabled="!editMode"
-                                    multiple
                                 />
                             </v-flex>
                             <v-flex xs12 sm6 v-show="isSameUser || hasPermissions" >
@@ -139,7 +139,7 @@
                                 <h3 class="subheading">Notifications preferences</h3>
                                 <v-switch
                                     v-model="computedData.notification_news" color="indigo" hide-details
-                                    label="I want to receive emails for new announcement"
+                                    label="I want to receive emails for new announcements"
                                     :disabled="!editMode"
                                 />
                                 <v-switch
@@ -149,7 +149,7 @@
                                 />
                                 <v-switch
                                     v-model="computedData.notification_zeus" color="indigo" hide-details
-                                    label="I want to receive emails for new zeus event"
+                                    label="I want to receive emails for new zeus events"
                                     :disabled="!editMode"
                                 />
                             </v-flex>

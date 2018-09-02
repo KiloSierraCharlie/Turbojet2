@@ -71,7 +71,8 @@ class UserController {
             'email',
             'room_number',
             'phone',
-            'callsign'
+            'callsign',
+            'calendar_zeus_username'
         ];
 
         $userData = $request->request->all();

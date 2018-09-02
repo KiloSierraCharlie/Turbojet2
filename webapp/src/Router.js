@@ -40,7 +40,9 @@ const router = new VueRouter({
                     imageUpload: 'editorial-image-upload'
                 },
                 settings: {
-                    totalToDisplay: 10
+                    totalToDisplay: 10,
+                    editPermissions: 'permission_edit_announcement',
+                    createPermissions: 'permission_edit_announcement'
                 }
             }
         },
@@ -164,7 +166,8 @@ const router = new VueRouter({
                     imageUpload: 'editorial-image-upload'
                 },
                 settings: {
-                    totalToDisplay: 100
+                    totalToDisplay: 100,
+                    editPermissions: 'permission_edit_ftebay_listing'
                 }
             }
         },
@@ -189,6 +192,7 @@ const router = new VueRouter({
                     meta: {
                         labels: {
                             title: 'Minivan Booking',
+                            bookingReason: 'Trip location'
                         },
                         api: {
                             getAll: 'bookings/minivan',
@@ -202,7 +206,8 @@ const router = new VueRouter({
                         settings: {
                             minimumHours: 1,
                             maximumHours: 8,
-                            multiResources: false
+                            multiResources: false,
+                            permissions: 'permission_make_minivan_booking'
                         }
                     }
                 },
@@ -213,6 +218,7 @@ const router = new VueRouter({
                     meta: {
                         labels: {
                             title: 'TV Booking',
+                            bookingReason: 'Watching'
                         },
                         api: {
                             getAll: 'bookings/tv',
@@ -235,6 +241,7 @@ const router = new VueRouter({
                     meta: {
                         labels: {
                             title: 'Barbecue Booking',
+                            bookingReason: 'Booking reason'
                         },
                         api: {
                             getAll: 'bookings/barbecue',

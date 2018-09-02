@@ -150,7 +150,7 @@ $app['router']->initRoutes();
 * Before function to protect the application by token authentification
 */
 $app->before(function(Request $request) use ($app) {
-    $whitelist = ['login', 'encoder', 'register', 'picklist-groups', 'parseZeusCalendar'];
+    $whitelist = ['login', 'encoder', 'register', 'picklist-groups', 'parseZeusCalendar', 'ical'];
     $method = $request->getMethod();
     $routeName = $request->get('_route');
 
@@ -160,9 +160,7 @@ $app->before(function(Request $request) use ($app) {
     }
 
     // Check the apiKey
-    $apiKey = $request->headers->get('ApiKey');
-
-    if($apiKey !== $app['settings']['APIKEY']) {
+    if($request->headers->get('ApiKey') !== $app['settings']['APIKEY'] && $request->query->get('ApiKey') !== $app['settings']['APIKEY']) {
       return $app->json(['message' => 'Access refused'], 401);
     }
 

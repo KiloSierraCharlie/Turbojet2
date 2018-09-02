@@ -41,5 +41,6 @@ class Router {
         $this->app->get('/bookings/{type}/calculatePrice', 'controller.booking:getBookingPrice');
         $this->app->get('/bookings/{type}/resources', 'controller.booking:getResources');
         $this->app->get('/zeus-calendar/parse', 'controller.zeusCalendarController:parseZeusCalendar')->bind('parseZeusCalendar');
+        $this->app->get('/zeus-calendar/ical/{zeusUserName}', 'controller.zeusCalendarController:generateIcal')->bind('ical');
     }
 }

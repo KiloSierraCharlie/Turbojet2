@@ -98,7 +98,7 @@ class EditorialContentModel extends AbstractModel {
                 ->setValue('id_user', ':idUser')->setParameter(':idUser', $userId)
                 ->setValue('active', '1')
                 ->setValue('type', ':type')->setParameter(':type', $type)
-                ->setValue('date', 'NOW()')
+                ->setValue('date', 'UTC_TIMESTAMP()')
             ;
 
             if($type === 'ftebay') {
