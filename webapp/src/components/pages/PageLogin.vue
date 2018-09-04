@@ -110,7 +110,7 @@
                                                 <v-text-field
                                                     v-model="registerFormData.room"
                                                     prepend-icon="person"
-                                                    label="Room"
+                                                    label="Room/Office/Hotel staying"
                                                     name="room"
                                                     type="text"
                                                     v-validate="{required: true}"
