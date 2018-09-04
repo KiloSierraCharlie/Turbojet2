@@ -234,6 +234,7 @@ class UserModel extends AbstractModel {
         $queryBuilder = $this->conn->createQueryBuilder();
 
         $queryBuilder
+            ->select('u.email')
             ->from('users', 'u')
             ->innerJoin('u', 'group_membership', 'gm', 'u.id = gm.id_user')
             ->innerJoin('gm', 'groups', 'g', 'gm.id_group = g.id')
