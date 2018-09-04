@@ -16,8 +16,12 @@
                             <v-card-text class="pl-4 pr-4">
                                 To configure your ZEUS calendar, please fill your zeus username in <a @click="openUserProfile">your profile</a>.<br>
                                 You can also choose to receive zeus notifications when a new zeus event is created.<br><br>
-                                To subscribe to this calendar from your device using iCal: <a target="_blank" :href="Config.endpoint + 'zeus-calendar/ical/' + connectedUser.calendarZeusUsername+ '?ApiKey=' + Config.apikey">click here</a>
-                                or copy and past this link in your web browser:<br> <strong>{{Config.endpoint}}zeus-calendar/ical/{{connectedUser.calendarZeusUsername}}?ApiKey={{Config.apikey}}</strong>
+                                You can subscribe to the calendar selecting your device below:
+                                <br><br>
+                                <a target="_blank" :href="Config.calendpoint + 'zeus-calendar/ical/' + connectedUser.calendarZeusUsername+ '?ApiKey=' + Config.apikey"><v-btn class="subscribe-button" color="primary">Apple</v-btn></a>
+                                <a target="_blank" :href="Config.endpoint + 'zeus-calendar/ical/' + connectedUser.calendarZeusUsername+ '?ApiKey=' + Config.apikey"><v-btn class="subscribe-button" color="primary">Android/PC/Linux</v-btn></a>
+                                <br><br>
+                                or copy and paste this link in your web browser:<br> <strong>{{Config.endpoint}}zeus-calendar/ical/{{connectedUser.calendarZeusUsername}}?ApiKey={{Config.apikey}}</strong>
                             </v-card-text>
                         </v-card>
                     </v-expansion-panel-content>

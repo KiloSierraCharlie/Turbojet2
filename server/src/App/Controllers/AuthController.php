@@ -118,11 +118,14 @@ class AuthController {
             return $this->app->json($response, 500);
         }
 
+        $id = $result;
+
         // Move the file in the correct path
         if($file) {
             try {
+                $picture_filename = $id . "." . pathinfo($file->getClientOriginalName(),PATHINFO_EXTENSION);
                 $path = '../www/media/student_photos/';
-                $file->move($path, $file->getClientOriginalName());
+                $file->move($path, $picture_filename);
             }
             catch(\Exception $e) {
                 return $this->app->json(['message' => 'Error during the transfer of the file, please try again. If the problem persist please contact the IT Rep'], 403);

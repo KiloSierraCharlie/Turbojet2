@@ -139,7 +139,7 @@ export default {
             }
             if(this.filterName && this.filterName.length > 0) {
                 mappedUsers = _.filter(mappedUsers.length > 1 ? mappedUsers : this.usersData, function(user) {
-                    var name = _.lowerCase(user.first_name + user.last_Name)
+                    var name = _.lowerCase(user.first_name + user.last_name)
                     var filter = _.chain($this.filterName).trim().lowerCase().value()
 
                     return name.indexOf(filter) !== -1

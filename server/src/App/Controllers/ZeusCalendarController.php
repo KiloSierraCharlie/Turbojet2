@@ -169,8 +169,8 @@ class ZeusCalendarController {
             foreach ($events['new'] as $event) {
                 $emailList[$user] .= 'Title: ' . $event['exercise_title'] . '<br>Start Time: ' . $event['start'] . 'z<br>End Time: ' . $event['end'] . 'z<br>P1: ' . $event['captain']  . '<br>P2: ' . $event['crew1'] . '<br>Aircraft: ' .$event['registration']. '<br><br>';
             }
+            $emailList[$user] .= '<br><br><span style="color: #D32F2F; font-size:small;">Disclaimer: Zeus is the only official source for your flights</span>';
         }
-        $emailList[$user] .= '<span style="color: #D32F2F">DISCLAIMER: ZEUS IS THE OFFICIAL SOURCE OF DATA FOR YOUR FLIGHTS. YOU SHOULD NOT USE TURBOJET NOR ITS EMAIL NOTIFICATIONS AS THE SOLE SOURCE OF INFORMATION FOR Y0UR EVENTS.</span>';
         var_dump($emailList);
 
         $mailResult = '';
@@ -258,13 +258,13 @@ class ZeusCalendarController {
             return $this->app->json(['message' => 'An error has occured during the users events retrieval'], 500);
         }
 
-        $icalEvents = "BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//hacksw/handcal//NONSGML v1.0//EN\n";
+        $icalEvents = "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//hacksw/handcal//NONSGML v1.0//EN\r\n";
 
         foreach ($events as $event) {
             // 20180829T173000Z
             $start = \DateTime::createFromFormat('Y-m-d H:i:s', $event['start'], new \DateTimeZone('UTC'))->format('Ymd\THis\Z');
             $end = \DateTime::createFromFormat('Y-m-d H:i:s', $event['end'], new \DateTimeZone('UTC'))->format('Ymd\THis\Z');
-            $icalEvents .= "BEGIN:VEVENT\nUID:" . md5(uniqid(mt_rand(), true)) . "@fteturbojet.com\nDTSTAMP:" . gmdate('Ymd').'T'. gmdate('His') . "Z\nDTSTART:".$start."\nDTEND:".$end."\nSUMMARY: ".$event['exercise_title'] . "\nDESCRIPTION:Captain: " . $event['captain'] . "\\nP1: " . $event['crew1'] . "\\nRegistration: " . $event['registration'] .  "\nEND:VEVENT\n";
+            $icalEvents .= "BEGIN:VEVENT\r\nUID:" . $event['id'] . "@fteturbojet.com\r\nDTSTAMP:" . gmdate('Ymd').'T'. gmdate('His') . "Z\r\nDTSTART:".$start."\r\nDTEND:".$end."\r\nSUMMARY: ".$event['exercise_title'] . "\r\nDESCRIPTION:Captain: " . $event['captain'] . "\\nP1: " . $event['crew1'] . "\\nRegistration: " . $event['registration'] .  "\r\nEND:VEVENT\r\n";
         }
         $icalEvents .= "END:VCALENDAR";
 
@@ -273,7 +273,7 @@ class ZeusCalendarController {
             200,
             array(
                 'Content-Type' => 'text/calendar; charset=utf-8',
-                'Content-Disposition' => 'attachment; filename="calendar.ics"'
+                'Content-Disposition' => 'inline; filename="calendar.ics"'
             )
         );
     }
