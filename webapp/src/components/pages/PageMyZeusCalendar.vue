@@ -42,7 +42,6 @@ import Axios from 'axios'
 import moment from 'moment'
 import _ from 'lodash'
 import Config from 'src/Config.__ENV__.js'
-import EventMenu from 'components/EventMenu.vue'
 
 export default {
     name: 'page-calendar',
@@ -185,8 +184,4 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
-    .page-my-zeus-calendar {
-
-    }
-</style>
+<style scoped lang="scss"></style>

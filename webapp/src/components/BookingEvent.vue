@@ -129,8 +129,4 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
-    .booking-event {
-
-    }
-</style>
+<style scoped lang="scss"></style>
