@@ -49,7 +49,6 @@ import Axios from 'axios'
 import moment from 'moment-timezone'
 import _ from 'lodash'
 import Config from 'src/Config.__ENV__.js'
-import EventMenu from 'components/EventMenu.vue'
 
 export default {
     name: 'page-booking',

@@ -139,8 +139,6 @@ export default {
         outline: 2px dashed #92b0b3;
         outline-offset: -10px;
 
-
-
         &.is-dragover {
             outline-offset: -12px;
             outline: 2px dashed #78909C;

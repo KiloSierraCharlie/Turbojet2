@@ -1,5 +1,5 @@
 <template>
-    <v-container fluid grid-list-lg class="page-list-users">
+    <v-container fluid grid-list-lg class="page-list-users pt-0">
         <v-layout row>
             <v-flex xs12>
                 <v-card class="pa-3">
@@ -30,6 +30,21 @@
                                     />
                                 </template>
                             </v-select>
+                        </v-flex>
+                    </v-layout>
+                </v-card>
+            </v-flex xs12>
+        </v-layout row>
+        <v-layout row v-if="connectedUser ? connectedUser.hasPermissions('permission_user_filter_actions') : false">
+            <v-flex xs12>
+                <v-card class="pa-3">
+                    <v-card-title primary-title class="pa-0 mb-0">
+                        <h3 class="subheading">Actions</h3>
+                    </v-card-title>
+                    <v-layout row wrap>
+                        <v-flex xs12>
+                            <v-btn color="info" @click="onCopyEmails">Copy Email Adresses</v-btn>
+                            <v-btn color="info" @click="onSendEmail">Send an Email</v-btn>
                         </v-flex>
                     </v-layout>
                 </v-card>
@@ -109,6 +124,9 @@ export default {
         }
     },
     computed: {
+        connectedUser() {
+            return this.$store.state.connectedUser
+        },
         endpoint() {
             return Config.endpoint
         },
@@ -187,6 +205,28 @@ export default {
                         $this.snackbar = true
                     }
                 });
+        },
+        getEmailList() {
+            return _.map(this.users, function(user) {
+                return user.email
+            })
+        },
+        onCopyEmails() {
+            var emails = this.getEmailList()
+            emails = emails.join(';') // outlook natively does not support standard comma separator
+
+            const el = document.createElement('textarea')
+            el.value = emails
+            document.body.appendChild(el)
+            el.select()
+            document.execCommand('copy')
+            document.body.removeChild(el)
+        },
+        onSendEmail() {
+            var emails = this.getEmailList()
+            var link = 'mailto:?bcc=' + emails
+
+            window.location.href = link
         },
         clickUser(user) {
             this.$root.$emit('showUser', user.id)
