@@ -264,7 +264,7 @@ class ZeusCalendarController {
             // 20180829T173000Z
             $start = \DateTime::createFromFormat('Y-m-d H:i:s', $event['start'], new \DateTimeZone('UTC'))->format('Ymd\THis\Z');
             $end = \DateTime::createFromFormat('Y-m-d H:i:s', $event['end'], new \DateTimeZone('UTC'))->format('Ymd\THis\Z');
-            $icalEvents .= "BEGIN:VEVENT\r\nUID:" . $event['id'] . "@fteturbojet.com\r\nDTSTAMP:" . gmdate('Ymd').'T'. gmdate('His') . "Z\r\nDTSTART:".$start."\r\nDTEND:".$end."\r\nSUMMARY: ".$event['exercise_title'] . "\r\nDESCRIPTION:Captain: " . $event['captain'] . "\\nP1: " . $event['crew1'] . "\\nRegistration: " . $event['registration'] .  "\r\nEND:VEVENT\r\n";
+            $icalEvents .= "BEGIN:VEVENT\r\nUID:" . $event['id'] . "@fteturbojet.com\r\nDTSTAMP:" . gmdate('Ymd').'T'. gmdate('His') . "Z\r\nDTSTART:".$start."\r\nDTEND:".$end."\r\nSUMMARY: ".$event['exercise_title'] . ' - ' . $event['registration'] . "\r\nDESCRIPTION:Captain: " . $event['captain'] . "\\nP1: " . $event['crew1'] . "\\nRegistration: " . $event['registration'] .  "\r\nEND:VEVENT\r\n";
         }
         $icalEvents .= "END:VCALENDAR";
 
