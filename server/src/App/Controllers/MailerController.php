@@ -54,7 +54,7 @@ class MailerController {
         if(is_array($to)) {
             $message = (new \Swift_Message($subject))
                 ->setFrom(['mailer@fteturbojet.com' => 'Turbojet Mailer'])
-                ->setTo($to)
+                ->setBcc($to)
                 ->setBody($email_start.$body.$email_end, 'text/html')
             ;
         }

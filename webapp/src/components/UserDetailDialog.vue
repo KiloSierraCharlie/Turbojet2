@@ -240,8 +240,4 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
-    .user-details-dialog {
-
-    }
-</style>
+<style scoped lang="scss"></style>

@@ -60,3 +60,12 @@ body {
 // .clearfix {
 //     zoom: 1; /* For IE 6/7 (trigger hasLayout) */
 // }
+
+.v-input--is-disabled {
+    .v-input__control {
+        pointer-events: auto;
+    }
+    input[type="email"], input[type="text"] {
+        cursor: text!important;
+    }
+}

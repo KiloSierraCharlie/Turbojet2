@@ -309,8 +309,4 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
-    .page-manager {
-
-    }
-</style>
+<style scoped lang="scss"></style>
