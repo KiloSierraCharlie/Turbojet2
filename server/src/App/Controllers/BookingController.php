@@ -139,6 +139,7 @@ class BookingController {
 
     public function changeBookingState(Request $request, $type, $id) {
         $authorId = $this->bookingModel->getBookingAuthorId($id);
+
         $isCancelled = $request->request->get('cancelled');
 
         // Check the user has the permission to edit offers or is the author
@@ -148,7 +149,7 @@ class BookingController {
 
         // Change cancelled flag in base
         if(($result = $this->bookingModel->changeState($id, $isCancelled)) instanceof \Exception) {
-            return $this->app->json(['message' => 'An error has occured during the cancellationof the booking', 'exception' => $result->__toString()], 500);
+            return $this->app->json(['message' => 'An error has occured during the cancellation of the booking', 'exception' => $result->__toString()], 500);
         }
         else {
             return $this->app->json(null, 200);
@@ -166,9 +167,15 @@ class BookingController {
 
         switch($type) {
             case 'minivan':
-                $hourRate = 10.0;
-                $minuteRate = $hourRate / 60;
-                return round(($minutesBooked * $minuteRate), 2);
+                $firstHourRate = 10.0;
+                $hourRate = 5.0;
+                if ($minutesBooked <= 60) {
+                    $price = ($firstHourRate / 60) * $minutesBooked;
+                } else {
+                    $minuteRate = $hourRate / 60;
+                    $price = $firstHourRate + ($minutesBooked - 60) * $minuteRate;
+                }
+                return round($price, 2);
             default:
                 return -1;
         };
