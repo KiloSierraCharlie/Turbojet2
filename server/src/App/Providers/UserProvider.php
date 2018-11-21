@@ -11,7 +11,7 @@ use Symfony\Component\Security\Core\Exception\AuthenticationExpiredException;
 use Doctrine\DBAL\Connection;
 
 class UserProvider implements UserProviderInterface {
-    const TOKEN_LIFETIME = 7200; // 2 hours
+    const TOKEN_LIFETIME = 86400; // 2 hours
     protected $conn;
 
 
@@ -28,7 +28,7 @@ class UserProvider implements UserProviderInterface {
         $stmt = $this->conn->executeQuery('
             SELECT u.*, t.refreshed_at as tokenRefreshedAt
             FROM users u
-            JOIN tokens t ON t.id_user = u.id
+            JOIN token t ON t.id_user = u.id
             WHERE t.token = ?
         ', array($token));
 
@@ -48,7 +48,7 @@ class UserProvider implements UserProviderInterface {
             //Delete the expired and useless token
             $this->conn->executeUpdate('
                 DELETE
-                FROM tokens
+                FROM token
                 WHERE token = ?
             ', array($token));
 
@@ -59,7 +59,7 @@ class UserProvider implements UserProviderInterface {
 
         // Update the token creation date
         $this->conn->executeUpdate('
-            UPDATE tokens
+            UPDATE token
             SET refreshed_at = ?
             WHERE token = ?
         ', array($datetime, $token));
@@ -143,7 +143,7 @@ class UserProvider implements UserProviderInterface {
     public function deleteUserTokens($username) {
         $this->conn->executeUpdate('
             DELETE t
-            FROM tokens t
+            FROM token t
             JOIN users u ON t.id_user = u.id
             WHERE u.email = ?
         ', array(strtolower($username)));
@@ -160,7 +160,7 @@ class UserProvider implements UserProviderInterface {
         $datetime = (new \DateTime())->format('Y-m-d H:i:s');
 
         $stmt = $this->conn->executeUpdate('
-            INSERT INTO tokens (id_user, token, created_at, refreshed_at)
+            INSERT INTO token (id_user, token, created_at, refreshed_at)
             VALUES ((SELECT id FROM users WHERE email = ?), ?, ?, ?)
         ', array(strtolower($username), $token, $datetime, $datetime));
 
