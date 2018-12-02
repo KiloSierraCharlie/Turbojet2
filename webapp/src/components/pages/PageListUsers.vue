@@ -66,7 +66,7 @@
             </v-flex>
         </v-layout>
         <v-layout row wrap>
-            <v-flex d-flex v-for="(user, index) in userSelection" :key="user.id">
+            <v-flex xs6 sm4 lg2 xl1 v-for="(user, index) in userSelection" :key="user.id">
                 <v-card class="user-card" @click.native="clickUser(user)">
                     <v-card-media
                         :src="endpoint+'media/student_photos/'+(user.picture ? user.picture : 'cygnet.jpg')"
