@@ -66,17 +66,17 @@
             </v-flex>
         </v-layout>
         <v-layout row wrap>
-            <v-flex xs6 sm4 lg2 xl1 v-for="(user, index) in userSelection" :key="user.id">
+            <v-flex xs6 sm4 lg3 xl2 v-for="(user, index) in userSelection" :key="user.id">
                 <v-card class="user-card" @click.native="clickUser(user)">
                     <v-card-media
                         :src="endpoint+'media/student_photos/'+(user.picture ? user.picture : 'cygnet.jpg')"
-                        height="200px"
+                        height="300px"
                     ></v-card-media>
 
                     <v-card-title primary-title>
                         <div>
                             <h3 class="headline mb-0">{{user.first_name}} {{user.last_name}}</h3>
-                            <div v-if="user.position">"{{user.position}}"</div>
+                            <div v-if="user.position">{{user.position}}</div>
                             <div class="chips">
                                 <group-chip
                                     v-for="group in user.groups"
