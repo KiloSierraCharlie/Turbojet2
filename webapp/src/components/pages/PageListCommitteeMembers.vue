@@ -1,6 +1,5 @@
 <template>
     <v-container fluid grid-list-lg class="page-list-committee-members pt-0">
-        </v-layout>
         <v-layout row wrap>
             <v-flex xs6 sm4 lg3 xl2 v-for="(user, index) in userSelection" :key="user.id">
                 <v-card class="user-card" @click.native="clickUser(user)">

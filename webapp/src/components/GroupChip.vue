@@ -16,7 +16,6 @@ export default {
         color() {
             switch (this.groupType) {
                 case 'Student Committee':
-                case 'Former Student Committee':
                     return 'yellow darken-2'
                     break
 
@@ -68,7 +67,6 @@ export default {
         icon() {
             switch (this.groupType) {
                 case 'Student Committee':
-                case 'Former Student Committee':
                     return 'mdi-star-circle'
                     break
 

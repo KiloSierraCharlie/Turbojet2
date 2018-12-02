@@ -284,7 +284,12 @@ const router = new VueRouter({
         {
             path: '/committee',
             component: PageListCommitteeMembers,
-            name: 'page-list-committee-members'
+            name: 'page-list-committee-members',
+            meta: {
+                labels: {
+                    title: 'Student Committee Members:'
+                }
+            }
         },
         // Fallback if no route matches, we redirect to the homepage
         {
