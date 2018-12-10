@@ -1,70 +1,5 @@
 <template>
-    <v-container fluid grid-list-lg class="page-list-users pt-0">
-        <v-layout row>
-            <v-flex xs12>
-                <v-card class="pa-3">
-                    <v-card-title primary-title class="pa-0 mb-0">
-                        <h3 class="subheading">Filter</h3>
-                    </v-card-title>
-                    <v-layout row wrap>
-                        <v-flex xs12 sm6>
-                            <v-text-field
-                                v-model="filterName"
-                                label="Filter by name"
-                                clearable
-                            />
-                        </v-flex>
-                        <v-flex xs12 sm6>
-                            <v-select
-                                v-model="filterGroup" :items="groupPicklist"
-                                item-text="name" item-value="id"
-                                label="Filter by course or job" multiple
-                                deletable-chips clearable
-                            >
-                                <template slot="selection" slot-scope="data">
-                                    <group-chip
-                                        :group-name="data.item.name"
-                                        :group-type="data.item.type"
-                                        close
-                                        @remove="onRemoveGroupFromFilter(data.item)"
-                                    />
-                                </template>
-                            </v-select>
-                        </v-flex>
-                    </v-layout>
-                </v-card>
-            </v-flex xs12>
-        </v-layout row>
-        <v-layout row v-if="connectedUser ? connectedUser.hasPermissions('permission_user_filter_actions') : false">
-            <v-flex xs12>
-                <v-card class="pa-3">
-                    <v-card-title primary-title class="pa-0 mb-0">
-                        <h3 class="subheading">Actions</h3>
-                    </v-card-title>
-                    <v-layout row wrap>
-                        <v-flex xs12>
-                            <v-btn color="info" @click="onCopyEmails">Copy Email Adresses</v-btn>
-                            <v-btn color="info" @click="onSendEmail">Send an Email</v-btn>
-                        </v-flex>
-                    </v-layout>
-                </v-card>
-            </v-flex xs12>
-        </v-layout row>
-        <v-layout row class="mt-2 mb-2">
-            <!-- <v-flex xs12 sm8 md10 class="pt-3">
-                <div class="text-xs-center">
-                    <v-pagination circle :length="totalPages" v-model="currentPage" :total-visible="7"></v-pagination>
-                </div>
-            </v-flex> -->
-            <v-flex xs12 sm4 offset-sm8 offset-md10 md2>
-                <v-select
-                :items="[25, 50, 100]"
-                v-model="totalToDisplay"
-                label="Total to display"
-                hide-details solo
-                ></v-select>
-            </v-flex>
-        </v-layout>
+    <v-container fluid grid-list-lg class="page-list-committee-members pt-0">
         <v-layout row wrap>
             <v-flex xs6 sm4 lg3 xl2 v-for="(user, index) in userSelection" :key="user.id">
                 <v-card class="user-card" @click.native="clickUser(user)">
@@ -111,13 +46,13 @@ import Config from 'src/Config.__ENV__.js'
 import GroupChip from 'components/GroupChip.vue'
 
 export default {
-    name: 'page-list-users',
+    name: 'page-list-committee-members',
     data() {
         return {
             snackbar: false,
             errorMessage: '',
             usersData: [],
-            filterGroup: [],
+            filterGroup: ['1'],
             filterName: '',
             currentPage: 1,
             totalToDisplay: 25
@@ -206,46 +141,19 @@ export default {
                     }
                 });
         },
-        getEmailList() {
-            return _.map(this.users, function(user) {
-                return user.email
-            })
-        },
-        onCopyEmails() {
-            var emails = this.getEmailList()
-            emails = emails.join(';') // outlook natively does not support standard comma separator
-
-            const el = document.createElement('textarea')
-            el.value = emails
-            document.body.appendChild(el)
-            el.select()
-            document.execCommand('copy')
-            document.body.removeChild(el)
-        },
-        onSendEmail() {
-            var emails = this.getEmailList()
-            var link = 'mailto:?bcc=' + emails
-
-            window.location.href = link
-        },
         clickUser(user) {
             this.$root.$emit('showUser', user.id)
         },
         navigateUserDetails(userId) {
             this.$router.push({ name: 'page-user-details', params: { userId: userId }})
         },
-        onRemoveGroupFromFilter(item) {
-            this.filterGroup.splice(this.filterGroup.indexOf(item.name), 1)
-            this.filterGroup = [...this.filterGroup]
-            console.log('removeGroupFromFilter', this.filterGroup, item)
-        }
     },
     components: {'group-chip': GroupChip}
 }
 </script>
 
 <style scoped lang="scss">
-.page-list-users {
+.page-list-committee-members {
     .chips {
         margin-top: 15px;
     }

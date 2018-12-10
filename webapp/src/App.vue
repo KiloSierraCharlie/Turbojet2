@@ -165,7 +165,7 @@ export default {
                     icon: 'mdi-star-circle',
                     text: 'The Student Committee',
                     children: [
-                        { icon: 'mdi-account-group', text: '(Coming soon) The members' },
+                        { icon: 'mdi-account-group', text: 'The members' , link: '/committee'},
                         { icon: 'mdi-cloud-download', text: 'Documents & Resources', link: '/documents/student-resources' }
                     ]
                 },
