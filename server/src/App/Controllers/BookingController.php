@@ -148,7 +148,7 @@ class BookingController {
         }
 
         // Check if cancelling past event
-        if (strtotime($this->bookingModel->getBookingStartDate($id)) < (time()-(60*60*1))) {
+        if (strtotime($this->bookingModel->getBookingStartDate($id)) < (time()+(60*60*1))) {
             return $this->app->json(['message' => 'You can\'t cancel a booking in the past'], 403);
         }
 
