@@ -69,10 +69,13 @@ class UserController {
     public function editUser(Request $request, $id) {
         $authorisedFields = [
             'email',
-            'room_number',
+            'room',
             'phone',
             'callsign',
-            'calendar_zeus_username'
+            'calendar_zeus_username',
+            'notification_news',
+            'notification_zeus',
+            'notification_ftebay'
         ];
 
         $userData = $request->request->all();

@@ -166,7 +166,7 @@
                 <!-- Event detail -->
                 <div v-if="!editMode">
                     <v-btn :disabled="loading" outline color="primary" @click="closeDialog">Close</v-btn>
-                    <v-btn v-show="hasPermissions" :disabled="loading" color="error" @click="deleteDialog">Delete</v-btn>
+                    <!--<v-btn v-show="hasPermissions" :disabled="loading" color="error" @click="deleteDialog">Delete</v-btn>-->
                     <v-btn v-show="hasPermissions || isSameUser" :loading="loading" color="primary" @click="setEditMode(true)">Edit</v-btn>
                 </div>
                 <!-- Edit event -->

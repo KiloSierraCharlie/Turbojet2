@@ -73,7 +73,7 @@
             <v-footer v-if="$route.name !== 'page-it-reps'" color="primary" class="hidden-xs-only px-2 white--text" height="auto" app>
                 <v-layout justify-center row wrap>
                     <v-flex class="pt-2 pb-2" text-xs-center white--text xs12>
-                        Turbojet V{{version}} made with &nbsp;<v-icon class="subheading" color="white">mdi-heart</v-icon>&nbsp; by &nbsp;<a target="_blank" href="https://www.linkedin.com/in/kevinbouhadana">Kevin Bouhadana (172)</a>, based on initial concept by <a href="http://www.jamesharding.ca/" target="_blank">James Harding (140)</a>. maintained by a <router-link to="/it-reps">lineage of wonderful IT Reps</router-link>.
+                        Turbojet V{{version}} made with &nbsp;<v-icon class="subheading" color="white">mdi-heart</v-icon>&nbsp; and maintained by a <router-link to="/it-reps">lineage of wonderful IT Reps</router-link>. Current IT Rep <router-link to="/committee">Francisco Jesús Jiménez Hidalgo (180)</router-link>
                     </v-flex>
                 </v-layout>
             </v-footer>
@@ -138,7 +138,8 @@ export default {
                     text: 'Groundschool',
                     children: [
                         { icon: 'mdi-cloud-download', text: 'Documents & Resources', link: '/documents/ground-school' },
-                        { icon: 'mdi-desktop-classic', text: 'CBT', link: 'http://ftecbt.com/login.html' }
+                        { icon: 'mdi-desktop-classic', text: 'CBT', link: 'http://ftecbt.com/login.html' },
+                        { icon: 'mdi-desktop-classic', text: 'OLD CBT', link: 'http://intranet/cbt/old/index.php' }
                     ]
                 },
                 {
@@ -148,7 +149,8 @@ export default {
                         { icon: 'mdi-cloud-download', text: 'Documents & Resources', link: '/documents/flying' },
                         { icon: 'mdi-timetable', text: 'Zeus', link: 'http://www.jmaero.com/zeus/' },
                         { icon: 'mdi-file-document', text: 'Allocation', link: '/documents/allocations' },
-                        { icon: 'mdi-desktop-classic', text: 'CBT', link: 'http://ftecbt.com/login.html' }
+                        { icon: 'mdi-desktop-classic', text: 'CBT', link: 'http://ftecbt.com/login.html' },
+                        { icon: 'mdi-desktop-classic', text: 'OLD CBT', link: 'http://intranet/cbt/old/index.php' }
                     ]
                 },
                 {
@@ -163,7 +165,7 @@ export default {
                     icon: 'mdi-star-circle',
                     text: 'The Student Committee',
                     children: [
-                        { icon: 'mdi-account-group', text: '(Coming soon) The members' },
+                        { icon: 'mdi-account-group', text: 'The members' , link: '/committee'},
                         { icon: 'mdi-cloud-download', text: 'Documents & Resources', link: '/documents/student-resources' }
                     ]
                 },

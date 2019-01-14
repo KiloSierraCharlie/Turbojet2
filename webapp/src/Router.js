@@ -6,6 +6,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import PageListUsers from 'components/pages/PageListUsers.vue'
+import PageListCommitteeMembers from 'components/pages/PageListCommitteeMembers.vue'
 import PageListDocuments from 'components/pages/PageListDocuments.vue'
 import PageListEditorial from 'components/pages/PageListEditorial.vue'
 import PageBooking from 'components/pages/PageBooking.vue'
@@ -279,6 +280,16 @@ const router = new VueRouter({
             path: '/it-reps',
             component: PageITReps,
             name: 'page-it-reps'
+        },
+        {
+            path: '/committee',
+            component: PageListCommitteeMembers,
+            name: 'page-list-committee-members',
+            meta: {
+                labels: {
+                    title: 'Student Committee Members:'
+                }
+            }
         },
         // Fallback if no route matches, we redirect to the homepage
         {
