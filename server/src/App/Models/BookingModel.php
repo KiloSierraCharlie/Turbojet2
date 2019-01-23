@@ -183,4 +183,24 @@ class BookingModel extends AbstractModel {
             return $e;
         }
     }
+
+    public function getBookingStartDate($bookingId) {
+        try {
+            $queryBuilder = $this->conn->createQueryBuilder();
+
+            $queryBuilder
+                ->select('start')
+                ->from('bookings')
+                ->where('id = :id')->setParameter(':id', $bookingId);
+            ;
+
+            $stmt = $queryBuilder->execute();
+            $result = $stmt->fetch();
+            $start_date = $result['start'];
+            return $start_date;
+        }
+        catch(\Exception $e) {
+            return false;
+        }
+    }
 }

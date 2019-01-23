@@ -147,6 +147,11 @@ class BookingController {
             return $this->app->json(['message' => 'You don\'t have the permission to edit this booking'], 403);
         }
 
+        // Check if cancelling past event
+        if (strtotime($this->bookingModel->getBookingStartDate($id)) < (time()+(60*60*1))) {
+            return $this->app->json(['message' => 'You can\'t cancel a booking in the past'], 403);
+        }
+
         // Change cancelled flag in base
         if(($result = $this->bookingModel->changeState($id, $isCancelled)) instanceof \Exception) {
             return $this->app->json(['message' => 'An error has occured during the cancellation of the booking', 'exception' => $result->__toString()], 500);
