@@ -25,11 +25,46 @@ class UserModel extends AbstractModel {
                 ->where('u.banned = 0')
                 ->andWhere('u.verified = 1')
                 ->groupBy('u.id')
+                ->orderBy('RAND()', 'ASC')
             ;
 
             if(!$includeGraduated) {
                 $queryBuilder->andWhere('u.graduated = 0');
             }
+
+            $stmt = $queryBuilder->execute();
+            $users = $stmt->fetchAll();
+
+            // Format groups in name/type key/value array
+            foreach ($users as &$user) {
+                $tempGroups = $user['groups'] = explode(',', $user['groups']);
+                $user['groups'] = array();
+
+                foreach ($tempGroups as &$group) {
+                    $user['groups'][] = array('id' => explode('::', $group)[0],'name' => explode('::', $group)[1], 'type' => explode('::', $group)[2]);
+                }
+            }
+
+            return $users;
+        }
+        catch(\Exception $e) {
+            return false;
+        }
+    }
+
+    public function getUsersToVerify() {
+        try {
+            $queryBuilder = $this->conn->createQueryBuilder();
+
+            $queryBuilder
+                ->select('u.id', 'u.first_name', 'u.last_name', 'u.email', 'u.picture', 'u.position', 'u.graduated', 'u.verified', 'GROUP_CONCAT(CONCAT(g.id, "::", g.name, "::", g.type)) as groups')
+                ->from('users', 'u')
+                ->innerJoin('u', 'group_membership', 'gm', 'u.id = gm.id_user')
+                ->innerJoin('gm', 'groups', 'g', 'gm.id_group = g.id')
+                ->andWhere('u.verified = 0')
+                ->groupBy('u.id')
+                ->orderBy('u.id', 'ASC')
+            ;
 
             $stmt = $queryBuilder->execute();
             $users = $stmt->fetchAll();
@@ -113,7 +148,7 @@ class UserModel extends AbstractModel {
         $queryBuilder
             ->select('u.id', 'u.first_name', 'u.last_name', 'u.email', 'u.room', 'u.callsign',
                 'u.position', 'u.phone', 'u.picture', 'u.graduated', 'GROUP_CONCAT(CONCAT(g.id, "::", g.name, "::", g.type)) as groups',
-                'u.calendar_zeus_username', 'u.notification_zeus', 'u.notification_news', 'u.notification_ftebay')
+                'u.calendar_zeus_username', 'u.notification_zeus', 'u.notification_news', 'u.notification_ftebay', 'u.verified', 'u.banned')
             ->from('users', 'u')
             ->innerJoin('u', 'group_membership', 'gm', 'u.id = gm.id_user')
             ->innerJoin('gm', 'groups', 'g', 'gm.id_group = g.id')
@@ -268,5 +303,50 @@ class UserModel extends AbstractModel {
         $users = $stmt->fetchAll(\PDO::FETCH_COLUMN);
 
         return $users;
+    }
+
+    public function verifyUser($id) {
+        try {
+            $queryBuilder = $this->conn->createQueryBuilder();
+
+            $queryBuilder->update('users')
+            ->where('id = :id')->setParameter('id', $id)
+            ->set('verified', "1");
+            $queryBuilder->execute();
+            return $this->getUserDetails($id);
+        }
+        catch(\Exception $e) {
+            return false;
+        }
+    }
+
+    public function banUser($id) {
+        try {
+            $queryBuilder = $this->conn->createQueryBuilder();
+
+            $queryBuilder->update('users')
+            ->where('id = :id')->setParameter('id', $id)
+            ->set('banned', "1");
+            $queryBuilder->execute();
+            return $this->getUserDetails($id);
+        }
+        catch(\Exception $e) {
+            return false;
+        }
+    }
+
+    public function unbanUser($id) {
+        try {
+            $queryBuilder = $this->conn->createQueryBuilder();
+
+            $queryBuilder->update('users')
+            ->where('id = :id')->setParameter('id', $id)
+            ->set('banned', "0");
+            $queryBuilder->execute();
+            return $this->getUserDetails($id);
+        }
+        catch(\Exception $e) {
+            return false;
+        }
     }
 }

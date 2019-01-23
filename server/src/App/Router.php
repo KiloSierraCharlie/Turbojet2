@@ -31,6 +31,10 @@ class Router {
         $this->app->get('/users', 'controller.user:getUsers');
         $this->app->get('/users/{id}', 'controller.user:getUser');
         $this->app->post('/users/{id}', 'controller.user:editUser');
+        $this->app->get('/verify-users', 'controller.user:getUsersToVerify');
+        $this->app->post('/verify-users/verify/{id}', 'controller.user:verifyUser');
+        $this->app->post('/verify-users/ban/{id}', 'controller.user:banUser');
+        $this->app->post('/verify-users/unban/{id}', 'controller.user:unbanUser');
         $this->app->get('/groups', 'controller.user:getAllGroups');
         $this->app->get('/picklists/groups', 'controller.user:getPicklistGroups')->bind('picklist-groups');
         $this->app->get('/bookings/{type}', 'controller.booking:getBookings');
@@ -42,5 +46,6 @@ class Router {
         $this->app->get('/bookings/{type}/resources', 'controller.booking:getResources');
         $this->app->get('/zeus-calendar/parse', 'controller.zeusCalendarController:parseZeusCalendar')->bind('parseZeusCalendar');
         $this->app->get('/zeus-calendar/ical/{zeusUserName}', 'controller.zeusCalendarController:generateIcal')->bind('ical');
+
     }
 }

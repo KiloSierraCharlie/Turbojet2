@@ -6,6 +6,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import PageListUsers from 'components/pages/PageListUsers.vue'
+import PageVerifyUsers from 'components/pages/PageVerifyUsers.vue'
 import PageListCommitteeMembers from 'components/pages/PageListCommitteeMembers.vue'
 import PageListDocuments from 'components/pages/PageListDocuments.vue'
 import PageListEditorial from 'components/pages/PageListEditorial.vue'
@@ -290,6 +291,26 @@ const router = new VueRouter({
                     title: 'Student Committee Members:'
                 }
             }
+        },
+        {
+            path: '/admin',
+            component: PageVerifyUsers,
+            children: [
+                {
+                    path: 'verify',
+                    component: PageVerifyUsers,
+                    name: 'page-verify-users',
+                    meta: {
+                        labels: {
+                            title: 'User verification:'
+                        }
+                    },
+                    settings: {
+                        permission: 'permission_approve_user'
+                    }
+                }
+            ],
+            props: true
         },
         // Fallback if no route matches, we redirect to the homepage
         {

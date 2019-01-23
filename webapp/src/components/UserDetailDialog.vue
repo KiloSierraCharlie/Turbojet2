@@ -166,7 +166,9 @@
                 <!-- Event detail -->
                 <div v-if="!editMode">
                     <v-btn :disabled="loading" outline color="primary" @click="closeDialog">Close</v-btn>
-                    <!--<v-btn v-show="hasPermissions" :disabled="loading" color="error" @click="deleteDialog">Delete</v-btn>-->
+                    <v-btn v-if="computedData.verified === '0'" v-show="hasPermissions" :disabled="loading" color="success" @click="verifyDialog">Verify</v-btn>
+                    <v-btn v-if="computedData.banned === '0'" v-show="hasPermissions" :disabled="loading" color="error" @click="banDialog">Ban</v-btn>
+                    <v-btn v-if="computedData.banned === '1'" v-show="hasPermissions" :disabled="loading" color="error" @click="unbanDialog">Unban</v-btn>
                     <v-btn v-show="hasPermissions || isSameUser" :loading="loading" color="primary" @click="setEditMode(true)">Edit</v-btn>
                 </div>
                 <!-- Edit event -->
@@ -219,6 +221,15 @@ export default {
         },
         deleteDialog() {
             this.$emit('deleteUser')
+        },
+        verifyDialog() {
+            this.$emit('verifyUser')
+        },
+        banDialog() {
+            this.$emit('banUser')
+        },
+        unbanDialog() {
+            this.$emit('unbanUser')
         },
         save() {
             const $this = this
