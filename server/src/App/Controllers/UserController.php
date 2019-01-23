@@ -164,7 +164,7 @@ class UserController {
     }
 
     public function getNewsSubscriptionUsersEmails() {
-        return $this->userModel->getNewsSubscrnotificaiptionUsers();
+        return $this->userModel->getNewsSubscriptionUsers();
     }
 
     public function getFtebaySubscriptionUsersEmails() {
