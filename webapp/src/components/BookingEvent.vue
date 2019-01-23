@@ -55,7 +55,7 @@
                     <v-btn :disabled="loading" outline color="primary" @click="closeDialog">Close</v-btn>
                     <v-btn v-show="hasPermissions" :disabled="loading" color="error" @click="cancelDialog">Cancel</v-btn>
                     <v-btn v-show="hasPermissions" :loading="loading" color="primary" @click="editMode = true;">Edit</v-btn>
-                    <v-btn v-show="hasPermissions && markAsPaidButton && !eventData.data.paid" :loading="loading" color="success" @click="paid">Mark as paid</v-btn>
+                    <!--<v-btn v-show="hasPermissions && markAsPaidButton && !eventData.data.paid" :loading="loading" color="success" @click="paid">Mark as paid</v-btn>-->
                 </div>
                 <!-- Edit event -->
                 <div v-else-if="eventData.data.id && editMode">
