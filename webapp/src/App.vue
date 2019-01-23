@@ -84,6 +84,9 @@
                 :is-same-user="editedUser ? editedUser.id === connectedUser.id : false"
                 :has-permissions="connectedUser ? connectedUser.hasPermissions('permission_edit_user') : false"
                 @saveUser="onSaveUser"
+                @verifyUser="onVerifyUser"
+                @banUser="onBanUser"
+                @unbanUser="onUnbanUser"
                 @closeDialogEdit="onCloseDialogEdit"
                 @deleteUser="dialogDelete = true;"
                 :loading="isLoading"/>
@@ -118,6 +121,14 @@ export default {
                 { icon: 'mdi-logout-variant', text: 'Logout', action: this.logoutUser }
             ],
             drawerItems: [
+                {
+                    icon: 'mdi-settings',
+                    text: 'Admin',
+                    permission: 'permission_approve_user',
+                    children: [
+                        { icon: 'mdi-account-group', text: 'User Verification' , link: '/admin/verify'}
+                    ]
+                },
                 { icon: 'mdi-message-alert', text: 'News', link: '/news' },
                 { icon: 'mdi-account-circle', text: 'Person Finder', link: '/users' },
                 { icon: 'mdi-calendar', text: 'My Zeus Calendar', link: '/my-zeus-calendar' },
@@ -222,6 +233,18 @@ export default {
 
             // Hide menu items which necessitate special permission (e.g: reps)
             // if the user does not have those permissions
+            _.remove(mergedDrawerItems, function(item) {
+                if(_.has(item, 'permission') && $this.connectedUser && !$this.connectedUser.hasPermissions(item.permission)) {
+                    return true
+                }
+                else if(!$this.connectedUser) {
+                    return true
+                }
+                else {
+                    return false
+                }
+            })
+
             _.each(mergedDrawerItems, function(item) {
                 if(_.has(item, 'children')) {
                     _.remove(item.children, function(child) {
@@ -315,6 +338,42 @@ export default {
             setTimeout(() => {
                 $this.resetForm()
             }, 300)
+        },
+        onVerifyUser() {
+            const $this = this
+
+            Axios.post(Config.endpoint + 'verify-users/verify/' + this.editedUser.id)
+                .then(function(response) {
+                    $this.isLoading = false
+                    $this.onCloseDialogEdit()
+                })
+                .catch(this.displayError)
+
+            this.isLoading = true
+        },
+        onBanUser() {
+            const $this = this
+
+            Axios.post(Config.endpoint + 'verify-users/ban/' + this.editedUser.id)
+                .then(function(response) {
+                    $this.isLoading = false
+                    $this.onCloseDialogEdit()
+                })
+                .catch(this.displayError)
+
+            this.isLoading = true
+        },
+        onUnbanUser() {
+            const $this = this
+
+            Axios.post(Config.endpoint + 'verify-users/unban/' + this.editedUser.id)
+                .then(function(response) {
+                    $this.isLoading = false
+                    $this.onCloseDialogEdit()
+                })
+                .catch(this.displayError)
+
+            this.isLoading = true
         },
         onSaveUser(userData) {
             const $this = this

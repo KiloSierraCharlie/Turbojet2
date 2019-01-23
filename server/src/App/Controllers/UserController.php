@@ -32,6 +32,20 @@ class UserController {
         return $this->app->json($users, 200);
     }
 
+    public function getUsersToVerify(Request $request) {
+        $queryParams = $request->query;
+
+        if(!$this->app['user']->hasPermission('permission_edit_user')) {
+            return $this->app->json(['message' => 'You don\'t have the permission to access this page'], 403);
+        }
+
+        if(($users = $this->userModel->getUsersToVerify()) === false) {
+            return $this->app->json(['message' => 'An error has occured during the users data retrieval'], 500);
+        }
+
+        return $this->app->json($users, 200);
+    }
+
     /**
     * Fetch all the users
     *
@@ -150,10 +164,46 @@ class UserController {
     }
 
     public function getNewsSubscriptionUsersEmails() {
-        return $this->userModel->getNewsSubscriptionUsers();
+        return $this->userModel->getNewsSubscrnotificaiptionUsers();
     }
 
     public function getFtebaySubscriptionUsersEmails() {
         return $this->userModel->getFtebaySubscriptionUsers();
+    }
+
+    public function verifyUser($id) {
+        if(!$this->app['user']->hasPermission('permission_edit_user') && $this->app['user']->getId() !== $id) {
+            return $this->app->json(['message' => 'You don\'t have the permission to edit this user'], 403);
+        }
+
+        if(($user = $this->userModel->verifyUser($id)) === false){
+            return $this->app->json(['message' => 'An error has occured during the user verification'], 500);
+        }
+
+        return $this->app->json($user, 200);
+    }
+
+    public function banUser($id) {
+        if(!$this->app['user']->hasPermission('permission_edit_user')) {
+            return $this->app->json(['message' => 'You don\'t have the permission to edit this user'], 403);
+        }
+
+        if(($user = $this->userModel->banUser($id)) === false){
+            return $this->app->json(['message' => 'An error has occured during the user banning process'], 500);
+        }
+
+        return $this->app->json($user, 200);
+    }
+
+    public function unbanUser($id) {
+        if(!$this->app['user']->hasPermission('permission_edit_user')) {
+            return $this->app->json(['message' => 'You don\'t have the permission to edit this user'], 403);
+        }
+
+        if(($user = $this->userModel->unbanUser($id)) === false){
+            return $this->app->json(['message' => 'An error has occured during the user banning process'], 500);
+        }
+
+        return $this->app->json($user, 200);
     }
 }
