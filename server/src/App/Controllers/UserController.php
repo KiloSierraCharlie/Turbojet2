@@ -172,7 +172,7 @@ class UserController {
     }
 
     public function verifyUser($id) {
-        if(!$this->app['user']->hasPermission('permission_edit_user') && $this->app['user']->getId() !== $id) {
+        if(!$this->app['user']->hasPermission('permission_edit_user')) {
             return $this->app->json(['message' => 'You don\'t have the permission to edit this user'], 403);
         }
 

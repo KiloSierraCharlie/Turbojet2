@@ -218,6 +218,7 @@ class UserModel extends AbstractModel {
                 type
             FROM groups
             WHERE active = ?
+            ORDER BY name ASC
         ', array(!$nonActive));
 
         return $groups;
@@ -230,6 +231,7 @@ class UserModel extends AbstractModel {
                 name as text
             FROM groups
             WHERE active = 1
+            ORDER BY name ASC
         ');
 
         return $groups;
