@@ -231,6 +231,7 @@ class UserModel extends AbstractModel {
                 name as text
             FROM groups
             WHERE active = 1
+            ORDER BY name ASC
         ');
 
         return $groups;
