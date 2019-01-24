@@ -32,6 +32,8 @@ class Router {
         $this->app->get('/users/{id}', 'controller.user:getUser');
         $this->app->post('/users/{id}', 'controller.user:editUser');
         $this->app->get('/verify-users', 'controller.user:getUsersToVerify');
+        $this->app->post('/verify-users/minivan/add/{id}', 'controller.user:addUserToMinivan');
+        $this->app->post('/verify-users/minivan/remove/{id}', 'controller.user:removeUserFromMinivan');
         $this->app->post('/verify-users/verify/{id}', 'controller.user:verifyUser');
         $this->app->post('/verify-users/ban/{id}', 'controller.user:banUser');
         $this->app->post('/verify-users/unban/{id}', 'controller.user:unbanUser');
