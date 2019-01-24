@@ -148,7 +148,7 @@ class UserModel extends AbstractModel {
         $queryBuilder
             ->select('u.id', 'u.first_name', 'u.last_name', 'u.email', 'u.room', 'u.callsign',
                 'u.position', 'u.phone', 'u.picture', 'u.graduated', 'GROUP_CONCAT(CONCAT(g.id, "::", g.name, "::", g.type)) as groups',
-                'u.calendar_zeus_username', 'u.notification_zeus', 'u.notification_news', 'u.notification_ftebay', 'u.verified', 'u.banned')
+                'u.calendar_zeus_username', 'u.notification_zeus', 'u.notification_news', 'u.notification_ftebay', 'u.verified', 'u.banned', 'u.permission_make_minivan_booking')
             ->from('users', 'u')
             ->innerJoin('u', 'group_membership', 'gm', 'u.id = gm.id_user')
             ->innerJoin('gm', 'groups', 'g', 'gm.id_group = g.id')
@@ -344,6 +344,21 @@ class UserModel extends AbstractModel {
             $queryBuilder->update('users')
             ->where('id = :id')->setParameter('id', $id)
             ->set('banned', "0");
+            $queryBuilder->execute();
+            return $this->getUserDetails($id);
+        }
+        catch(\Exception $e) {
+            return false;
+        }
+    }
+
+    public function setMinivanPermision($id, $flag) {
+        try {
+            $queryBuilder = $this->conn->createQueryBuilder();
+
+            $queryBuilder->update('users')
+            ->where('id = :id')->setParameter('id', $id)
+            ->set('permission_make_minivan_booking', $flag);
             $queryBuilder->execute();
             return $this->getUserDetails($id);
         }
