@@ -206,4 +206,28 @@ class UserController {
 
         return $this->app->json($user, 200);
     }
+
+    public function addUserToMinivan($id) {
+        if(!$this->app['user']->hasPermission('permission_edit_user')) {
+            return $this->app->json(['message' => 'You don\'t have the permission to edit this user'], 403);
+        }
+
+        if(($user = $this->userModel->setMinivanPermision($id, '1')) === false){
+            return $this->app->json(['message' => 'An error has occured during the user banning process'], 500);
+        }
+
+        return $this->app->json($user, 200);
+    }
+
+    public function removeUserFromMinivan($id) {
+        if(!$this->app['user']->hasPermission('permission_edit_user')) {
+            return $this->app->json(['message' => 'You don\'t have the permission to edit this user'], 403);
+        }
+
+        if(($user = $this->userModel->setMinivanPermision($id, '0')) === false){
+            return $this->app->json(['message' => 'An error has occured during the user banning process'], 500);
+        }
+
+        return $this->app->json($user, 200);
+    }
 }

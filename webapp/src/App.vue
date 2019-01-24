@@ -87,6 +87,8 @@
                 @verifyUser="onVerifyUser"
                 @banUser="onBanUser"
                 @unbanUser="onUnbanUser"
+                @addUserToMinivan="onAddUserToMinivan"
+                @removeUserFromMinivan="onRemoveUserFromMinivan"
                 @closeDialogEdit="onCloseDialogEdit"
                 @deleteUser="dialogDelete = true;"
                 :loading="isLoading"/>
@@ -367,6 +369,30 @@ export default {
             const $this = this
 
             Axios.post(Config.endpoint + 'verify-users/unban/' + this.editedUser.id)
+                .then(function(response) {
+                    $this.isLoading = false
+                    $this.onCloseDialogEdit()
+                })
+                .catch(this.displayError)
+
+            this.isLoading = true
+        },
+        onAddUserToMinivan() {
+            const $this = this
+
+            Axios.post(Config.endpoint + 'verify-users/minivan/add/' + this.editedUser.id)
+                .then(function(response) {
+                    $this.isLoading = false
+                    $this.onCloseDialogEdit()
+                })
+                .catch(this.displayError)
+
+            this.isLoading = true
+        },
+        onRemoveUserFromMinivan() {
+            const $this = this
+
+            Axios.post(Config.endpoint + 'verify-users/minivan/remove/' + this.editedUser.id)
                 .then(function(response) {
                     $this.isLoading = false
                     $this.onCloseDialogEdit()
