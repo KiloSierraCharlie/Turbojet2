@@ -218,6 +218,7 @@ class UserModel extends AbstractModel {
                 type
             FROM groups
             WHERE active = ?
+            ORDER BY name ASC
         ', array(!$nonActive));
 
         return $groups;
