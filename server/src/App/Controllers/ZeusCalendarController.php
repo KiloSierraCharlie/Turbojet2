@@ -46,21 +46,18 @@ class ZeusCalendarController {
 
         $crawler = new Crawler($xml);
         $crawler->filter('userLogin userEvents userEvent')->each(function (Crawler $node, $i) use (&$newEvents) {
-            // idEvent 0 is a DI duty, we skip it
-            if($node->filter('idEvent')->text() !== '0') {
-                $start = \DateTime::createFromFormat('d/m/Y H:i', $node->filter('eventStartDate')->text() . ' ' . $node->filter('eventStartTime')->text(), new \DateTimeZone('UTC'));
-                $end = \DateTime::createFromFormat('d/m/Y H:i', $node->filter('eventStartDate')->text() . ' ' . $node->filter('eventFinishTime')->text(), new \DateTimeZone('UTC'));
+            $start = \DateTime::createFromFormat('d/m/Y H:i', $node->filter('eventStartDate')->text() . ' ' . $node->filter('eventStartTime')->text(), new \DateTimeZone('UTC'));
+            $end = \DateTime::createFromFormat('d/m/Y H:i', $node->filter('eventStartDate')->text() . ' ' . $node->filter('eventFinishTime')->text(), new \DateTimeZone('UTC'));
 
-                $newEvents['event_'.$node->filter('idEvent')->text()] = array(
-                    'id' => $node->filter('idEvent')->text(),
-                    'start' => $start->format('Y-m-d H:i:s'),
-                    'end' => $end->format('Y-m-d H:i:s'),
-                    'captain' => $node->filter('captain')->text(),
-                    'crew1' => $node->filter('crew1')->text(),
-                    'exercise_title' => $node->filter('exerciseTitle')->text(),
-                    'registration' => $node->filter('registration')->text()
-                );
-            }
+            $newEvents['event_'.$node->filter('idEvent')->text().$start->format('YmdHi')] = array(
+                'id' => $node->filter('idEvent')->text().$start->format('YmdHi'),
+                'start' => $start->format('Y-m-d H:i:s'),
+                'end' => $end->format('Y-m-d H:i:s'),
+                'captain' => $node->filter('captain')->text(),
+                'crew1' => $node->filter('crew1')->text(),
+                'exercise_title' => $node->filter('exerciseTitle')->text(),
+                'registration' => $node->filter('registration')->text()
+            );
         });
 
         // var_dump($newEvents);
