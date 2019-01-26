@@ -20,5 +20,6 @@
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [QSA,L]
 
-    lsapi_phpini /home/ftetehti/api.fteturbojet.com/www/php.ini
+    #for namecheap enable this
+    # lsapi_phpini /home/ftetehti/api.fteturbojet.com/www/php.ini
 </IfModule>

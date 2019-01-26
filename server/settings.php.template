@@ -20,11 +20,10 @@ return array(
         )
     ),
     'SMTP' => array(
-        'username' => '', // gmail username
-        'password' => '' // gmail password
+        'username' => '',
+        'password' => ''
     ),
-    'DEBUG_MAIL_RECIPIENT' => 'kevin.bouhadana@gmail.com',
-    // 'DEBUG_MAIL_RECIPIENT' => 'fjjsus@gmail.com',
+    'DEBUG_MAIL_RECIPIENT' => array(''),
     'CORS' => array(
         'dev' => array(
             'allowOrigin' => 'http://localhost:8080' // Space separated set of allowed domains. Defaults to all
@@ -40,5 +39,5 @@ return array(
     'APIKEY' => 'rpF88UUHiheBBYiC1KCbTsZDkuP1kQvq',
     'RECAPTCHA_SECRET' => '6LeS8k8UAAAAAJH1Yr_lPcjjG4n2lnHo2Tbnq1FP',
     'DEBUG' => true, // Silex debug mode
-    'ENV' => 'dev' // dev or prod
+    'ENV' => 'debug' // dev or prod
 );

@@ -1,6 +1,8 @@
 vendor/
 www/media/
+.htaccess
 settings.php
+.htaccess
 prod_to_local.sh
 *.DS_Store
 *.log
