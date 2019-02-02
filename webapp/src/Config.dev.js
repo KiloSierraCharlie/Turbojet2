@@ -4,7 +4,7 @@
 */
 export default {
     //endpoint: 'http://api.turbojet.local/',
-    endpoint: 'https://api.fteturbojet.com/',
+    endpoint: 'http://localhost:456/',
     calendpoint: 'webcal://api.fteturbojet.com/',
     apikey: 'rpF88UUHiheBBYiC1KCbTsZDkuP1kQvq',
     recaptchaKey: '6LeS8k8UAAAAAOZsYkWOV9dSei8RNa2sSDFNI6hB',
