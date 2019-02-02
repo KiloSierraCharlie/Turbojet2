@@ -1,13 +1,21 @@
 var path = require('path')
 var webpack = require('webpack')
 var UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+var HtmlWebpackPlugin = require('html-webpack-plugin')
 
 module.exports = {
     entry: './src/main.js',
+    plugins: [
+        new HtmlWebpackPlugin({
+            title: 'My Awesome application',
+            template: './indextemplate.html',
+            filename: './index.html' //relative to root of the application
+        })
+    ],
     output: {
         path: path.resolve(__dirname, './dist'),
-        publicPath: '/dist/',
-        filename: 'build.js'
+        publicPath: '/',
+        filename: 'build.[hash].js'
     },
     resolve: {
         extensions: ['*', '.js', '.vue', '.json'],
