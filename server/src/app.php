@@ -68,18 +68,18 @@ $app['security.default_encoder'] = function ($app) {
 if($app['settings']['ENV'] === 'prod') {
     $app->register(new SwiftmailerServiceProvider(), array(
         'swiftmailer.options' => array(
-        'host' => 'fteturbojet.com',
-        'port' => 465,
+        'host' => 'localhost',
+        'port' => 26,
         'username' => $app['settings']['SMTP']['username'],
         'password' => $app['settings']['SMTP']['password'],
-        'encryption' => 'ssl',
+        'encryption' => null,
         'auth_mode' => 'login')
     ));
 }
 else {
     $app->register(new SwiftmailerServiceProvider(), array(
         'swiftmailer.options' => array(
-        'host' => 'smtp.gmail.com',
+        'host' => 'fteturbojet.com',
         'port' => 465,
         'username' => $app['settings']['SMTP']['username'],
         'password' => $app['settings']['SMTP']['password'],
