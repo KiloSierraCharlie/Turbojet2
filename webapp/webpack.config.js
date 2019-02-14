@@ -7,14 +7,13 @@ module.exports = {
     entry: './src/main.js',
     plugins: [
         new HtmlWebpackPlugin({
-            title: 'My Awesome application',
             template: './indextemplate.html',
             filename: './index.html' //relative to root of the application
         })
     ],
     output: {
         path: path.resolve(__dirname, './dist'),
-        publicPath: '/',
+        publicPath: '/dist/',
         filename: 'build.[hash].js'
     },
     resolve: {
