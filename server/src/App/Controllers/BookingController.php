@@ -76,6 +76,10 @@ class BookingController {
             return $this->app->json(['message' => 'this type of booking is not allowed'], 400);
         }
 
+        if ($this->bookingModel->checkForUnpaid($userId)) {
+            return $this->app->json(['message' => 'You have unpaid bookings from more than a week ago'], 403);
+        }
+
         // Check for correctly filled fields
         if(!$bookingReason || !$start || !$end) {
             return $this->app->json(['message' => 'Please fill all fields correcly'], 400);
