@@ -64,7 +64,6 @@ class AuthController {
 
 
     public function register(Request $request) {
-        //TODO check that user  email does not exists
 
         $username = $request->request->get('username');
         $plainPassword = $request->request->get('password');
@@ -107,6 +106,19 @@ class AuthController {
         // Create the user profile
         $userModel = $this->app['model.user'];
         $userProvider = new UserProvider($this->app['db']);
+
+        //Check if email is already in the DB for a user
+        try {
+            $result = $userProvider->loadUserByUsername($username);
+
+            //User already exists
+            $response = ['message' => 'There is a user with this email already registered'];
+
+            return $this->app->json($response, 400);
+
+        } catch (UsernameNotFoundException $e) {
+            //just continue execution
+        }
 
         if(($result = $userModel->createUser($username, $firstName, $lastName, $room, $group, $phone, $file->getClientOriginalName())) instanceof \Exception) {
             $response = ['message' => 'An error has occured during the user creation'];
