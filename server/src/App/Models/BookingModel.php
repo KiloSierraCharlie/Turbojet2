@@ -96,6 +96,29 @@ class BookingModel extends AbstractModel {
     //     }
     // }
 
+    public function checkForUnpaid($userId) {
+        try {
+            //Check if the user has unpaid bookings from more than a week ago
+            $queryBuilderUnpaid = $this->conn->createQueryBuilder();
+
+            $queryBuilderUnpaid
+                ->select('b.id')
+                ->from('bookings', 'b')
+                ->where('b.cancelled = 0')
+                ->andWhere('b.paid = 0')
+                ->andWhere('id_user = :id_user')->setParameter(':id_user', $userId)
+                ->andWhere('b.start <= NOW() - INTERVAL 1 WEEK');
+
+            $stmtUnpaid = $queryBuilderUnpaid->execute();
+            if ($stmtUnpaid->fetchAll()) {
+                return true;
+            }
+        } catch (\Exception $e) {
+            return false;
+        }
+        return false;
+    }
+
     public function add($type, $start, $end, $bookingReason, $userId, $price, $resourceId) {
         try {
             // Edit the document
