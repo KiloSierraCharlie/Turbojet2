@@ -11,7 +11,7 @@ use Symfony\Component\Security\Core\Exception\AuthenticationExpiredException;
 use Doctrine\DBAL\Connection;
 
 class UserProvider implements UserProviderInterface {
-    const TOKEN_LIFETIME = 86400; // 2 hours
+    const TOKEN_LIFETIME = 86400; // 24 hours
     protected $conn;
 
 
