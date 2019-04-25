@@ -106,6 +106,7 @@ class BookingModel extends AbstractModel {
                 ->from('bookings', 'b')
                 ->where('b.cancelled = 0')
                 ->andWhere('b.paid = 0')
+                ->andWhere('b.type = 1')
                 ->andWhere('id_user = :id_user')->setParameter(':id_user', $userId)
                 ->andWhere('b.start <= NOW() - INTERVAL 1 WEEK');
 
