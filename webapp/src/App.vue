@@ -125,7 +125,7 @@ export default {
             drawerItems: [
                 {
                     icon: 'mdi-settings',
-                    text: 'Admin',
+                    text: 'Admin & Course Leaders',
                     permission: 'permission_approve_user',
                     children: [
                         { icon: 'mdi-account-group', text: 'User Verification' , link: '/admin/verify'}
