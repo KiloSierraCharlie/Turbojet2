@@ -35,12 +35,27 @@ class UserController {
     public function getUsersToVerify(Request $request) {
         $queryParams = $request->query;
 
-        if(!$this->app['user']->hasPermission('permission_edit_user')) {
+        if(!$this->app['user']->hasPermission('permission_edit_user') and !$this->app['user']->hasPermission('permission_course_leader')) {
             return $this->app->json(['message' => 'You don\'t have the permission to access this page'], 403);
         }
-
+        
         if(($users = $this->userModel->getUsersToVerify()) === false) {
             return $this->app->json(['message' => 'An error has occured during the users data retrieval'], 500);
+        }
+        
+        if( $this->app['user']->hasPermission('permission_course_leader') and !$this->app['user']->getSuperAdmin() ){
+            $courseUsers = [];
+            foreach( $users as $usr ){
+                foreach( $usr["groups"] as $u_gp ){
+                    foreach( $this->app['user']->groups as $s_gp ){
+                        if( $u_gp["id"] == $s_gp["id_group"] ){
+                            array_push( $courseUsers, $usr );
+                            break 2;
+                        }
+                    }
+                }
+            }
+            return $this->app->json(array_unique( $courseUsers ), 200);
         }
 
         return $this->app->json($users, 200);
