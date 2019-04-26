@@ -235,9 +235,12 @@ export default {
             this.$router.push({ name: 'page-user-details', params: { userId: userId }})
         },
         onRemoveGroupFromFilter(item) {
-            this.filterGroup.splice(this.filterGroup.indexOf(item.name), 1)
-            this.filterGroup = [...this.filterGroup]
-            console.log('removeGroupFromFilter', this.filterGroup, item)
+            for( var i=0; i < this.filterGroup.length; i++ ){
+                if( this.filterGroup[i] == item["id"] ){
+                    this.filterGroup.splice( i, 1 );
+                    return;
+                }
+            }
         }
     },
     components: {'group-chip': GroupChip}
