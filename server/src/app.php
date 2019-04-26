@@ -198,6 +198,9 @@ $app->before(function(Request $request) use ($app) {
     } catch (AuthenticationExpiredException $e) {
         return $app->json(['message' => 'Token expired'], 401);
     }
+    if(!$app['user']->getVerified() || $app['user']->getBanned()) {
+        return $this->app->json(['message' => 'Your account has been banned or is not yet validated'], 401);
+    }
 });
 
 return $app;
