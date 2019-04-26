@@ -58,7 +58,9 @@ export default {
                 case 'Modular':
                     return 'indigo';
                     break
-
+                case 'Course Leader':
+                    return 'orange darken-2';
+                    break
                 default:
                     return 'grey';
 
@@ -108,6 +110,9 @@ export default {
                 case 'Modular':
                     return 'mdi-plane-shield'
                     break
+                case 'Course Leader':
+                    return 'mdi-account-star';
+                    break;
 
             }
         }
