@@ -254,7 +254,7 @@ const router = new VueRouter({
                         },
                         settings: {
                             minimumHours: 0.5,
-                            maximumHours: 4,
+                            maximumHours: 8,
                             multiResources: true
                         }
                     }
