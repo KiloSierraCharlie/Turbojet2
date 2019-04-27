@@ -228,3 +228,4 @@ $RECYCLE.BIN/
 
 
 # End of https://www.gitignore.io/api/node,macos,linux,windows,phpstorm+all,visualstudiocode
+webapp/src/Config.dev.js
