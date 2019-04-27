@@ -155,7 +155,10 @@ export default {
                 this.editedEvent.end = moment(start).add(this.$route.meta.settings.minimumHours, 'hours')
             }
             else if(hours > this.$route.meta.settings.maximumHours) {
-                this.editedEvent.end = moment(start).add(this.$route.meta.settings.maximumHours, 'hours')
+                this.errorMessage = "Maximum booking length is " + this.$route.meta.settings.maximumHours
+                + " hours. If you need longer, contact the social commitee directly.";
+                this.snackbar = true
+                return
             }
             else {
                 this.editedEvent.end = end
