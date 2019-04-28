@@ -18,14 +18,13 @@ class UserModel extends AbstractModel {
             $queryBuilder = $this->conn->createQueryBuilder();
 
             $queryBuilder
-                ->select('u.id', 'u.first_name', 'u.last_name', 'u.email', 'u.picture', 'u.position', 'u.graduated', 'GROUP_CONCAT(CONCAT(g.id, "::", g.name, "::", g.type)) as groups')
+                ->select('u.id', 'u.first_name', 'u.last_name', 'u.email', 'u.picture', 'u.position', 'u.graduated', 'GROUP_CONCAT(CONCAT(g.id, "::", g.name, "::", g.type, "::", g.active)) as groups')
                 ->from('users', 'u')
                 ->innerJoin('u', 'group_membership', 'gm', 'u.id = gm.id_user')
                 ->innerJoin('gm', 'groups', 'g', 'gm.id_group = g.id')
                 ->where('u.banned = 0')
                 ->andWhere('u.verified = 1')
                 ->groupBy('u.id')
-                ->orderBy('RAND()', 'ASC')
             ;
 
             if(!$includeGraduated) {
@@ -34,18 +33,29 @@ class UserModel extends AbstractModel {
 
             $stmt = $queryBuilder->execute();
             $users = $stmt->fetchAll();
-
+            
+            $filtered_users = [];
+            
             // Format groups in name/type key/value array
             foreach ($users as &$user) {
                 $tempGroups = $user['groups'] = explode(',', $user['groups']);
                 $user['groups'] = array();
-
+                $graduated = 0;
+                $notGraduated = 0;
                 foreach ($tempGroups as &$group) {
+                    if( explode( '::', $group )[3] == "1" ){
+                        $notGraduated++;
+                    }else{
+                        $graduated++;
+                    }
                     $user['groups'][] = array('id' => explode('::', $group)[0],'name' => explode('::', $group)[1], 'type' => explode('::', $group)[2]);
+                }
+                if( ( $graduated < $notGraduated ) && !$includeGraduated ){
+                    array_push( $filtered_users, $user );
                 }
             }
 
-            return $users;
+            return $includeGraduated ? $users : $filtered_users;
         }
         catch(\Exception $e) {
             return false;
