@@ -17,13 +17,13 @@
                         <v-flex xs12 sm6>
                             <v-select
                                 v-model="filterGroup" :items="groupPicklist"
-                                item-text="name" item-value="id"
+                                item-text="text" item-value="value"
                                 label="Filter by course or job" multiple
                                 deletable-chips clearable
                             >
                                 <template slot="selection" slot-scope="data">
                                     <group-chip
-                                        :group-name="data.item.name"
+                                        :group-name="data.item.text"
                                         :group-type="data.item.type"
                                         close
                                         @remove="onRemoveGroupFromFilter(data.item)"
@@ -117,6 +117,7 @@ export default {
             snackbar: false,
             errorMessage: '',
             usersData: [],
+            groups: [],
             filterGroup: [],
             filterName: '',
             currentPage: 1,
@@ -167,17 +168,8 @@ export default {
             return mappedUsers
         },
         groupPicklist() {
-            return _
-                .chain(this.usersData)
-                .map(function(user) {
-                    return user.groups
-                })
-                .flatten()
-                .uniqBy('name')
-                .sortBy('name')
-                .value()
-            ;
-        }
+            return this.groups;
+        },
     },
     created() {
         this.fetchData()
@@ -205,6 +197,12 @@ export default {
                         $this.snackbar = true
                     }
                 });
+
+            Axios.get(Config.endpoint + 'picklists/groups')
+                .then(function (response) {
+                    $this.groups = response.data
+                })
+                .catch(this.displayError);
         },
         getEmailList() {
             return _.map(this.users, function(user) {
@@ -225,7 +223,7 @@ export default {
         onSendEmail() {
             var emails = this.getEmailList()
             var link = 'mailto:?bcc=' + emails
-
+ 
             window.location.href = link
         },
         clickUser(user) {
@@ -236,7 +234,7 @@ export default {
         },
         onRemoveGroupFromFilter(item) {
             for( var i=0; i < this.filterGroup.length; i++ ){
-                if( this.filterGroup[i] == item["id"] ){
+                if( this.filterGroup[i] == item["value"] ){
                     this.filterGroup.splice( i, 1 );
                     return;
                 }

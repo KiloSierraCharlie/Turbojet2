@@ -228,7 +228,8 @@ class UserModel extends AbstractModel {
         $groups = $this->conn->fetchAll('
             SELECT
                 id as value,
-                name as text
+                name as text,
+                type
             FROM groups
             WHERE active = 1
             ORDER BY name ASC
