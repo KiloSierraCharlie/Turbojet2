@@ -25,6 +25,7 @@ class UserModel extends AbstractModel {
                 ->where('u.banned = 0')
                 ->andWhere('u.verified = 1')
                 ->groupBy('u.id')
+                ->orderBy('u.first_name')
             ;
 
             if(!$includeGraduated) {
