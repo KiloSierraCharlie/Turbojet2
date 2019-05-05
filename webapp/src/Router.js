@@ -255,7 +255,9 @@ const router = new VueRouter({
                         settings: {
                             minimumHours: 0.5,
                             maximumHours: 8,
-                            multiResources: true
+                            multiResources: true,
+                            showWarning: true,
+                            warningText: "You must leave the barbecue, and any other resources (grill, etc) clean.\nFailure to comply, will result in a fine.",
                         }
                     }
                 }

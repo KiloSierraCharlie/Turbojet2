@@ -35,6 +35,17 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
+        <v-dialog v-model="dialogWarning" max-width="500px" persistent>
+            <v-card>
+                <v-card-title class="headline">Rules - {{ this.editedEvent.name_resource }}</v-card-title>
+                <v-card-text>{{ this.$route.meta.settings.warningText }}</v-card-text>
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn :disabled="isLoading" outline color="primary" @click="dialogWarning = false;">No, thanks.</v-btn>
+                    <v-btn :loading="isLoading" color="primary" @click="dialogWarning = false;dialogEdit = true;">I agree.</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
         <v-snackbar :timeout="0" color="red accent-2" v-model="snackbar">
           {{ errorMessage }}
           <v-btn dark flat @click.native="snackbar = false; errorMessage = ''">Close</v-btn>
@@ -83,6 +94,7 @@ export default {
             // resourcesSource: null,
             dialogEdit: false,
             dialogCancel: false,
+            dialogWarning: false,
             editedEvent: {
                 start: moment(),
                 end: moment(),
@@ -90,6 +102,7 @@ export default {
                 data: {
                     id: '',
                     id_resource: '',
+                    name_resource: '',
                     id_user: '',
                     user_name: '',
                     price: '',
@@ -166,6 +179,7 @@ export default {
 
             if(resource && resource.id) {
                 this.editedEvent.id_resource = resource.id
+                this.editedEvent.name_resource = resource.title
             }
 
             if(this.$route.meta.api.getPriceApi) {
@@ -178,7 +192,12 @@ export default {
                     })
                     .catch(this.displayError)
             }
-            this.dialogEdit = true
+
+            if( _.has(this.$route, 'meta.settings.showWarning') ){
+                this.dialogWarning = true
+            }else{
+                this.dialogEdit = true
+            }
         },
         onEventClick(event, jsEvent, view){
             console.log('event', event)
