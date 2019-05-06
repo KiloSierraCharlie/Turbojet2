@@ -15,7 +15,6 @@ import BookingEvent from 'components/BookingEvent.vue'
 import PageLogin from 'components/pages/PageLogin.vue'
 import PageManager from 'components/pages/PageManager.vue'
 import PageCustom from 'components/pages/PageCustom.vue'
-import PageITReps from 'components/pages/PageITReps.vue'
 import PageMyZeusCalendar from 'components/pages/PageMyZeusCalendar.vue'
 import Store from './Store.js'
 
@@ -278,11 +277,6 @@ const router = new VueRouter({
                     title: 'Settings'
                 }
             }
-        },
-        {
-            path: '/it-reps',
-            component: PageITReps,
-            name: 'page-it-reps'
         },
         {
             path: '/committee',

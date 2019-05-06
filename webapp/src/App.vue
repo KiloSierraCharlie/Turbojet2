@@ -70,13 +70,6 @@
                 <router-view ref="view" :class="{'mb-5': $route.name !== 'page-it-reps'}"></router-view>
                 <!-- <router-view name="dialog"></router-view> -->
             </v-content>
-            <v-footer v-if="$route.name !== 'page-it-reps'" color="primary" class="hidden-xs-only px-2 white--text" height="auto" app>
-                <v-layout justify-center row wrap>
-                    <v-flex class="pt-2 pb-2" text-xs-center white--text xs12>
-                        Turbojet V{{version}} made with &nbsp;<v-icon class="subheading" color="white">mdi-heart</v-icon>&nbsp; and maintained by a <router-link to="/it-reps">lineage of wonderful IT Reps</router-link>. Current IT Rep <router-link to="/committee">Francisco Jesús Jiménez Hidalgo (180)</router-link>
-                    </v-flex>
-                </v-layout>
-            </v-footer>
             <user-details-dialog ref="userDetailsDialog"
                 :user-data="editedUser"
                 :groups-data="groups"
