@@ -38,7 +38,7 @@ class AuthController {
             $encoder = $this->app['security.encoder_factory']->getEncoder($user);
 
             // Check user is not banned and his account is verified
-            if(!$user->getVerified() || $user->getBanned()) {
+            if(!$user->getVerified() || $user->getBanned() || $user->getGraduated() ) {
                 return $this->app->json(['message' => 'Your account has been banned or is not yet validated'], 401);
             }
 

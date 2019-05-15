@@ -195,6 +195,10 @@ class UserController {
             return $this->app->json(['message' => 'An error has occured during the user verification'], 500);
         }
 
+        if( $user->getBanned() ){
+            return $this->app->json(['message' => 'User is banned, unban to verify them!'], 500);
+        }
+
         return $this->app->json($user, 200);
     }
 

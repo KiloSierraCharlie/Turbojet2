@@ -32,7 +32,6 @@ class User implements UserInterface, EquatableInterface {
         $this->position = $user['position'];
         $this->phone = $user['phone'];
         $this->picture = $user['picture'];
-        $this->graduated = (int) $user['graduated'];
         $this->calendarGroundschool = $user['calendar_groundschool'];
         $this->calendarZeusUsername = $user['calendar_zeus_username'];
         $this->notification_zeus = $user['notification_zeus'];
@@ -111,10 +110,6 @@ class User implements UserInterface, EquatableInterface {
         return $this->picture;
     }
 
-    public function getGraduated() {
-        return $this->graduated;
-    }
-
     public function getCalendarGroundschool() {
         return $this->calendarGroundschool;
     }
@@ -150,6 +145,15 @@ class User implements UserInterface, EquatableInterface {
             }
         }
 
+        return false;
+    }
+
+    public function getGraduated(){
+        for ($i = 0; $i < count($this->groups); $i++) {
+            if ( (int) $this->groups[$i]["active"] == 1) {
+                return true;
+            }
+        }
         return false;
     }
 
