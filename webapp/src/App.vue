@@ -153,8 +153,7 @@ export default {
                     text: 'Flight Training',
                     children: [
                         { icon: 'mdi-cloud-download', text: 'Documents & Resources', link: '/documents/flying' },
-                        { icon: 'mdi-timetable', text: 'Zeus (Mobile)', link: 'http://www.jmaero.com/zeus/' },
-                        { icon: 'mdi-timetable', text: 'Zeus (PC)', link: 'http://zeus/' },
+                        { icon: 'mdi-timetable', text: 'Zeus (Mobile)', link: 'https://zeus.fteturbojet.com/' },
                         { icon: 'mdi-file-document', text: 'Allocation', link: '/documents/allocations' },
                         { icon: 'mdi-desktop-classic', text: 'CBT', link: 'http://ftecbt.com/login.html' },
                         { icon: 'mdi-desktop-classic', text: 'OLD CBT', link: 'http://intranet/cbt/old/index.php' }
