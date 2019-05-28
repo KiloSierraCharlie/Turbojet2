@@ -146,6 +146,27 @@ const router = new VueRouter({
                             permission: 'permission_entertainment_rep'
                         }
                     }
+                },
+                {
+                    name: 'page-discount',
+                    path: 'page-discount',
+                    meta: {
+                        labels: {
+                            title: 'Discount Page Manager',
+                            formTitleNew: 'New Page',
+                            formTitleEdit: 'Edit Page'
+                        },
+                        api: {
+                            getAll: 'editorial/page-discount',
+                            post: 'editorial/page-discount',
+                            edit: 'editorial/page-discount/{id}/edit',
+                            delete: 'editorial/page-discount/{id}',
+                            imageUpload: 'editorial-image-upload'
+                        },
+                        settings: {
+                            permission: 'permission_entertainment_rep'
+                        }
+                    }
                 }
             ]
         },

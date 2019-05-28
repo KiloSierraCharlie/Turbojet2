@@ -140,6 +140,22 @@ export default {
                     ]
                 },
                 {
+                    icon: 'mdi-star-circle',
+                    text: 'The Student Committee',
+                    children: [
+                        { icon: 'mdi-account-group', text: 'The members' , link: '/committee'},
+                        { icon: 'mdi-cloud-download', text: 'Documents & Resources', link: '/documents/student-resources' }
+                    ]
+                },
+                {
+                    icon: 'mdi-currency-eur',
+                    text: 'Discounts',
+                    children: [
+                        { icon: 'mdi-cloud-download', text: 'Documents & Resources', link: '/documents/page-discounts' }
+                    ],
+                    customPagesPlaceholder: 'page-discount'
+                },
+                {
                     icon: 'mdi-projector-screen',
                     text: 'Groundschool',
                     children: [
@@ -165,14 +181,6 @@ export default {
                     children: [
                         { icon: 'mdi-cloud-download', text: 'Documents & Resources', link: '/documents/multi-pilot-resources' },
                         { icon: 'mdi-calendar', text: '737 Sim TimeTable', link: '/documents/737-sim-timetable' }
-                    ]
-                },
-                {
-                    icon: 'mdi-star-circle',
-                    text: 'The Student Committee',
-                    children: [
-                        { icon: 'mdi-account-group', text: 'The members' , link: '/committee'},
-                        { icon: 'mdi-cloud-download', text: 'Documents & Resources', link: '/documents/student-resources' }
                     ]
                 },
                 {
