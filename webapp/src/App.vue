@@ -151,7 +151,8 @@ export default {
                     icon: 'mdi-currency-eur',
                     text: 'Discounts',
                     children: [
-                        { icon: 'mdi-cloud-download', text: 'Documents & Resources', link: '/documents/page-discounts' }
+                        { icon: 'mdi-cloud-download', text: 'Documents & Resources', link: '/documents/page-discounts' },
+                        { icon: 'mdi-settings', text: 'Page Manager', link: '/page-manager/page-discount', permission: 'permission_entertainment_rep' }
                     ],
                     customPagesPlaceholder: 'page-discount'
                 },
