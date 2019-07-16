@@ -102,7 +102,7 @@ class EditorialContentModel extends AbstractModel {
             ;
 
             if($type === 'ftebay') {
-                $queryBuilder->setValue('expiry_date', 'NOW() + INTERVAL 14 DAY');
+                $queryBuilder->setValue('expiry_date', 'NOW() + INTERVAL 21 DAY');
             }
 
             $queryBuilder->execute();
