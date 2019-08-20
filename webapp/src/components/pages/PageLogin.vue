@@ -234,7 +234,8 @@ export default {
                 '6635883637_19678f38b4_o.jpg',
                 '4553065262_3a71c1825b_o.jpg',
                 '16400282722_86d1dee4e6_o.jpg',
-                '35332726055_c8fd88581a_o.jpg'
+                '35332726055_c8fd88581a_o.jpg',
+                'turbojet_atc_tower.jpg'
             ])
         },
         recaptchaKey() {
