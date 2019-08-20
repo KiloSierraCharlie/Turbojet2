@@ -35,12 +35,27 @@ class UserController {
     public function getUsersToVerify(Request $request) {
         $queryParams = $request->query;
 
-        if(!$this->app['user']->hasPermission('permission_edit_user')) {
+        if(!$this->app['user']->hasPermission('permission_edit_user') and !$this->app['user']->hasPermission('permission_course_leader')) {
             return $this->app->json(['message' => 'You don\'t have the permission to access this page'], 403);
         }
-
+        
         if(($users = $this->userModel->getUsersToVerify()) === false) {
             return $this->app->json(['message' => 'An error has occured during the users data retrieval'], 500);
+        }
+        
+        if( $this->app['user']->hasPermission('permission_course_leader') and !$this->app['user']->getSuperAdmin() ){
+            $courseUsers = [];
+            foreach( $users as $usr ){
+                foreach( $usr["groups"] as $u_gp ){
+                    foreach( $this->app['user']->groups as $s_gp ){
+                        if( $u_gp["id"] == $s_gp["id_group"] ){
+                            array_push( $courseUsers, $usr );
+                            break 2;
+                        }
+                    }
+                }
+            }
+            return $this->app->json(array_unique( $courseUsers ), 200);
         }
 
         return $this->app->json($users, 200);
@@ -89,7 +104,8 @@ class UserController {
             'calendar_zeus_username',
             'notification_news',
             'notification_zeus',
-            'notification_ftebay'
+            'notification_ftebay',
+            'password'
         ];
 
         $userData = $request->request->all();
@@ -102,7 +118,7 @@ class UserController {
         // Check the user can edit the fields.
         // IF the user is superAdmin he can edit any field
         // Otherwise he is limited to the authorised list
-        if(!$this->app['user']->getSuperAdmin() && count($userData) != count(array_intersect($authorisedFields, array_keys($userData))) > 0) {
+        if((!$this->app['user']->getSuperAdmin() | !$this->app['user']->hasPermission('permission_edit_user') )&& count($userData) != count(array_intersect($authorisedFields, array_keys($userData))) > 0) {
             return $this->app->json(['message' => 'You don\'t have the permission to edit these fields'], 403);
         }
 
