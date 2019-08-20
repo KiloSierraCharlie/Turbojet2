@@ -70,13 +70,6 @@
                 <router-view ref="view" :class="{'mb-5': $route.name !== 'page-it-reps'}"></router-view>
                 <!-- <router-view name="dialog"></router-view> -->
             </v-content>
-            <v-footer v-if="$route.name !== 'page-it-reps'" color="primary" class="hidden-xs-only px-2 white--text" height="auto" app>
-                <v-layout justify-center row wrap>
-                    <v-flex class="pt-2 pb-2" text-xs-center white--text xs12>
-                        Turbojet V{{version}} made with &nbsp;<v-icon class="subheading" color="white">mdi-heart</v-icon>&nbsp; and maintained by a <router-link to="/it-reps">lineage of wonderful IT Reps</router-link>. Current IT Rep <router-link to="/committee">Francisco Jesús Jiménez Hidalgo (180)</router-link>
-                    </v-flex>
-                </v-layout>
-            </v-footer>
             <user-details-dialog ref="userDetailsDialog"
                 :user-data="editedUser"
                 :groups-data="groups"
@@ -125,7 +118,7 @@ export default {
             drawerItems: [
                 {
                     icon: 'mdi-settings',
-                    text: 'Admin',
+                    text: 'Admin & Course Leaders',
                     permission: 'permission_approve_user',
                     children: [
                         { icon: 'mdi-account-group', text: 'User Verification' , link: '/admin/verify'}
@@ -147,12 +140,27 @@ export default {
                     ]
                 },
                 {
+                    icon: 'mdi-star-circle',
+                    text: 'The Student Committee',
+                    children: [
+                        { icon: 'mdi-account-group', text: 'The members' , link: '/committee'},
+                        { icon: 'mdi-cloud-download', text: 'Documents & Resources', link: '/documents/student-resources' }
+                    ]
+                },
+                {
+                    icon: 'mdi-currency-eur',
+                    text: 'Local Discounts',
+                    children: [
+                        { icon: 'mdi-cloud-download', text: 'Documents & Resources', link: '/documents/page-discounts' }
+                    ],
+                    customPagesPlaceholder: 'page-discount'
+                },
+                {
                     icon: 'mdi-projector-screen',
                     text: 'Groundschool',
                     children: [
                         { icon: 'mdi-cloud-download', text: 'Documents & Resources', link: '/documents/ground-school' },
                         { icon: 'mdi-desktop-classic', text: 'CBT', link: 'http://ftecbt.com/login.html' },
-                        { icon: 'mdi-desktop-classic', text: 'OLD CBT', link: 'http://intranet/cbt/old/index.php' }
                     ]
                 },
                 {
@@ -160,10 +168,8 @@ export default {
                     text: 'Flight Training',
                     children: [
                         { icon: 'mdi-cloud-download', text: 'Documents & Resources', link: '/documents/flying' },
-                        { icon: 'mdi-timetable', text: 'Zeus', link: 'http://www.jmaero.com/zeus/' },
+                        { icon: 'mdi-timetable', text: 'Zeus', link: 'https://zeus.fteturbojet.com' },
                         { icon: 'mdi-file-document', text: 'Allocation', link: '/documents/allocations' },
-                        { icon: 'mdi-desktop-classic', text: 'CBT', link: 'http://ftecbt.com/login.html' },
-                        { icon: 'mdi-desktop-classic', text: 'OLD CBT', link: 'http://intranet/cbt/old/index.php' }
                     ]
                 },
                 {
@@ -172,14 +178,6 @@ export default {
                     children: [
                         { icon: 'mdi-cloud-download', text: 'Documents & Resources', link: '/documents/multi-pilot-resources' },
                         { icon: 'mdi-calendar', text: '737 Sim TimeTable', link: '/documents/737-sim-timetable' }
-                    ]
-                },
-                {
-                    icon: 'mdi-star-circle',
-                    text: 'The Student Committee',
-                    children: [
-                        { icon: 'mdi-account-group', text: 'The members' , link: '/committee'},
-                        { icon: 'mdi-cloud-download', text: 'Documents & Resources', link: '/documents/student-resources' }
                     ]
                 },
                 {

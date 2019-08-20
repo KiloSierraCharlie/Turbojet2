@@ -114,13 +114,16 @@ export default {
         }
     },
     methods: {
-        getEventColor(start, end) {
+        getEventColor(start, end,paid) {
             const now = moment()
 
             if(now >= moment(start) && now <= moment(end)) {
                 return '#F44336'
             }
-            else if(now > moment(end)) {
+            else if(now > moment(end) && paid == "0"){
+                return '#FF4500'
+            }
+            else if(now > moment(end) && paid == "1") {
                 return '#757575'
             }
             else {
@@ -314,12 +317,12 @@ export default {
                             .then(function (response) {
                                 var events = _.map(response.data, function(item) {
                                     return {
-                                        title: ($this.$route.meta.settings.multiResources ? item.resource_name + '\n' : '') + item.user_name+'\n'+item.booking_reason,
+                                        title: ($this.$route.meta.settings.multiResources ? item.resource_name + '\n' : '') + item.user_name+ '\n'+item.booking_reason,
                                         start: moment(item.start).format(),
                                         end: moment(item.end).format(),
                                         allDay: false,
                                         editable: false,
-                                        color: $this.getEventColor(item.start, item.end),
+                                        color: $this.getEventColor(item.start, item.end, item.paid),
                                         data: item,
                                         resourceId: item.id_resource
                                     }
