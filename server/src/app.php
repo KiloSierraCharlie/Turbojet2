@@ -65,28 +65,16 @@ $app['security.default_encoder'] = function ($app) {
     return new Pbkdf2PasswordEncoder('sha1', false, 1000, 20);
 };
 
-if($app['settings']['ENV'] === 'prod') {
-    $app->register(new SwiftmailerServiceProvider(), array(
-        'swiftmailer.options' => array(
-        'host' => 'fteturbojet.com',
-        'port' => 465,
-        'username' => $app['settings']['SMTP']['username'],
-        'password' => $app['settings']['SMTP']['password'],
-        'encryption' => 'ssl',
-        'auth_mode' => 'login')
-    ));
-}
-else {
-    $app->register(new SwiftmailerServiceProvider(), array(
-        'swiftmailer.options' => array(
-        'host' => 'smtp.gmail.com',
-        'port' => 465,
-        'username' => $app['settings']['SMTP']['username'],
-        'password' => $app['settings']['SMTP']['password'],
-        'encryption' => 'ssl',
-        'auth_mode' => 'login')
-    ));
-}
+
+$app->register(new SwiftmailerServiceProvider(), array(
+    'swiftmailer.options' => array(
+    'host' => 'smtp.gmail.com',
+    'port' => 465,
+    'username' => $app['settings']['SMTP']['username'],
+    'password' => $app['settings']['SMTP']['password'],
+    'encryption' => 'ssl',
+    'auth_mode' => 'login')
+));
 
 
 /*
