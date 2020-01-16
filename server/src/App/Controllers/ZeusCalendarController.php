@@ -154,6 +154,11 @@ class ZeusCalendarController {
 
         // var_dump($usersMail);
         // exit();
+        
+        $this->zeusCalendarModel->deleteEvents($diffEvents['deletions']);
+        $this->zeusCalendarModel->insertEvents($diffEvents['insertions'], $newEvents);
+        $this->zeusCalendarModel->updateEvents($diffEvents['updates'], $newEvents);
+
 
         $emailList = [];
         foreach ($usersMail as $user => $events) {
@@ -182,10 +187,7 @@ class ZeusCalendarController {
         /*
             Update/insert/delete
          */
-        $this->zeusCalendarModel->deleteEvents($diffEvents['deletions']);
-        $this->zeusCalendarModel->insertEvents($diffEvents['insertions'], $newEvents);
-        $this->zeusCalendarModel->updateEvents($diffEvents['updates'], $newEvents);
-
+        
         var_dump($diffEvents);
         // exit();
 
