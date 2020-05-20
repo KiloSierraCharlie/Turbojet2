@@ -237,6 +237,29 @@ const router = new VueRouter({
                     }
                 },
                 {
+                    name: 'gym-booking',
+                    path: 'gym',
+                    component: BookingEvent,
+                    meta: {
+                        labels: {
+                            title: 'Gym Booking',
+                            bookingReason: 'Booking reason'
+                        },
+                        api: {
+                            getAll: 'bookings/gym',
+                            post: 'bookings/gym',
+                            edit: 'bookings/gym/{id}/edit',
+                            changeState: 'bookings/gym/{id}/changeState',
+                            getResources: 'bookings/gym/resources'
+                        },
+                        settings: {
+                            minimumHours: 0.5,
+                            maximumHours: 1,
+                            multiResources: false
+                        }
+                    }
+                },    
+                {
                     name: 'barbecue-booking',
                     path: 'barbecue',
                     component: BookingEvent,

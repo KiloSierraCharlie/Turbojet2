@@ -162,7 +162,7 @@ class BookingController {
     }
 
     private function isAllowedType($type) {
-        $allowedTypes = ['minivan', 'tv', 'barbecue'];
+        $allowedTypes = ['minivan', 'tv', 'barbecue', 'gym'];
 
         return in_array($type, $allowedTypes);
     }
