@@ -107,6 +107,27 @@ const router = new VueRouter({
                     }
                 },
                 {
+                    name: 'page-covid',
+                    path: 'page-covid',
+                    meta: {
+                        labels: {
+                            title: 'Covid Page Manager',
+                            formTitleNew: 'New Page',
+                            formTitleEdit: 'Edit Page'
+                        },
+                        api: {
+                            getAll: 'editorial/page-covid',
+                            post: 'editorial/page-covid',
+                            edit: 'editorial/page-covid/{id}/edit',
+                            delete: 'editorial/page-covid/{id}',
+                            imageUpload: 'editorial-image-upload'
+                        },
+                        settings: {
+                            permission: 'permission_edit_user'
+                        }
+                    }
+                },
+                {
                     name: 'page-career',
                     path: 'page-career',
                     meta: {

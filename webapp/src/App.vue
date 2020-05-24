@@ -182,6 +182,14 @@ export default {
                     ]
                 },
                 {
+                    icon: 'mdi-message-alert',
+                    text: 'COVID 19',
+                    children: [
+                        { icon: 'mdi-cloud-download', text: 'Documents & Resources', link: '/documents/covid-resources' },
+                        { icon: 'mdi-settings', text: 'Page Manager', link: '/page-manager/page-covid', permission: 'permission_edit_user' }
+                    ]
+                },
+                {
                     icon: 'mdi-briefcase',
                     'icon-alt': 'keyboard_arrow_down',
                     text: 'Career',
