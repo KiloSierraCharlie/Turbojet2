@@ -302,6 +302,29 @@ const router = new VueRouter({
                             multiResources: true
                         }
                     }
+                },
+                {
+                    name: 'tennis-booking',
+                    path: 'tennis',
+                    component: BookingEvent,
+                    meta: {
+                        labels: {
+                            title: 'Tennis Court Booking',
+                            bookingReason: 'Booking reason'
+                        },
+                        api: {
+                            getAll: 'bookings/tennis',
+                            post: 'bookings/tennis',
+                            edit: 'bookings/tennis/{id}/edit',
+                            changeState: 'bookings/tennis/{id}/changeState',
+                            getResources: 'bookings/tennis/resources'
+                        },
+                        settings: {
+                            minimumHours: 0.5,
+                            maximumHours: 2,
+                            multiResources: true
+                        }
+                    }
                 }
             ],
             props: true

@@ -135,6 +135,7 @@ export default {
                         { icon: 'mdi-cloud-download', text: 'Documents & Resources', link: '/documents/administration'},
                         { icon: 'mdi-van-passenger', text: 'Minivan Booking', link: '/bookings/minivan'},
                         { icon: 'mdi-television-classic', text: 'TV Room Booking', link: '/bookings/tv'},
+                        { icon: 'mdi-basketball', text: 'Tennis Court Booking', link: '/bookings/tennis'},
                         { icon: 'mdi-fire', text: 'Barbecue Booking', link: '/bookings/barbecue'},
                         { icon: 'mdi-basketball', text: 'Gym Booking', link: '/bookings/gym'},
                         { icon: 'mdi-wrench', text: 'IT / Maintenance Request', link: 'http://request.ftejerez.com' }
