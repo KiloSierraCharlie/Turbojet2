@@ -234,29 +234,29 @@ const router = new VueRouter({
                         }
                     }
                 },
-                {
-                    name: 'tv-booking',
-                    path: 'tv',
-                    component: BookingEvent,
-                    meta: {
-                        labels: {
-                            title: 'TV Booking',
-                            bookingReason: 'Watching'
-                        },
-                        api: {
-                            getAll: 'bookings/tv',
-                            post: 'bookings/tv',
-                            edit: 'bookings/tv/{id}/edit',
-                            changeState: 'bookings/tv/{id}/changeState',
-                            getResources: 'bookings/tv/resources'
-                        },
-                        settings: {
-                            minimumHours: 0.5,
-                            maximumHours: 4,
-                            multiResources: false
-                        }
-                    }
-                },
+                //{
+                 //   name: 'tv-booking',
+                 //   path: 'tv',
+                  //  component: BookingEvent,
+                  //  meta: {
+                  //      labels: {
+                  //          title: 'TV Booking',
+                   //         bookingReason: 'Watching'
+                   //     },
+                   //     api: {
+                   //         getAll: 'bookings/tv',
+                   //         post: 'bookings/tv',
+                   //         edit: 'bookings/tv/{id}/edit',
+                   //         changeState: 'bookings/tv/{id}/changeState',
+                   //         getResources: 'bookings/tv/resources'
+                   //     },
+                   //     settings: {
+                   //         minimumHours: 0.5,
+                   //         maximumHours: 4,
+                   //         multiResources: false
+                   //     }
+                   // }
+              //  },
                 {
                     name: 'gym-booking',
                     path: 'gym',
