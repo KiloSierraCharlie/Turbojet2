@@ -138,7 +138,7 @@ export default {
                         { icon: 'mdi-silverware', text: 'Tennis Court Booking', link: '/bookings/tennis'},
                         { icon: 'mdi-fire', text: 'Barbecue Booking', link: '/bookings/barbecue'},
                         { icon: 'mdi-basketball', text: 'Gym Booking', link: '/bookings/gym'},
-                        { icon: 'mdi-wrench', text: 'IT / Maintenance Request', link: 'http://request.ftejerez.com' }
+                        { icon: 'mdi-wrench', text: 'ERP Site', link: 'https://apps.ftejerez.com:7000/officeapps/'}
                     ]
                 },
                 {
