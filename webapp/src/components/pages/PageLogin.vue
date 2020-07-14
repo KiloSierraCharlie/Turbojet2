@@ -225,17 +225,18 @@ export default {
     computed: {
         backgroundImage() {
             return _.sample([
-                'stock-photo-202413751.jpg',
-                'stock-photo-241687465.jpg',
-                '32545605703_da157f563c_k.jpg',
-                '17834084238_cf249eea2f_k.jpg',
-                '6852968917_45a0e3718c_o.jpg',
-                '9420551811_3f46ab307e_k.jpg',
-                '6635883637_19678f38b4_o.jpg',
-                '4553065262_3a71c1825b_o.jpg',
-                '16400282722_86d1dee4e6_o.jpg',
-                '35332726055_c8fd88581a_o.jpg',
-                'turbojet_atc_tower.jpg'
+                'ATC.jpg',
+                'Dusk.jpg',
+                'Night.jpg',
+                'volotea.jpg',
+                'Air Astana.jpg',
+                'Air France.jpg',
+                'Easy Jet.jpg',
+                'Aer Lingus.jpg',
+                'Vueling.jpg',
+                'BA CF.jpg',
+                'Iberia.jpg',
+                'MEA.jpg'
             ])
         },
         recaptchaKey() {
