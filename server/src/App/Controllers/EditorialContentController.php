@@ -199,7 +199,7 @@ class EditorialContentController {
     }
 
     private function isAllowedType($type) {
-        $allowedTypes = ['news', 'ftebay', 'page-sport', 'page-career', 'page-entertainment', 'page-covid'];
+        $allowedTypes = ['news', 'ftebay', 'page-sport', 'page-career', 'page-entertainment', 'page-covid', 'page-flightsafety'];
 
         return in_array($type, $allowedTypes);
     }

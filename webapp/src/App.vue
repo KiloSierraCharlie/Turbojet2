@@ -191,6 +191,15 @@ export default {
                     ],
                     customPagesPlaceholder: 'page-covid'
                 },
+                 {
+                    icon: 'mdi-airplane-landing',
+                    text: 'Flight Safety',
+                    children: [
+                        { icon: 'mdi-cloud-download', text: 'Documents & Resources', link: '/documents/covid-resources' },
+                        { icon: 'mdi-settings', text: 'Page Manager', link: '/page-manager/page-covid', permission: 'permission_edit_user' }
+                    ],
+                    customPagesPlaceholder: 'page-flightsafety'
+                },
                 {
                     icon: 'mdi-briefcase',
                     'icon-alt': 'keyboard_arrow_down',

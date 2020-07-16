@@ -15,7 +15,7 @@ class MenuController {
     }
 
     public function getDynamicMenu(Request $request) {
-        $pagesTypes = array('page-sport', 'page-career', 'page-entertainment', 'page-covid');
+        $pagesTypes = array('page-sport', 'page-career', 'page-entertainment', 'page-covid', 'page-flightsafety');
 
         if(($result = $this->menuModel->getDynamicPages($pagesTypes)) instanceof \Exception) {
             return $this->app->json(['message' => 'An error has occured during the menu data retrieval', 'exception' => $result->__toString()], 500);

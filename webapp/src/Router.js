@@ -128,6 +128,27 @@ const router = new VueRouter({
                     }
                 },
                 {
+                    name: 'page-flightsafety',
+                    path: 'page-flightsafety',
+                    meta: {
+                        labels: {
+                            title: 'Flight Safety Page Manager',
+                            formTitleNew: 'New Page',
+                            formTitleEdit: 'Edit Page'
+                        },
+                        api: {
+                            getAll: 'editorial/page-flightsafety',
+                            post: 'editorial/page-flightsafety',
+                            edit: 'editorial/page-flightsafety/{id}/edit',
+                            delete: 'editorial/page-flightsafety/{id}',
+                            imageUpload: 'editorial-image-upload'
+                        },
+                        settings: {
+                            permission: 'permission_edit_user'
+                        }
+                    }
+                },
+                {
                     name: 'page-career',
                     path: 'page-career',
                     meta: {
