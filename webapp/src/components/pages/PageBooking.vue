@@ -333,10 +333,10 @@ export default {
                                     // TODO bug when barbecueue -> minivan -> book event
 
                                     if($this.$route.meta.settings.multiResources) {
-                                        $this.$refs.calendar.fireMethod('changeView', 'agendaDay')
+                                        $this.$refs.calendar.fireMethod('changeView', 'agendaWeek')
                                     }
                                     else {
-                                        $this.$refs.calendar.fireMethod('changeView', 'agendaWeek')
+                                        $this.$refs.calendar.fireMethod('changeView', 'agendaDay')
                                     }
 
                                     $this.$refs.calendar.fireMethod('option', {
