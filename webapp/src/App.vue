@@ -183,7 +183,8 @@ export default {
                     ]
                 },
                 {
-                    icon: 'mdi-message-alert',
+                    icon: 'mdi-biohazard',
+                    
                     text: 'COVID 19',
                     children: [
                         { icon: 'mdi-cloud-download', text: 'Documents & Resources', link: '/documents/covid-resources' },
