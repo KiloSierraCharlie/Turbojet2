@@ -126,18 +126,18 @@ export default {
                 },
                 { icon: 'mdi-message-alert', text: 'News', link: '/news' },
                 { icon: 'mdi-account-circle', text: 'Person Finder', link: '/users' },
-                { icon: 'mdi-calendar', text: 'My Zeus Calendar', link: '/my-zeus-calendar' },
+                // { icon: 'mdi-calendar', text: 'My Zeus Calendar', link: '/my-zeus-calendar' },
                 { icon: 'mdi-cart', text: 'FTEBay', link: '/ftebay'  },
                 {
                     icon: 'mdi-domain',
                     text: 'Administration & Facilities',
                     children: [
                         { icon: 'mdi-cloud-download', text: 'Documents & Resources', link: '/documents/administration'},
-                        { icon: 'mdi-van-passenger', text: 'Minivan Booking', link: '/bookings/minivan'},
+                       // { icon: 'mdi-van-passenger', text: 'Minivan Booking', link: '/bookings/minivan'},
                        // { icon: 'mdi-television-classic', text: 'TV Room Booking', link: '/bookings/tv'},
-                        { icon: 'mdi-silverware', text: 'Tennis Court Booking', link: '/bookings/tennis'},
-                        { icon: 'mdi-fire', text: 'Barbecue Booking', link: '/bookings/barbecue'},
-                        { icon: 'mdi-basketball', text: 'Gym Booking', link: '/bookings/gym'},
+                       // { icon: 'mdi-silverware', text: 'Tennis Court Booking', link: '/bookings/tennis'},
+                       // { icon: 'mdi-fire', text: 'Barbecue Booking', link: '/bookings/barbecue'},
+                       // { icon: 'mdi-basketball', text: 'Gym Booking', link: '/bookings/gym'},
                         { icon: 'mdi-wrench', text: 'ERP Site', link: 'https://apps.ftejerez.com:7000/officeapps/'}
                     ]
                 },
@@ -162,7 +162,7 @@ export default {
                     text: 'Groundschool',
                     children: [
                         { icon: 'mdi-cloud-download', text: 'Documents & Resources', link: '/documents/ground-school' },
-                        { icon: 'mdi-desktop-classic', text: 'CBT', link: 'http://ftecbt.com/login.html' },
+                       // { icon: 'mdi-desktop-classic', text: 'CBT', link: 'http://ftecbt.com/login.html' },
                     ]
                 },
                 {
@@ -170,8 +170,8 @@ export default {
                     text: 'Flight Training',
                     children: [
                         { icon: 'mdi-cloud-download', text: 'Documents & Resources', link: '/documents/flying' },
-                        { icon: 'mdi-timetable', text: 'Zeus', link: 'https://zeus.fteturbojet.com' },
-                        { icon: 'mdi-file-document', text: 'Allocation', link: '/documents/allocations' },
+                        // { icon: 'mdi-timetable', text: 'Zeus', link: 'https://zeus.fteturbojet.com' },
+                        // { icon: 'mdi-file-document', text: 'Allocation', link: '/documents/allocations' },
                     ]
                 },
                 {
@@ -179,7 +179,7 @@ export default {
                     text: 'Multi Pilot Training',
                     children: [
                         { icon: 'mdi-cloud-download', text: 'Documents & Resources', link: '/documents/multi-pilot-resources' },
-                        { icon: 'mdi-calendar', text: '737 Sim TimeTable', link: '/documents/737-sim-timetable' }
+                        // { icon: 'mdi-calendar', text: '737 Sim TimeTable', link: '/documents/737-sim-timetable' }
                     ]
                 },
                 {
